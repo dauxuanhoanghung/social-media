@@ -1,7 +1,0 @@
-com\social\configs\TilesConfig.class
-com\social\configs\DispatcherSerletInitilizer.class
-com\social\configs\HibernateConfig.class
-com\social\configs\WebApplicationContextConfig.class
-com\social\configs\InternatinonalConfig.class
-com\social\controllers\HomeController.class
-com\social\apis\PostAPI.class
