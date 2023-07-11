@@ -16,14 +16,15 @@ public class DispatcherSerletInitilizer extends AbstractAnnotationConfigDispatch
     protected Class<?>[] getRootConfigClasses() {
         return new Class[]{
 //            HibernateConfig.class,
-            TilesConfig.class
+            TilesConfig.class,
         };
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
         return new Class[]{
-            WebApplicationContextConfig.class,};
+            WebApplicationContextConfig.class,
+            SwaggerConfig.class};
     }
 
     @Override
