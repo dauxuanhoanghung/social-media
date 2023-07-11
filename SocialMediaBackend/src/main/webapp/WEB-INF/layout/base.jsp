@@ -1,19 +1,65 @@
-<%-- 
-    Document   : base
-    Created on : Jul 10, 2023, 9:19:31 PM
-    Author     : LENOVO
---%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="tiles" 
-           uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <!DOCTYPE html>
-<html>
+<c:url value="/" var="context"/>
+<html
+    lang="en"
+    class="light-style layout-menu-fixed"
+    dir="ltr"
+    data-theme="theme-default"
+    data-assets-path="../assets/"
+    data-template="vertical-menu-template-free"
+    >
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+            />
         <title><tiles:insertAttribute name="title"/></title>
+        <meta name="description" content="" />
+        <tiles:insertAttribute name="css"/>
+        <!-- Helpers -->
+        <script src="<c:url value="${context}vendor/js/helpers.js" />"></script>
+        <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+        <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+        <script src="<c:url value="${context}js/config.js" />"></script>
     </head>
+
     <body>
-        <h1>Hello World!</h1>
+        <!-- Layout wrapper -->
+        <div class="layout-wrapper layout-content-navbar">
+            <div class="layout-container">
+                <tiles:insertAttribute name="sidebar"/>
+
+                <!-- Layout container -->
+                <div class="layout-page">
+                    <!-- Navbar -->
+                    <tiles:insertAttribute name="header" />
+                    <!-- / Navbar -->
+
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
+                        <!-- Content -->
+                        <div class="container-xxl flex-grow-1 container-p-y">
+                            <tiles:insertAttribute name="content" />
+                        </div>
+                        <!-- / Content -->
+
+                        <tiles:insertAttribute name="footer"/>
+                        <div class="content-backdrop fade"></div>
+                    </div>
+                    <!-- Content wrapper -->
+                </div>
+                <!-- / Layout page -->
+            </div>
+
+            <!-- Overlay -->
+            <div class="layout-overlay layout-menu-toggle"></div>
+        </div>
+        <!-- / Layout wrapper -->
+
+        <tiles:insertAttribute name="js" />
     </body>
 </html>
