@@ -59,7 +59,50 @@
             <div class="layout-overlay layout-menu-toggle"></div>
         </div>
         <!-- / Layout wrapper -->
-
+        <div id="loading">Loading...</div>
         <tiles:insertAttribute name="js" />
+        <script>
+            // Function to remove the loading element
+            function removeLoading() {
+                var loadingElement = document.getElementById("loading");
+                loadingElement.parentNode.removeChild(loadingElement);
+            }
+
+            // Check if all resources have finished loading
+            function checkResourcesLoaded() {
+                var styleSheets = document.styleSheets;
+                var scripts = document.scripts;
+
+                for (var i = 0; i < styleSheets.length; i++) {
+                    if (styleSheets[i].cssRules === null) {
+                        // CSS is still loading
+                        return false;
+                    }
+                }
+
+                for (var j = 0; j < scripts.length; j++) {
+                    if (scripts[j].readyState === "loading") {
+                        // JavaScript is still loading
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            // Function to periodically check if resources have finished loading
+            function checkLoadingStatus() {
+                if (checkResourcesLoaded()) {
+                    // All resources have loaded
+                    removeLoading();
+                } else {
+                    // Keep checking after a short delay
+                    setTimeout(checkLoadingStatus, 200);
+                }
+            }
+
+            // Start checking the loading status when the page has finished loading
+            window.addEventListener("load", checkLoadingStatus);
+        </script>
     </body>
 </html>

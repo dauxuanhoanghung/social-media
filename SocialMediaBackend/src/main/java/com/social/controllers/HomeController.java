@@ -23,4 +23,9 @@ public class HomeController {
     public String account() {
         return "account-settings";
     }
+    
+    @GetMapping("/login")
+    public String loginView() {
+        return "login";
+    }
 }
