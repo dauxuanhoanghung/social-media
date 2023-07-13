@@ -9,7 +9,7 @@ package com.social.handler;
  * @author DinhChuong
  */
 import com.social.pojo.User;
-import com.social.servicces.UserService;
+import com.social.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;

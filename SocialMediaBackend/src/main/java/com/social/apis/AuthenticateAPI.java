@@ -4,11 +4,11 @@
  */
 package com.social.apis;
 
-import com.social.configs.JwtTokenProvider;
+import com.social.jwt.JwtTokenProvider;
 import com.social.dto.request.UserCredentialRequest;
 import com.social.dto.response.JwtResponse;
 import com.social.dto.response.ModelResponse;
-import com.social.servicces.UserService;
+import com.social.services.UserService;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

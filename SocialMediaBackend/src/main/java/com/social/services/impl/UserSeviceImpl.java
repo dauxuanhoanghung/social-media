@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.social.servicces.impl;
+package com.social.services.impl;
 
 import com.social.pojo.User;
 import com.social.repositories.UserRepository;
-import com.social.servicces.UserService;
+import com.social.services.UserService;
 import java.util.HashSet;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;

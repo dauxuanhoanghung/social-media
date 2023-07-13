@@ -5,7 +5,7 @@
 package com.social.apis;
 
 import com.social.pojo.User;
-import com.social.servicces.UserService;
+import com.social.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,8 +24,7 @@ public class PostAPI {
     
     @GetMapping
     public String getAllPost(){
-        User user = userService.getUserByUsername("dhthanh");
-        return user.getPassword();
+          return "authen success";
     }
     
     @PostMapping

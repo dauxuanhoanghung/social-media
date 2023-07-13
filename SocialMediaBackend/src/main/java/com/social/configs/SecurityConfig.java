@@ -4,9 +4,11 @@
  */
 package com.social.configs;
 
+import com.social.jwt.JwtAuthenticationEntryPoint;
+import com.social.jwt.JwtAuthenticationFilter;
 import com.social.handler.LoginSuccessHandler;
 import com.social.handler.LogoutSuccessHandler;
-import com.social.servicces.UserService;
+import com.social.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,6 +20,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -64,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private static final String[] AUTH_BLACKLIST = {
-        "/api/user/**" // Các route không yêu cầu xác thực
+        "/api/**" // Các route không yêu cầu xác thực
     };
     @Bean
     @Override
@@ -91,4 +94,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+    
+
 }
