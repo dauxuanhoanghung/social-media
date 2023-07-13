@@ -24,8 +24,9 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @EnableTransactionManagement
 @ComponentScan(basePackages = {
-    "com.social.apis",
-    "com.social.controllers",
+    "com.social"
+//    "com.social.apis",
+//    "com.social.controllers",
 //    "com.dxhh.repositories",
 //    "com.dxhh.services"
 })
