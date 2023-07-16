@@ -17,6 +17,7 @@ public class DispatcherSerletInitilizer extends AbstractAnnotationConfigDispatch
         return new Class[]{
             HibernateConfig.class,
             TilesConfig.class,
+            MailConfig.class,
             SecurityConfig.class
         };
     }
@@ -25,7 +26,8 @@ public class DispatcherSerletInitilizer extends AbstractAnnotationConfigDispatch
     protected Class<?>[] getServletConfigClasses() {
         return new Class[]{
             WebApplicationContextConfig.class,
-            SwaggerConfig.class};
+            SwaggerConfig.class
+        };
     }
 
     @Override
