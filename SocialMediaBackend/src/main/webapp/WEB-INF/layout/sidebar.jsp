@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" data-bg-class="bg-menu-theme">
     <div class="app-brand demo">
         <a href="index.html" class="app-brand-link">
@@ -36,7 +37,7 @@
                     </g>
                 </svg>
             </span>
-            <span class="app-brand-text demo menu-text fw-bolder ms-2">ADMIN PAGE</span>
+            <span class="app-brand-text demo menu-text fw-bolder ms-2"><spring:message code="view.layout.sidebar.app-brand-text" /></span>
         </a>
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
             <i class="bx bx-chevron-left bx-sm align-middle"></i>
@@ -46,9 +47,9 @@
     <ul class="menu-inner py-1 ps ps--active-y">
         <!-- Dashboard -->
         <li class="menu-item active">
-            <a href="index.html" class="menu-link">
+            <a href="/" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Analytics">Dashboard</div>
+                <div data-i18n="Analytics"><spring:message code="view.layout.sidebar.dashboard" /></div>
             </a>
         </li>
         <!-- Layouts -->

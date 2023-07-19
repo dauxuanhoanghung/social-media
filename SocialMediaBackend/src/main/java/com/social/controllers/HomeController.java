@@ -4,6 +4,8 @@
  */
 package com.social.controllers;
 
+import com.social.services.MailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -13,9 +15,13 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @Controller
 public class HomeController {
+    
+    @Autowired
+    private MailService mailService;
 
     @GetMapping("/")
     public String home() {
+//        mailService.sendMail("nhphuc414@gmail.com", "HELOO", "1111", "invitation");
         return "home";
     }
 

@@ -7,7 +7,6 @@ package com.social.configs;
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -39,15 +38,16 @@ public class MailConfig {
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
         props.put("mail.debug", "true");
 
         return mailSender;
     }
-    
-    
+
     /**
      * FreeMarker Config Bean
-     * @return 
+     *
+     * @return
      */
     @Bean
     public FreeMarkerConfigurationFactoryBean getFreeMarkerConfiguration() {
@@ -56,5 +56,5 @@ public class MailConfig {
         bean.setDefaultEncoding("UTF-8");
         return bean;
     }
-    
+
 }

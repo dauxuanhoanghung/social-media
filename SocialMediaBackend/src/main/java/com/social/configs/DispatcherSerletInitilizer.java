@@ -26,7 +26,8 @@ public class DispatcherSerletInitilizer extends AbstractAnnotationConfigDispatch
     protected Class<?>[] getServletConfigClasses() {
         return new Class[]{
             WebApplicationContextConfig.class,
-            SwaggerConfig.class
+            SwaggerConfig.class,
+            InternatinonalConfig.class,
         };
     }
 
