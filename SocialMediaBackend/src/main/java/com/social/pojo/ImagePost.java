@@ -5,32 +5,31 @@
 package com.social.pojo;
 
 import java.io.Serializable;
-import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author DinhChuong
+ * @author LENOVO
  */
 @Entity
-@Table(name = "tag")
+@Table(name = "image_post")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Tag.findAll", query = "SELECT t FROM Tag t"),
-    @NamedQuery(name = "Tag.findById", query = "SELECT t FROM Tag t WHERE t.id = :id"),
-    @NamedQuery(name = "Tag.findByName", query = "SELECT t FROM Tag t WHERE t.name = :name")})
-public class Tag implements Serializable {
+    @NamedQuery(name = "ImagePost.findAll", query = "SELECT i FROM ImagePost i"),
+    @NamedQuery(name = "ImagePost.findById", query = "SELECT i FROM ImagePost i WHERE i.id = :id"),
+    @NamedQuery(name = "ImagePost.findByUrl", query = "SELECT i FROM ImagePost i WHERE i.url = :url")})
+public class ImagePost implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -38,24 +37,18 @@ public class Tag implements Serializable {
     @NotNull
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "name")
-    private String name;
-    @OneToMany(mappedBy = "tagId")
-    private Set<ProTag> proTagSet;
+    @Size(max = 255)
+    @Column(name = "url")
+    private String url;
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    @ManyToOne
+    private Post postId;
 
-    public Tag() {
+    public ImagePost() {
     }
 
-    public Tag(Integer id) {
+    public ImagePost(Integer id) {
         this.id = id;
-    }
-
-    public Tag(Integer id, String name) {
-        this.id = id;
-        this.name = name;
     }
 
     public Integer getId() {
@@ -66,21 +59,20 @@ public class Tag implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUrl() {
+        return url;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    @XmlTransient
-    public Set<ProTag> getProTagSet() {
-        return proTagSet;
+    public Post getPostId() {
+        return postId;
     }
 
-    public void setProTagSet(Set<ProTag> proTagSet) {
-        this.proTagSet = proTagSet;
+    public void setPostId(Post postId) {
+        this.postId = postId;
     }
 
     @Override
@@ -93,10 +85,10 @@ public class Tag implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Tag)) {
+        if (!(object instanceof ImagePost)) {
             return false;
         }
-        Tag other = (Tag) object;
+        ImagePost other = (ImagePost) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -105,7 +97,7 @@ public class Tag implements Serializable {
 
     @Override
     public String toString() {
-        return "com.social.pojo.Tag[ id=" + id + " ]";
+        return "com.social.pojo.ImagePost[ id=" + id + " ]";
     }
     
 }

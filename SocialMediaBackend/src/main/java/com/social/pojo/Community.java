@@ -6,69 +6,66 @@ package com.social.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author DinhChuong
+ * @author LENOVO
  */
 @Entity
-@Table(name = "sale_order")
+@Table(name = "community")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SaleOrder.findAll", query = "SELECT s FROM SaleOrder s"),
-    @NamedQuery(name = "SaleOrder.findById", query = "SELECT s FROM SaleOrder s WHERE s.id = :id"),
-    @NamedQuery(name = "SaleOrder.findByAmount", query = "SELECT s FROM SaleOrder s WHERE s.amount = :amount"),
-    @NamedQuery(name = "SaleOrder.findByCreatedDate", query = "SELECT s FROM SaleOrder s WHERE s.createdDate = :createdDate")})
-public class SaleOrder implements Serializable {
+    @NamedQuery(name = "Community.findAll", query = "SELECT c FROM Community c"),
+    @NamedQuery(name = "Community.findById", query = "SELECT c FROM Community c WHERE c.id = :id"),
+    @NamedQuery(name = "Community.findByName", query = "SELECT c FROM Community c WHERE c.name = :name"),
+    @NamedQuery(name = "Community.findByCreatedDate", query = "SELECT c FROM Community c WHERE c.createdDate = :createdDate"),
+    @NamedQuery(name = "Community.findByCountMember", query = "SELECT c FROM Community c WHERE c.countMember = :countMember")})
+public class Community implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
-    @Column(name = "amount")
-    private Long amount;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "id")
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "name")
+    private String name;
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date createdDate;
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne
-    private User userId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "orderId")
-    private Set<OrderDetail> orderDetailSet;
+    @Column(name = "count_member")
+    private Integer countMember;
+    @JoinColumn(name = "founder_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private User founderId;
 
-    public SaleOrder() {
+    public Community() {
     }
 
-    public SaleOrder(Integer id) {
+    public Community(Integer id) {
         this.id = id;
     }
 
-    public SaleOrder(Integer id, Date createdDate) {
+    public Community(Integer id, String name) {
         this.id = id;
-        this.createdDate = createdDate;
+        this.name = name;
     }
 
     public Integer getId() {
@@ -79,12 +76,12 @@ public class SaleOrder implements Serializable {
         this.id = id;
     }
 
-    public Long getAmount() {
-        return amount;
+    public String getName() {
+        return name;
     }
 
-    public void setAmount(Long amount) {
-        this.amount = amount;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getCreatedDate() {
@@ -95,21 +92,20 @@ public class SaleOrder implements Serializable {
         this.createdDate = createdDate;
     }
 
-    public User getUserId() {
-        return userId;
+    public Integer getCountMember() {
+        return countMember;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setCountMember(Integer countMember) {
+        this.countMember = countMember;
     }
 
-    @XmlTransient
-    public Set<OrderDetail> getOrderDetailSet() {
-        return orderDetailSet;
+    public User getFounderId() {
+        return founderId;
     }
 
-    public void setOrderDetailSet(Set<OrderDetail> orderDetailSet) {
-        this.orderDetailSet = orderDetailSet;
+    public void setFounderId(User founderId) {
+        this.founderId = founderId;
     }
 
     @Override
@@ -122,10 +118,10 @@ public class SaleOrder implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SaleOrder)) {
+        if (!(object instanceof Community)) {
             return false;
         }
-        SaleOrder other = (SaleOrder) object;
+        Community other = (Community) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -134,7 +130,7 @@ public class SaleOrder implements Serializable {
 
     @Override
     public String toString() {
-        return "com.social.pojo.SaleOrder[ id=" + id + " ]";
+        return "com.social.pojo.Community[ id=" + id + " ]";
     }
     
 }

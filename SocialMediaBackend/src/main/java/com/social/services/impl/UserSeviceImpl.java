@@ -23,11 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class UserSeviceImpl implements UserService{
-     
+public class UserSeviceImpl implements UserService {
+
     @Autowired
     private UserRepository userRepository;
-    
+
     @Override
     public User getUserByUsername(String username) {
         return userRepository.getUserByUsername(username);
@@ -40,9 +40,9 @@ public class UserSeviceImpl implements UserService{
             throw new UsernameNotFoundException("User does not exist!");
         }
         Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority(user.getUserRole()));
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(), user.getPassword(), authorities);
     }
-    
+
 }

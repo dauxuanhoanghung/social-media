@@ -5,29 +5,33 @@
 package com.social.pojo;
 
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author DinhChuong
+ * @author LENOVO
  */
 @Entity
-@Table(name = "pro_tag")
+@Table(name = "tags")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ProTag.findAll", query = "SELECT p FROM ProTag p"),
-    @NamedQuery(name = "ProTag.findById", query = "SELECT p FROM ProTag p WHERE p.id = :id")})
-public class ProTag implements Serializable {
+    @NamedQuery(name = "Tags.findAll", query = "SELECT t FROM Tags t"),
+    @NamedQuery(name = "Tags.findById", query = "SELECT t FROM Tags t WHERE t.id = :id"),
+    @NamedQuery(name = "Tags.findByName", query = "SELECT t FROM Tags t WHERE t.name = :name")})
+public class Tags implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -35,17 +39,16 @@ public class ProTag implements Serializable {
     @NotNull
     @Column(name = "id")
     private Integer id;
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    @ManyToOne
-    private Product productId;
-    @JoinColumn(name = "tag_id", referencedColumnName = "id")
-    @ManyToOne
-    private Tag tagId;
+    @Size(max = 255)
+    @Column(name = "name")
+    private String name;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tagId")
+    private Set<PostTag> postTagSet;
 
-    public ProTag() {
+    public Tags() {
     }
 
-    public ProTag(Integer id) {
+    public Tags(Integer id) {
         this.id = id;
     }
 
@@ -57,20 +60,21 @@ public class ProTag implements Serializable {
         this.id = id;
     }
 
-    public Product getProductId() {
-        return productId;
+    public String getName() {
+        return name;
     }
 
-    public void setProductId(Product productId) {
-        this.productId = productId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Tag getTagId() {
-        return tagId;
+    @XmlTransient
+    public Set<PostTag> getPostTagSet() {
+        return postTagSet;
     }
 
-    public void setTagId(Tag tagId) {
-        this.tagId = tagId;
+    public void setPostTagSet(Set<PostTag> postTagSet) {
+        this.postTagSet = postTagSet;
     }
 
     @Override
@@ -83,10 +87,10 @@ public class ProTag implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ProTag)) {
+        if (!(object instanceof Tags)) {
             return false;
         }
-        ProTag other = (ProTag) object;
+        Tags other = (Tags) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -95,7 +99,7 @@ public class ProTag implements Serializable {
 
     @Override
     public String toString() {
-        return "com.social.pojo.ProTag[ id=" + id + " ]";
+        return "com.social.pojo.Tags[ id=" + id + " ]";
     }
     
 }

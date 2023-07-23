@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  */
 
 @ControllerAdvice
-public class CustomExceptionHandler extends ResponseEntityExceptionHandler{
+public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleTest(Exception exception){

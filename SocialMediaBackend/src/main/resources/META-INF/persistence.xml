@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence           http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+<persistence version="2.2" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence           http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
   <persistence-unit name="com.social_SocialMediaBackend_war_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.social.pojo.Tag</class>
@@ -10,6 +10,24 @@
     <class>com.social.pojo.ProTag</class>
     <class>com.social.pojo.Category</class>
     <class>com.social.pojo.User</class>
+    <class>com.social.pojo.SubCommentAction</class>
+    <class>com.social.pojo.PostReport</class>
+    <class>com.social.pojo.ImagePost</class>
+    <class>com.social.pojo.Post</class>
+    <class>com.social.pojo.Action</class>
+    <class>com.social.pojo.PostTag</class>
+    <class>com.social.pojo.PostAction</class>
+    <class>com.social.pojo.Friendship</class>
+    <class>com.social.pojo.SurveyResult</class>
+    <class>com.social.pojo.Choice</class>
+    <class>com.social.pojo.Role</class>
+    <class>com.social.pojo.Tags</class>
+    <class>com.social.pojo.CommentAction</class>
+    <class>com.social.pojo.SubComment</class>
+    <class>com.social.pojo.UserSettings</class>
+    <class>com.social.pojo.Group1</class>
+    <class>com.social.pojo.Question</class>
+    <class>com.social.pojo.Community</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/saleapp"/>

@@ -14,6 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -31,16 +32,16 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author LENOVO
  */
 @Entity
-@Table(name = "comment")
+@Table(name = "post")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Comment.findAll", query = "SELECT c FROM Comment c"),
-    @NamedQuery(name = "Comment.findById", query = "SELECT c FROM Comment c WHERE c.id = :id"),
-    @NamedQuery(name = "Comment.findByContent", query = "SELECT c FROM Comment c WHERE c.content = :content"),
-    @NamedQuery(name = "Comment.findByCountAction", query = "SELECT c FROM Comment c WHERE c.countAction = :countAction"),
-    @NamedQuery(name = "Comment.findByCreatedDate", query = "SELECT c FROM Comment c WHERE c.createdDate = :createdDate"),
-    @NamedQuery(name = "Comment.findByModifiedDate", query = "SELECT c FROM Comment c WHERE c.modifiedDate = :modifiedDate")})
-public class Comment implements Serializable {
+    @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p"),
+    @NamedQuery(name = "Post.findById", query = "SELECT p FROM Post p WHERE p.id = :id"),
+    @NamedQuery(name = "Post.findByLockComment", query = "SELECT p FROM Post p WHERE p.lockComment = :lockComment"),
+    @NamedQuery(name = "Post.findByCountAction", query = "SELECT p FROM Post p WHERE p.countAction = :countAction"),
+    @NamedQuery(name = "Post.findByCreatedDate", query = "SELECT p FROM Post p WHERE p.createdDate = :createdDate"),
+    @NamedQuery(name = "Post.findByModifiedDate", query = "SELECT p FROM Post p WHERE p.modifiedDate = :modifiedDate")})
+public class Post implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -50,9 +51,12 @@ public class Comment implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Lob
+    @Size(min = 1, max = 65535)
     @Column(name = "content")
     private String content;
+    @Column(name = "lock_comment")
+    private Boolean lockComment;
     @Column(name = "count_action")
     private Integer countAction;
     @Column(name = "created_date")
@@ -61,35 +65,35 @@ public class Comment implements Serializable {
     @Column(name = "modified_date")
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedDate;
-    @OneToMany(mappedBy = "commentId")
-    private Set<SubComment> subCommentSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comment")
-    private Set<CommentAction> commentActionSet;
-    @OneToMany(mappedBy = "commentId")
-    private Set<Comment> commentSet;
-    @JoinColumn(name = "comment_id", referencedColumnName = "id")
-    @ManyToOne
-    private Comment commentId;
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Post postId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
+    private Set<Question> questionSet;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;
-    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
+    private Set<Comment> commentSet;
+    @OneToMany(mappedBy = "postId")
+    private Set<ImagePost> imagePostSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
+    private Set<PostReport> postReportSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private Set<PostAction> postActionSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
+    private Set<PostTag> postTagSet;
+
     {
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = LocalDateTime.now();
     }
 
-    public Comment() {
+    public Post() {
     }
 
-    public Comment(Integer id) {
+    public Post(Integer id) {
         this.id = id;
     }
 
-    public Comment(Integer id, String content) {
+    public Post(Integer id, String content) {
         this.id = id;
         this.content = content;
     }
@@ -108,6 +112,14 @@ public class Comment implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Boolean getLockComment() {
+        return lockComment;
+    }
+
+    public void setLockComment(Boolean lockComment) {
+        this.lockComment = lockComment;
     }
 
     public Integer getCountAction() {
@@ -135,21 +147,20 @@ public class Comment implements Serializable {
     }
 
     @XmlTransient
-    public Set<SubComment> getSubCommentSet() {
-        return subCommentSet;
+    public Set<Question> getQuestionSet() {
+        return questionSet;
     }
 
-    public void setSubCommentSet(Set<SubComment> subCommentSet) {
-        this.subCommentSet = subCommentSet;
+    public void setQuestionSet(Set<Question> questionSet) {
+        this.questionSet = questionSet;
     }
 
-    @XmlTransient
-    public Set<CommentAction> getCommentActionSet() {
-        return commentActionSet;
+    public User getUser() {
+        return user;
     }
 
-    public void setCommentActionSet(Set<CommentAction> commentActionSet) {
-        this.commentActionSet = commentActionSet;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @XmlTransient
@@ -161,28 +172,40 @@ public class Comment implements Serializable {
         this.commentSet = commentSet;
     }
 
-    public Comment getCommentId() {
-        return commentId;
+    @XmlTransient
+    public Set<ImagePost> getImagePostSet() {
+        return imagePostSet;
     }
 
-    public void setCommentId(Comment commentId) {
-        this.commentId = commentId;
+    public void setImagePostSet(Set<ImagePost> imagePostSet) {
+        this.imagePostSet = imagePostSet;
     }
 
-    public Post getPostId() {
-        return postId;
+    @XmlTransient
+    public Set<PostReport> getPostReportSet() {
+        return postReportSet;
     }
 
-    public void setPostId(Post postId) {
-        this.postId = postId;
+    public void setPostReportSet(Set<PostReport> postReportSet) {
+        this.postReportSet = postReportSet;
     }
 
-    public User getUser() {
-        return user;
+    @XmlTransient
+    public Set<PostAction> getPostActionSet() {
+        return postActionSet;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPostActionSet(Set<PostAction> postActionSet) {
+        this.postActionSet = postActionSet;
+    }
+
+    @XmlTransient
+    public Set<PostTag> getPostTagSet() {
+        return postTagSet;
+    }
+
+    public void setPostTagSet(Set<PostTag> postTagSet) {
+        this.postTagSet = postTagSet;
     }
 
     @Override
@@ -195,10 +218,10 @@ public class Comment implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Comment)) {
+        if (!(object instanceof Post)) {
             return false;
         }
-        Comment other = (Comment) object;
+        Post other = (Post) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -207,7 +230,7 @@ public class Comment implements Serializable {
 
     @Override
     public String toString() {
-        return "com.social.pojo.Comment[ id=" + id + " ]";
+        return "com.social.pojo.Post[ id=" + id + " ]";
     }
-    
+
 }

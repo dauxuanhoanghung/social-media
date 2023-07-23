@@ -5,12 +5,19 @@
 package com.social.repositories;
 
 import com.social.pojo.User;
+import java.util.Optional;
 
 /**
  *
  * @author DinhChuong
  */
 public interface UserRepository {
-    
+
     User getUserByUsername(String username);
+
+    Optional<User> getUserByAlumniId(String alumniId);
+
+    Optional<User> getUserByEmail(String email);
+
+    Optional<User> getUserBySlug(String slug);
 }

@@ -6,6 +6,7 @@ package com.social.repositories.impl;
 
 import com.social.pojo.User;
 import com.social.repositories.UserRepository;
+import java.util.Optional;
 import org.hibernate.Session;
 
 import org.hibernate.SessionFactory;
@@ -14,7 +15,6 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.Query;
-import java.util.List;
 
 /**
  *
@@ -22,22 +22,46 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class UserRepositoryImpl implements UserRepository{
-    @Autowired  
+public class UserRepositoryImpl implements UserRepository {
+
+    @Autowired
     private LocalSessionFactoryBean sessionFactory;
 
-    @Override
-    public User getUserByUsername(String username) {
-        Session session = getSession();
-        Query query = session.createQuery("FROM User WHERE username = :username");
-        query.setParameter("username", username);
-        return (User) query.getSingleResult();
-    }
-    
     private Session getSession() {
         SessionFactory sessionFactory = this.sessionFactory.getObject();
         Session session = sessionFactory.getCurrentSession();
         return session;
     }
-    
+
+    @Override
+    public User getUserByUsername(String username) {
+        Session session = getSession();
+        Query query = session.createNamedQuery("User.findByUsername", User.class);
+        query.setParameter("username", username);
+        return (User) query.getSingleResult();
+    }
+
+    @Override
+    public Optional<User> getUserByAlumniId(String alumniId) {
+        Session session = getSession();
+        Query query = session.createNamedQuery("User.findByAlumniId", User.class);
+        query.setParameter("alumniId", alumniId);
+        return Optional.ofNullable((User) query.getSingleResult());
+    }
+
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        Session session = getSession();
+        Query query = session.createNamedQuery("User.findByEmail", User.class);
+        query.setParameter("email", email);
+        return Optional.ofNullable((User) query.getSingleResult());
+    }
+
+    @Override
+    public Optional<User> getUserBySlug(String slug) {
+        Session session = getSession();
+        Query query = session.createNamedQuery("User.findBySlug", User.class);
+        query.setParameter("slug", slug);
+        return Optional.ofNullable((User) query.getSingleResult());
+    }
 }
