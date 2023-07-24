@@ -15,6 +15,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.Query;
+import org.hibernate.HibernateException;
 
 /**
  *
@@ -63,5 +64,38 @@ public class UserRepositoryImpl implements UserRepository {
         Query query = session.createNamedQuery("User.findBySlug", User.class);
         query.setParameter("slug", slug);
         return Optional.ofNullable((User) query.getSingleResult());
+    }
+
+    @Override
+    public User saveOrUpdateUser(User user) {
+        Session s = getSession();
+        try {
+            if (user.getId() == null) {
+                s.save(user);
+            } else {
+                s.update(user);
+            }
+
+            return user;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public boolean deleteUser(Integer id) {
+        Session session = getSession();
+        User user = session.get(User.class, id);
+        try {
+            if (user != null) {
+                session.delete(user);
+                return true;
+            }
+            return false;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            return false;
+        }
     }
 }

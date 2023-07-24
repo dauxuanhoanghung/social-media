@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package com.social.repositories;
 
 import com.social.pojo.Post;
@@ -20,4 +16,6 @@ public interface PostRepository {
     Optional<Post> getPostById(String id);
 
     Post saveOrUpdatePost(Post post);
+    
+    boolean deletePost(Integer id);
 }

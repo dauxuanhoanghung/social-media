@@ -8,6 +8,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -34,7 +36,7 @@ public class Choice implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
@@ -44,7 +46,7 @@ public class Choice implements Serializable {
     private String content;
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Question questionId;
+    private Question question;
 
     public Choice() {
     }
@@ -74,12 +76,12 @@ public class Choice implements Serializable {
         this.content = content;
     }
 
-    public Question getQuestionId() {
-        return questionId;
+    public Question getQuestion() {
+        return question;
     }
 
-    public void setQuestionId(Question questionId) {
-        this.questionId = questionId;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
     @Override
@@ -106,5 +108,5 @@ public class Choice implements Serializable {
     public String toString() {
         return "com.social.pojo.Choice[ id=" + id + " ]";
     }
-    
+
 }

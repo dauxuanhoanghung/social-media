@@ -1,8 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" data-bg-class="bg-menu-theme">
     <div class="app-brand demo">
-        <a href="index.html" class="app-brand-link">
+        <a href="<c:url value="/"/>" class="app-brand-link">
             <span class="app-brand-logo demo">
                 <svg width="25" viewBox="0 0 25 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <defs>
@@ -97,7 +98,7 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="pages-account-settings-account.html" class="menu-link">
+                    <a href="<c:url value="/account" />" class="menu-link">
                         <div data-i18n="Account">Account</div>
                     </a>
                 </li>
@@ -345,17 +346,19 @@
             </a>
         </li>
         <!-- Misc -->
-        <li class="menu-header small text-uppercase"><span class="menu-header-text">Misc</span></li>
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text"><spring:message code="view.layout.sidebar.statistic"/></span>
+        </li>
         <li class="menu-item">
-            <a href="https://github.com/themeselection/sneat-html-admin-template-free/issues" target="_blank" class="menu-link">
+            <a href="" target="_blank" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-support"></i>
-                <div data-i18n="Support">Support</div>
+                <div data-i18n="User"><spring:message code="view.layout.sidebar.statistic-user" /></div>
             </a>
         </li>
         <li class="menu-item">
-            <a href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/" target="_blank" class="menu-link">
+            <a href="" target="_blank" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
-                <div data-i18n="Documentation">Documentation</div>
+                <div data-i18n="Post"><spring:message code="view.layout.sidebar.statistic-post" /></div>
             </a>
         </li>
         <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
