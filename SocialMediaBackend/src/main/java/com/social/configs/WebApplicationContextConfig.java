@@ -4,6 +4,8 @@
  */
 package com.social.configs;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -45,24 +47,28 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
 //        resolver.setSuffix(".jsp");
 //        return resolver;
 //    }
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/vendor/**").addResourceLocations("/resources/vendor/");
         registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
         registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
 //        registry.addResourceHandler("/img/**").addResourceLocations("/resources/img/");
-        
+
         registry.addResourceHandler("/swagger-ui/**")
-                    .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
-                    .resourceChain(false);
+                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
+                .resourceChain(false);
     }
-    
+
     //multipart file
     @Bean
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver resolver = new CommonsMultipartResolver();
         resolver.setDefaultEncoding("UTF-8");
         return resolver;
+    }
+
+    @Bean
+    public DateTimeFormatter getDateTimeFormatter() {
+        return DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
     }
 }

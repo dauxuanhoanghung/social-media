@@ -20,4 +20,6 @@ public interface PostRepository {
     Optional<Post> getPostById(String id);
 
     Post saveOrUpdatePost(Post post);
+    
+    boolean deletePost(Integer id);
 }
