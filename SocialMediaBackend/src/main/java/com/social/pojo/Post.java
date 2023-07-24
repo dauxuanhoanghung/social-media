@@ -6,7 +6,6 @@ package com.social.pojo;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -22,8 +21,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -62,13 +59,11 @@ public class Post implements Serializable {
     @Column(name = "count_action")
     private Integer countAction;
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdDate;
     @Column(name = "modified_date")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
-    private Set<Question> questionSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private Set<Question> questions;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;
@@ -149,12 +144,12 @@ public class Post implements Serializable {
     }
 
     @XmlTransient
-    public Set<Question> getQuestionSet() {
-        return questionSet;
+    public Set<Question> getQuestions() {
+        return questions;
     }
 
-    public void setQuestionSet(Set<Question> questionSet) {
-        this.questionSet = questionSet;
+    public void setQuestions(Set<Question> questions) {
+        this.questions = questions;
     }
 
     public User getUser() {

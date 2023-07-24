@@ -56,7 +56,7 @@
                     <li>
                         <a class="dropdown-item" href="#">
                             <i class="bx bx-cog me-2"></i>
-                            <span class="align-middle">Settings</span>
+                            <span class="align-middle"><spring:message code="view.layout.header.settings" /></span>
                         </a>
                     </li>
                     <li>

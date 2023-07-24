@@ -50,7 +50,6 @@ public class Community implements Serializable {
     @Column(name = "name")
     private String name;
     @Column(name = "created_date")
-    @Temporal(TemporalType.DATE)
     private Date createdDate;
     @Column(name = "count_member")
     private Integer countMember;

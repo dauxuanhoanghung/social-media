@@ -5,7 +5,9 @@
 package com.social.configs;
 
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +17,6 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 /**
  *
@@ -24,6 +24,7 @@ import org.springframework.web.servlet.view.JstlView;
  */
 @Configuration
 @EnableWebMvc
+@EnableCaching
 @EnableTransactionManagement
 @ComponentScan(basePackages = {
     "com.social"
@@ -47,6 +48,7 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
 //        resolver.setSuffix(".jsp");
 //        return resolver;
 //    }
+    
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/vendor/**").addResourceLocations("/resources/vendor/");
@@ -70,5 +72,10 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
     @Bean
     public DateTimeFormatter getDateTimeFormatter() {
         return DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    }
+    
+    @Bean
+    public CacheManager cacheManager() {
+        return new ConcurrentMapCacheManager("actions", "tags");
     }
 }

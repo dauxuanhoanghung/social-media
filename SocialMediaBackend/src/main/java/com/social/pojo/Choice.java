@@ -46,7 +46,7 @@ public class Choice implements Serializable {
     private String content;
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Question questionId;
+    private Question question;
 
     public Choice() {
     }
@@ -76,12 +76,12 @@ public class Choice implements Serializable {
         this.content = content;
     }
 
-    public Question getQuestionId() {
-        return questionId;
+    public Question getQuestion() {
+        return question;
     }
 
-    public void setQuestionId(Question questionId) {
-        this.questionId = questionId;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
     @Override

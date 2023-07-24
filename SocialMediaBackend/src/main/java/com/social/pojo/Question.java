@@ -4,12 +4,15 @@
  */
 package com.social.pojo;
 
+import com.social.enums.QuestionType;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -52,15 +55,16 @@ public class Question implements Serializable {
     private String content;
     @Basic(optional = false)
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "question_type")
-    private int questionType;
+    private QuestionType questionType;
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Post postId;
+    private Post post;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "questionId")
     private Set<SurveyResult> surveyResultSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "questionId")
-    private Set<Choice> choiceSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
+    private Set<Choice> choices;
 
     public Question() {
     }
@@ -69,7 +73,7 @@ public class Question implements Serializable {
         this.id = id;
     }
 
-    public Question(Integer id, String content, int questionType) {
+    public Question(Integer id, String content, QuestionType questionType) {
         this.id = id;
         this.content = content;
         this.questionType = questionType;
@@ -91,20 +95,20 @@ public class Question implements Serializable {
         this.content = content;
     }
 
-    public int getQuestionType() {
+    public QuestionType getQuestionType() {
         return questionType;
     }
 
-    public void setQuestionType(int questionType) {
+    public void setQuestionType(QuestionType questionType) {
         this.questionType = questionType;
     }
 
-    public Post getPostId() {
-        return postId;
+    public Post getPost() {
+        return post;
     }
 
-    public void setPostId(Post postId) {
-        this.postId = postId;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     @XmlTransient
@@ -117,12 +121,12 @@ public class Question implements Serializable {
     }
 
     @XmlTransient
-    public Set<Choice> getChoiceSet() {
-        return choiceSet;
+    public Set<Choice> getChoices() {
+        return choices;
     }
 
-    public void setChoiceSet(Set<Choice> choiceSet) {
-        this.choiceSet = choiceSet;
+    public void setChoices(Set<Choice> choices) {
+        this.choices = choices;
     }
 
     @Override
@@ -149,5 +153,5 @@ public class Question implements Serializable {
     public String toString() {
         return "com.social.pojo.Question[ id=" + id + " ]";
     }
-    
+
 }

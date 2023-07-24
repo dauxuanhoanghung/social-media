@@ -6,7 +6,6 @@ package com.social.pojo;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -21,8 +20,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -58,20 +55,13 @@ public class Comment implements Serializable {
     @Column(name = "count_action")
     private Integer countAction;
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdDate;
     @Column(name = "modified_date")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedDate;
-    @OneToMany(mappedBy = "commentId")
-    private Set<SubComment> subCommentSet;
+    @OneToMany(mappedBy = "comment")
+    private Set<SubComment> subComments;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "comment")
     private Set<CommentAction> commentActionSet;
-    @OneToMany(mappedBy = "commentId")
-    private Set<Comment> commentSet;
-    @JoinColumn(name = "comment_id", referencedColumnName = "id")
-    @ManyToOne
-    private Comment commentId;
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Post postId;
@@ -137,12 +127,12 @@ public class Comment implements Serializable {
     }
 
     @XmlTransient
-    public Set<SubComment> getSubCommentSet() {
-        return subCommentSet;
+    public Set<SubComment> getSubComments() {
+        return subComments;
     }
 
-    public void setSubCommentSet(Set<SubComment> subCommentSet) {
-        this.subCommentSet = subCommentSet;
+    public void setSubComments(Set<SubComment> subComments) {
+        this.subComments = subComments;
     }
 
     @XmlTransient
@@ -152,23 +142,6 @@ public class Comment implements Serializable {
 
     public void setCommentActionSet(Set<CommentAction> commentActionSet) {
         this.commentActionSet = commentActionSet;
-    }
-
-    @XmlTransient
-    public Set<Comment> getCommentSet() {
-        return commentSet;
-    }
-
-    public void setCommentSet(Set<Comment> commentSet) {
-        this.commentSet = commentSet;
-    }
-
-    public Comment getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(Comment commentId) {
-        this.commentId = commentId;
     }
 
     public Post getPostId() {
