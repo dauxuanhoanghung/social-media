@@ -83,7 +83,6 @@ public class User implements Serializable {
     @Size(max = 255)
     @Column(name = "email")
     private String email;
-    @Size(max = 255)
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private UserStatus status;

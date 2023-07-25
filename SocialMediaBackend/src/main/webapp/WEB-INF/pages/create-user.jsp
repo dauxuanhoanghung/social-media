@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">User /</span> Create</h4>
 
 <div class="card">
@@ -16,7 +17,16 @@
             <div class="col-xxl">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <form action="<c:url value="/admin/user/create" />" method="POST">
+                        <c:url value="/admin/user/create" var="action" />
+                        <a href="${action}">Link</a>
+                        <form:form action="${action}" method="post" modelAttribute="user" enctype="multipart/form-data">
+                            <form:hidden path="id" />
+                            <form:hidden path="alumniId" />
+                            <form:hidden path="password" value="ou@123" />
+                            
+                            <form:hidden path="slug" />
+                            <form:hidden path="status" value="${status[0]}"/>
+
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">
                                     <spring:message code="view.pages.create-user.username" />
@@ -26,29 +36,39 @@
                                         <span id="basic-icon-default-fullname2" class="input-group-text">
                                             <i class="bx bx-user"></i>
                                         </span>
-                                        <input
+                                        <spring:message code="view.pages.create-user.username" var="usernamePlacholder"/>
+                                        <form:input
                                             type="text"
                                             class="form-control"
                                             id="basic-icon-default-fullname"
-                                            placeholder="<spring:message code="view.pages.create-user.username" />"
+                                            placeholder="${usernamePlacholder}"
+                                            path="username"
                                             aria-label="John Doe"
                                             aria-describedby="basic-icon-default-fullname2"
+                                            value="chuongdinh"
                                             />
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="basic-icon-default-email"><spring:message code="view.pages.create-user.email" /></label>
+                                <label class="col-sm-2 col-form-label" for="basic-icon-default-email">
+                                    <spring:message code="view.pages.create-user.email" />
+                                </label>
                                 <div class="col-sm-10">
                                     <div class="input-group input-group-merge">
-                                        <span class="input-group-text"><i class="bx bx-envelope"></i></span>
-                                        <input
+                                        <span class="input-group-text">
+                                            <i class="bx bx-envelope"></i>
+                                        </span>
+                                        <spring:message code="view.pages.create-user.email" var="emailPlaceholder"/>
+                                        <form:input
                                             type="text"
                                             id="basic-icon-default-email"
                                             class="form-control"
-                                            placeholder="<spring:message code="view.pages.create-user.email" />"
+                                            path="email"
+                                            placeholder="${emailPlaceholder}"
                                             aria-label="john.doe"
                                             aria-describedby="basic-icon-default-email2"
+                                            value="chuongdinh2202@gmail.com"
                                             />
                                     </div>
                                 </div>
@@ -62,33 +82,37 @@
                                         <span id="basic-icon-default-phone2" class="input-group-text"
                                               ><i class="icon bx bx-user-circle"></i
                                             ></span>
-                                        <input
-                                            type="text"
-                                            id="basic-icon-default-phone"
-                                            class="form-control phone-mask"
-                                            placeholder="<spring:message code="view.pages.create-user.display-name" />"
-                                            aria-label="658 799 8941"
-                                            aria-describedby="basic-icon-default-phone2"
-                                            />
+                                            <spring:message code="view.pages.create-user.display-name" var="displayNamePlaceholder" />
+                                            <form:input
+                                                type="text"
+                                                id="basic-icon-default-phone"
+                                                class="form-control phone-mask"
+                                                path="displayName"
+                                                placeholder="${displayNamePlaceholder}"
+                                                aria-label="658 799 8941"
+                                                aria-describedby="basic-icon-default-phone2"
+                                                value="Chương giáo sư"
+                                                />
                                     </div>
                                     <div class="form-text">You can use letters, numbers & periods</div>
                                 </div>
                             </div>
+
                             <div class="row mb-3">
-                                <label class="col-sm-2 form-label" for="basic-icon-default-message">Message</label>
+                                <label class="col-sm-2 form-label" for="basic-icon-default-message">Role</label>
                                 <div class="col-sm-10">
-                                    <div class="input-group input-group-merge">
-                                        <span id="basic-icon-default-message2" class="input-group-text"
-                                              ><i class="bx bx-comment"></i
-                                            ></span>
-                                        <textarea
-                                            id="basic-icon-default-message"
-                                            class="form-control"
-                                            placeholder="Hi, Do you have a moment to talk Joe?"
-                                            aria-label="Hi, Do you have a moment to talk Joe?"
-                                            aria-describedby="basic-icon-default-message2"
-                                            ></textarea>
-                                    </div>
+                                    <form:select class="form-select" id="role" name="role" path="role">
+                                        <c:forEach items="${roles}" var="role">
+                                            <c:choose>
+                                                <c:when test="${user.role.id eq role.id}">
+                                                    <option value="${role.id}" selected>${role.name}</option>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <option value="${role.id}">${role.name}</option>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:forEach>
+                                    </form:select>
                                 </div>
                             </div>
                             <div class="row justify-content-end">
@@ -98,7 +122,7 @@
                                     </button>
                                 </div>
                             </div>
-                        </form>
+                        </form:form>
                     </div>
                 </div>
             </div>

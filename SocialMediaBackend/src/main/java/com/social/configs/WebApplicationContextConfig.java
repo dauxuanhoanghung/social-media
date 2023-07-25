@@ -4,6 +4,7 @@
  */
 package com.social.configs;
 
+import com.social.formatters.RoleFormatter;
 import java.time.format.DateTimeFormatter;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.CacheManager;
@@ -12,6 +13,7 @@ import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -84,4 +86,11 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new RoleFormatter());
+    }
+    
+    
 }

@@ -5,6 +5,7 @@
 package com.social.controllers;
 
 import com.social.dto.request.UserRegisterDTO;
+import com.social.enums.UserStatus;
 import com.social.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ public class UserController {
     @ModelAttribute
     public void commonAttributesUser(Model model) {
         model.addAttribute("roles", this.userService.getAllRoles());
+        model.addAttribute("status", UserStatus.values());
     }
 
     @GetMapping
@@ -42,7 +44,10 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String createUser() {
-        return "user";
+    public String createUser(@ModelAttribute(value = "user") UserRegisterDTO user) {
+        user.setStatus(UserStatus.valueOf(user.getStatus().toString()));
+        System.out.println("com.social.controllers.UserController.createUser(): " + user);
+        this.userService.saveOrUpdateUser(user);
+        return "redirect:/admin/user";
     }
 }

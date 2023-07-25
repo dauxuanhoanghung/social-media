@@ -1,6 +1,7 @@
 package com.social.services.impl;
 
 import com.social.dto.UserDTO;
+import com.social.dto.request.UserRegisterDTO;
 import com.social.pojo.Role;
 import com.social.pojo.User;
 import com.social.repositories.RoleRepository;
@@ -9,11 +10,13 @@ import com.social.services.UserService;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +33,12 @@ public class UserSeviceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public User getUserByUsername(String username) {
@@ -65,9 +74,19 @@ public class UserSeviceImpl implements UserService {
 
     @Override
     public User saveOrUpdateUser(UserDTO user) {
+        
         return null;
 //        return this.userRepository.saveOrUpdateUser(user);
     }
+    
+    @Override
+    public User saveOrUpdateUser(UserRegisterDTO user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User entity = modelMapper.map(user, User.class);
+        System.out.println("com.social.services.impl.UserSeviceImpl.saveOrUpdateUser()");
+        return this.userRepository.saveOrUpdateUser(entity);
+//        return this.userRepository.saveOrUpdateUser(user);
+            }
 
     @Override
     public boolean deleteUser(Integer id) {

@@ -67,8 +67,10 @@ public class UserRepositoryImpl implements UserRepository {
         Session s = getSession();
         try {
             if (user.getId() == null) {
+                System.out.println("com.social.repositories.impl.UserRepositoryImpl.saveUser()");
                 s.save(user);
             } else {
+                System.out.println("com.social.repositories.impl.UserRepositoryImpl.UpdateUser()");
                 s.update(user);
             }
 
