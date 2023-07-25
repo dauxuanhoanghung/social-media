@@ -1,7 +1,9 @@
 package com.social.repositories;
 
 import com.social.pojo.Comment;
+import com.social.pojo.CommentAction;
 import com.social.pojo.SubComment;
+import com.social.pojo.SubCommentAction;
 
 /**
  *
@@ -9,6 +11,8 @@ import com.social.pojo.SubComment;
  */
 public interface CommentRepository {
     
-    Comment saveOrUpdate(Comment comment);
-    SubComment saveOrUpdateSubComment(SubComment subComment, Comment comment);
+    Comment saveOrUpdateComment(Comment comment);
+    CommentAction saveOrUpdateCommentAction(CommentAction commentAction);
+    SubComment saveOrUpdateSubComment(SubComment subComment);
+    SubCommentAction saveOrUpdateSubCommentAction(SubCommentAction subCommentAction);
 }

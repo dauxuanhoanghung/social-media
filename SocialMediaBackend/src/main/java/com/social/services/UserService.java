@@ -1,16 +1,28 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.social.services;
 
+import com.social.dto.UserDTO;
+import com.social.pojo.Role;
 import com.social.pojo.User;
+import java.util.List;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  *
  * @author DinhChuong
  */
-public interface UserService extends UserDetailsService{
-     User getUserByUsername(String username);
+public interface UserService extends UserDetailsService {
+    
+    List<Role> getAllRoles();
+
+    User getUserByUsername(String username);
+
+    User getUserByAlumniId(String alumniId);
+
+    User getUserByEmail(String email);
+
+    User getUserBySlug(String slug);
+
+    User saveOrUpdateUser(UserDTO user);
+
+    boolean deleteUser(Integer id);
 }

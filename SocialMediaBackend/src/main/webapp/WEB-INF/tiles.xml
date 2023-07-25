@@ -12,7 +12,10 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="content" value="" />
         <put-attribute name="footer" value="/WEB-INF/layout/footer.jsp" />
         <put-attribute name="js" value="/WEB-INF/layout/js.jsp" />
-
+    </definition>
+    <definition name="login" extends="baseLayout">
+        <put-attribute name="title" value="Authentication" />
+        <put-attribute name="content" value="/WEB-INF/pages/login.jsp" />
     </definition>
     <definition name="home" extends="baseLayout">
         <put-attribute name="title" value="Dashboard Admin - Home Page" />
@@ -22,8 +25,12 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Dashboard Admin - Account Settings" />
         <put-attribute name="content" value="/WEB-INF/pages/account.jsp" />
     </definition>
-    <definition name="login" extends="baseLayout">
+    <definition name="user" extends="baseLayout">
         <put-attribute name="title" value="Authentication" />
-        <put-attribute name="content" value="/WEB-INF/pages/login.jsp" />
+        <put-attribute name="content" value="/WEB-INF/pages/user.jsp" />
+    </definition>
+    <definition name="create-user" extends="baseLayout">
+        <put-attribute name="title" value="Authentication" />
+        <put-attribute name="content" value="/WEB-INF/pages/create-user.jsp" />
     </definition>
 </tiles-definitions>

@@ -5,6 +5,7 @@
 package com.social.configs;
 
 import java.time.format.DateTimeFormatter;
+import org.modelmapper.ModelMapper;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
@@ -77,5 +78,10 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
     @Bean
     public CacheManager cacheManager() {
         return new ConcurrentMapCacheManager("actions", "tags");
+    }
+    
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }
