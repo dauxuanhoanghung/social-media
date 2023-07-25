@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.social.repositories.impl;
 
 import com.social.pojo.User;
@@ -71,8 +67,10 @@ public class UserRepositoryImpl implements UserRepository {
         Session s = getSession();
         try {
             if (user.getId() == null) {
+                System.out.println("com.social.repositories.impl.UserRepositoryImpl.saveUser()");
                 s.save(user);
             } else {
+                System.out.println("com.social.repositories.impl.UserRepositoryImpl.UpdateUser()");
                 s.update(user);
             }
 

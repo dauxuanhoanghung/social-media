@@ -4,6 +4,7 @@
  */
 package com.social.pojo;
 
+import com.social.enums.UserStatus;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -11,6 +12,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -80,9 +83,9 @@ public class User implements Serializable {
     @Size(max = 255)
     @Column(name = "email")
     private String email;
-    @Size(max = 255)
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private UserStatus status;
     @Size(max = 255)
     @Column(name = "user_type")
     private String userType;
@@ -203,11 +206,11 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getStatus() {
+    public UserStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(UserStatus status) {
         this.status = status;
     }
 

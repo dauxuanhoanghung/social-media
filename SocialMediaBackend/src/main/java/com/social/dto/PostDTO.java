@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.social.dto;
 
 import com.social.pojo.User;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,4 +23,5 @@ public class PostDTO {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private User user;
+    private List<String> images;
 }
