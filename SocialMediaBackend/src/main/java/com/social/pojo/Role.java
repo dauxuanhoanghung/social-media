@@ -43,8 +43,8 @@ public class Role implements Serializable {
     @Size(max = 20)
     @Column(name = "name")
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
-    private Set<User> users;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "role")
+//    private Set<User> users;
 
     public Role() {
     }
@@ -69,14 +69,14 @@ public class Role implements Serializable {
         this.name = name;
     }
 
-    @XmlTransient
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
+//    @XmlTransient
+//    public Set<User> getUsers() {
+//        return users;
+//    }
+//
+//    public void setUsers(Set<User> users) {
+//        this.users = users;
+//    }
 
     @Override
     public int hashCode() {
