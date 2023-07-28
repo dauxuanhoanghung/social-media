@@ -1,6 +1,8 @@
 package com.social.repositories;
 
 import com.social.pojo.User;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -8,6 +10,8 @@ import java.util.Optional;
  * @author DinhChuong
  */
 public interface UserRepository {
+    
+    List<User> getUsers(Map<String, String> params);
 
     User getUserByUsername(String username);
 

@@ -10,6 +10,7 @@ import com.social.repositories.UserRepository;
 import com.social.services.UserService;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,11 @@ public class UserSeviceImpl implements UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Override
+    public List<User> getUsers(Map<String, String> params) {
+        return this.userRepository.getUsers(params);
+    }
 
     @Override
     public User getUserByUsername(String username) {

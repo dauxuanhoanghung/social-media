@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="table-responsive text-nowrap" style="min-height: 70vh">
-        <c:if test="${users}">
+        <c:if test="${users != null}">
             <table class="table">
                 <caption class="ms-4">
                     <spring:message code="view.pages.user.table-title" />
@@ -29,7 +29,7 @@
                 </thead>
                 <tbody>
 
-                    <c:forEach var="user" items="users">
+                    <c:forEach var="user" items="${users}">
                         <tr>
                             <td>
                                 <i class="fab fa-bootstrap fa-lg text-primary me-3"></i> <strong>${user.id}</strong>

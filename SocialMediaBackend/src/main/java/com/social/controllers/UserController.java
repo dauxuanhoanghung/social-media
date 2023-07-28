@@ -7,6 +7,7 @@ package com.social.controllers;
 import com.social.dto.request.UserRegisterDTO;
 import com.social.enums.UserStatus;
 import com.social.services.UserService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -33,7 +35,8 @@ public class UserController {
     }
 
     @GetMapping
-    public String get() {
+    public String get(Model model, @RequestParam Map<String, String> params) {
+        model.addAttribute("users", userService.getUsers(params));
         return "user";
     }
 
@@ -46,7 +49,6 @@ public class UserController {
     @PostMapping("/create")
     public String createUser(@ModelAttribute(value = "user") UserRegisterDTO user) {
         user.setStatus(UserStatus.valueOf(user.getStatus().toString()));
-        System.out.println("com.social.controllers.UserController.createUser(): " + user);
         this.userService.saveOrUpdateUser(user);
         return "redirect:/admin/user";
     }

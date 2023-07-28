@@ -5,6 +5,7 @@ import com.social.dto.request.UserRegisterDTO;
 import com.social.pojo.Role;
 import com.social.pojo.User;
 import java.util.List;
+import java.util.Map;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -14,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService extends UserDetailsService {
 
     List<Role> getAllRoles();
+    
+    List<User> getUsers(Map<String, String> params);
 
     User getUserByUsername(String username);
 
