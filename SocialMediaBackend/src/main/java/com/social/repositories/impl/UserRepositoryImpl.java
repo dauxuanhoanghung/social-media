@@ -57,6 +57,10 @@ public class UserRepositoryImpl implements UserRepository {
             if (kw != null && !kw.isEmpty()) {
                 predicates.add(b.like(root.get("name"), String.format("%%%s%%", kw)));
             }
+            String roleId = params.get("roleId");
+            if (roleId != null && !roleId.isEmpty()) {
+                predicates.add(b.equal(root.get("role"), Integer.valueOf(roleId)));
+            }
 
             q.where(predicates.toArray(Predicate[]::new));
         }
@@ -77,6 +81,13 @@ public class UserRepositoryImpl implements UserRepository {
         }
 
         return query.getResultList();
+    }
+
+    @Override
+    public User getUserById(int id) {
+        Session s = getSession();
+        return s.get(User.class, id);
+
     }
 
     @Override

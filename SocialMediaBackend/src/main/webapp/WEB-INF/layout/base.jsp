@@ -104,5 +104,6 @@
             // Start checking the loading status when the page has finished loading
             window.addEventListener("load", checkLoadingStatus);
         </script>
+        
     </body>
 </html>

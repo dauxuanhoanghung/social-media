@@ -15,8 +15,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService extends UserDetailsService {
 
     List<Role> getAllRoles();
-    
+
     List<User> getUsers(Map<String, String> params);
+
+    User getUserById(int id);
 
     User getUserByUsername(String username);
 
@@ -25,6 +27,8 @@ public interface UserService extends UserDetailsService {
     User getUserByEmail(String email);
 
     User getUserBySlug(String slug);
+
+    User saveOrUpdateUser(User user);
 
     User saveOrUpdateUser(UserDTO user);
 

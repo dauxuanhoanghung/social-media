@@ -1,5 +1,6 @@
 package com.social.repositories.impl;
 
+import com.social.pojo.Role;
 import com.social.pojo.User;
 import com.social.repositories.StatsRepository;
 import java.time.LocalDateTime;
@@ -10,6 +11,8 @@ import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -39,14 +42,20 @@ public class StatsRepositoryImpl implements StatsRepository {
     }
 
     @Override
-    public List<Object[]> countUsers(Map<String, String> params) {
+    public List<Object[]> countNewUsers(Map<String, String> params) {
         Session session = getSession();
 
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
 
         Root<User> userRoot = criteriaQuery.from(User.class);
+        Join<Role, User> roleJoin = userRoot.join("role", JoinType.LEFT); 
 
+        criteriaQuery.multiselect(
+                roleJoin.get("id"),
+                roleJoin.get("name"),
+                criteriaBuilder.count(userRoot.get("id"))
+        );
         List<Predicate> predicates = new ArrayList<>();
 
         if (params != null) {
@@ -60,9 +69,16 @@ public class StatsRepositoryImpl implements StatsRepository {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(userRoot.get("createdDate"),
                         LocalDateTime.parse(toDate, dateTimeFormatter)));
             }
+
+            String roleId = params.get("roleId");
+            if (roleId != null && !roleId.isEmpty()) {
+                predicates.add(criteriaBuilder.equal(userRoot.get("role"),
+                        Integer.valueOf(roleId)));
+            }
+
+            criteriaQuery.where(predicates.toArray(Predicate[]::new));
         }
-        
-        criteriaQuery.where(predicates.toArray(Predicate[]::new));
+        criteriaQuery.groupBy(roleJoin.get("id"), roleJoin.get("name"));
         Query query = session.createQuery(criteriaQuery);
         return query.getResultList();
     }

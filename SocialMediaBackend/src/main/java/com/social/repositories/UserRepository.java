@@ -10,8 +10,10 @@ import java.util.Optional;
  * @author DinhChuong
  */
 public interface UserRepository {
-    
+
     List<User> getUsers(Map<String, String> params);
+
+    User getUserById(int id);
 
     User getUserByUsername(String username);
 
@@ -20,8 +22,8 @@ public interface UserRepository {
     Optional<User> getUserByEmail(String email);
 
     Optional<User> getUserBySlug(String slug);
-    
-    User saveOrUpdateUser(User user); 
-    
+
+    User saveOrUpdateUser(User user);
+
     boolean deleteUser(Integer id);
 }

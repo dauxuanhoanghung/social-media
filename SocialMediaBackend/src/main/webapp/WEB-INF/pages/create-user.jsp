@@ -18,12 +18,10 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <c:url value="/admin/user/create" var="action" />
-                        <a href="${action}">Link</a>
                         <form:form action="${action}" method="post" modelAttribute="user" enctype="multipart/form-data">
                             <form:hidden path="id" />
                             <form:hidden path="alumniId" />
                             <form:hidden path="password" value="ou@123" />
-                            
                             <form:hidden path="slug" />
                             <form:hidden path="status" value="${status[0]}"/>
                             
