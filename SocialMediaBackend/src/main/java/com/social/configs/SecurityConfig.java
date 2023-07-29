@@ -51,8 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationFilter jwtRequestFilter;
-    
-    
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -69,17 +67,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] AUTH_BLACKLIST = {
         "/api/**" // Các route không yêu cầu xác thực
     };
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+    @Override
     protected void configure(HttpSecurity http)
             throws Exception {
-         http.formLogin().loginPage("/login")
+        http.formLogin().loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password");
-        http.formLogin().successHandler(this.loginHandler).failureUrl("/login?error").defaultSuccessUrl("/");
+        http.formLogin()
+                .successHandler(this.loginHandler)
+                .failureUrl("/login?error")
+                .defaultSuccessUrl("/");
 
         http.logout().addLogoutHandler(this.logoutHandler);
 
@@ -87,13 +91,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/login?accessDenied");
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(AUTH_BLACKLIST).authenticated()
+                .antMatchers(AUTH_BLACKLIST).permitAll()
                 .anyRequest().permitAll()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS.STATELESS);
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
-    
 
 }

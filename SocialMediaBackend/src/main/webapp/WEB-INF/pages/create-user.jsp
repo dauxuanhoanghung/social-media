@@ -26,7 +26,7 @@
                             
                             <form:hidden path="slug" />
                             <form:hidden path="status" value="${status[0]}"/>
-
+                            
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">
                                     <spring:message code="view.pages.create-user.username" />

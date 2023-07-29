@@ -41,6 +41,7 @@ public class InternatinonalConfig implements WebMvcConfigurer {
         // Ví dụ: i18n/messages_en.properties
         messageResource.setBasenames("messages/messages");
         messageResource.setDefaultEncoding("UTF-8");
+        messageResource.setUseCodeAsDefaultMessage(true);
         return messageResource;
     }
 

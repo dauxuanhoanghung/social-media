@@ -87,19 +87,12 @@ public class User implements Serializable {
     @Column(name = "status")
     private UserStatus status;
     @Size(max = 255)
-    @Column(name = "user_type")
-    private String userType;
-    @Size(max = 255)
     @Column(name = "slug")
     private String slug;
     @Column(name = "created_date")
     private LocalDateTime createdDate;
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user1Id")
-    private Set<Friendship> friendshipSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user2Id")
-    private Set<Friendship> friendshipSet1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private Set<SurveyResult> surveyResultSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "founderId")
@@ -111,13 +104,7 @@ public class User implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<SubComment> subComments;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<CommentAction> commentActions;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Comment> comments;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<SubCommentAction> subCommentActions;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userReportId")
-    private Set<PostReport> postReportSet;
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Role role;
@@ -214,14 +201,6 @@ public class User implements Serializable {
         this.status = status;
     }
 
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
-
     public String getSlug() {
         return slug;
     }
@@ -244,24 +223,6 @@ public class User implements Serializable {
 
     public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
-    }
-
-    @XmlTransient
-    public Set<Friendship> getFriendshipSet() {
-        return friendshipSet;
-    }
-
-    public void setFriendshipSet(Set<Friendship> friendshipSet) {
-        this.friendshipSet = friendshipSet;
-    }
-
-    @XmlTransient
-    public Set<Friendship> getFriendshipSet1() {
-        return friendshipSet1;
-    }
-
-    public void setFriendshipSet1(Set<Friendship> friendshipSet1) {
-        this.friendshipSet1 = friendshipSet1;
     }
 
     @XmlTransient
@@ -310,39 +271,12 @@ public class User implements Serializable {
     }
 
     @XmlTransient
-    public Set<CommentAction> getCommentActions() {
-        return commentActions;
-    }
-
-    public void setCommentActions(Set<CommentAction> commentActions) {
-        this.commentActions = commentActions;
-    }
-
-    @XmlTransient
     public Set<Comment> getComments() {
         return comments;
     }
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
-    }
-
-    @XmlTransient
-    public Set<SubCommentAction> getSubCommentActions() {
-        return subCommentActions;
-    }
-
-    public void setSubCommentActions(Set<SubCommentAction> subCommentActions) {
-        this.subCommentActions = subCommentActions;
-    }
-
-    @XmlTransient
-    public Set<PostReport> getPostReportSet() {
-        return postReportSet;
-    }
-
-    public void setPostReportSet(Set<PostReport> postReportSet) {
-        this.postReportSet = postReportSet;
     }
 
     public Role getRole() {

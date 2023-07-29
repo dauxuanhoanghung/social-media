@@ -6,6 +6,7 @@ package com.social.configs;
 
 import com.social.formatters.RoleFormatter;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -14,6 +15,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -92,5 +96,10 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
         registry.addFormatter(new RoleFormatter());
     }
     
-    
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+        // Configure the builder with any additional settings, if needed
+        converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
+    }
 }
