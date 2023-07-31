@@ -2,7 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">User /</span> Create</h4>
+<h4 class="fw-bold py-3 mb-4">
+    <span class="text-muted fw-light">
+        <spring:message code="view.pages.create-user.user" /> /
+    </span> 
+    <spring:message code="view.pages.create-user.create" />
+</h4>
 
 <div class="card">
     <div class="card-header d-flex justify-content-between">
@@ -18,15 +23,14 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <c:url value="/admin/user/create" var="action" />
-                        <a href="${action}">Link</a>
                         <form:form action="${action}" method="post" modelAttribute="user" enctype="multipart/form-data">
+                            <form:errors path="*" element="div" cssClass="alert alert-danger" />
                             <form:hidden path="id" />
                             <form:hidden path="alumniId" />
                             <form:hidden path="password" value="ou@123" />
-                            
                             <form:hidden path="slug" />
                             <form:hidden path="status" value="${status[0]}"/>
-                            
+
                             <div class="row mb-3">
                                 <label class="col-sm-2 col-form-label" for="basic-icon-default-fullname">
                                     <spring:message code="view.pages.create-user.username" />
@@ -45,9 +49,9 @@
                                             path="username"
                                             aria-label="John Doe"
                                             aria-describedby="basic-icon-default-fullname2"
-                                            value="chuongdinh"
                                             />
                                     </div>
+                                    <div class="form-text"><form:errors path="username" cssClass="text-danger"/></div>
                                 </div>
                             </div>
                             <div class="row mb-3">
@@ -68,10 +72,10 @@
                                             placeholder="${emailPlaceholder}"
                                             aria-label="john.doe"
                                             aria-describedby="basic-icon-default-email2"
-                                            value="chuongdinh2202@gmail.com"
                                             />
                                     </div>
-                                </div>
+                                    <div class="form-text"><form:errors path="email" cssClass="text-danger"/></div>
+                                </div>    
                             </div>
                             <div class="row mb-3">
                                 <label class="col-sm-2 form-label" for="basic-icon-default-phone">
@@ -91,15 +95,18 @@
                                                 placeholder="${displayNamePlaceholder}"
                                                 aria-label="658 799 8941"
                                                 aria-describedby="basic-icon-default-phone2"
-                                                value="Chương giáo sư"
                                                 />
                                     </div>
-                                    <div class="form-text">You can use letters, numbers & periods</div>
+                                    <div class="form-text">
+                                        <form:errors path="displayName" cssClass="text-danger"/>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-2 form-label" for="basic-icon-default-message">Role</label>
+                                <label class="col-sm-2 form-label" for="basic-icon-default-message">
+                                    <spring:message code="view.pages.create-user.role" />
+                                </label>
                                 <div class="col-sm-10">
                                     <form:select class="form-select" id="role" name="role" path="role">
                                         <c:forEach items="${roles}" var="role">
@@ -107,13 +114,14 @@
                                                 <c:when test="${user.role.id eq role.id}">
                                                     <option value="${role.id}" selected>${role.name}</option>
                                                 </c:when>
-                                                <c:otherwise>
+                                                <c:when test="${user.role.id != role.id}">
                                                     <option value="${role.id}">${role.name}</option>
-                                                </c:otherwise>
+                                                </c:when>
                                             </c:choose>
                                         </c:forEach>
                                     </form:select>
-                                </div>
+                                </div>                                        
+                                <form:errors path="role" cssClass="text-danger"/>
                             </div>
                             <div class="row justify-content-end">
                                 <div class="col-sm-10">

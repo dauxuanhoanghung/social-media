@@ -2,10 +2,13 @@ package com.social.controllers;
 
 import com.social.enums.QuestionType;
 import com.social.services.MailService;
+import com.social.services.StatsService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -16,11 +19,14 @@ public class HomeController {
 
     @Autowired
     private MailService mailService;
-
+    
+    @Autowired
+    private StatsService statsService;
+    
     @GetMapping("/")
-    public String home() {
-//        mailService.sendMail("nhphuc414@gmail.com", "HELOO", "1111", "invitation");
-        return "home";
+    public String home(@RequestParam Map<String, String> params, Model model) {
+        model.addAttribute("userStats", this.statsService.countUsers(null));
+        return "index";
     }
 
     @GetMapping("/account")

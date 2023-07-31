@@ -38,7 +38,9 @@
                     </g>
                 </svg>
             </span>
-            <span class="app-brand-text demo menu-text fw-bolder ms-2"><spring:message code="view.layout.sidebar.app-brand-text" /></span>
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">
+                <spring:message code="view.layout.sidebar.app-brand-text" />
+            </span>
         </a>
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-xl-none">
             <i class="bx bx-chevron-left bx-sm align-middle"></i>
@@ -71,25 +73,10 @@
                         <div data-i18n="Without navbar">Without navbar</div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="layouts-container.html" class="menu-link">
-                        <div data-i18n="Container">Container</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-fluid.html" class="menu-link">
-                        <div data-i18n="Fluid">Fluid</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-blank.html" class="menu-link">
-                        <div data-i18n="Blank">Blank</div>
-                    </a>
-                </li>
             </ul>
         </li>
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Pages</span>
+            <span class="menu-header-text"><spring:message code="view.layout.sidebar.manage" /></span>
         </li>
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -117,22 +104,22 @@
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-                <div data-i18n="Authentications">Authentications</div>
+                <div data-i18n="Authentications"><spring:message code="view.layout.sidebar.manage.user" /></div>
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="auth-login-basic.html" class="menu-link" target="_blank">
-                        <div data-i18n="Basic">Login</div>
+                    <a href="<c:url value="/admin/user" />" class="menu-link">
+                        <div data-i18n="Basic"><spring:message code="view.layout.sidebar.manage.user" /></div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="auth-register-basic.html" class="menu-link" target="_blank">
-                        <div data-i18n="Basic">Register</div>
+                    <a href="<c:url value="/admin/user/create" />" class="menu-link">
+                        <div data-i18n="Basic"><spring:message code="view.layout.sidebar.manage.create" /></div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="auth-forgot-password-basic.html" class="menu-link" target="_blank">
-                        <div data-i18n="Basic">Forgot Password</div>
+                    <a href="<c:url value="/admin/user/active" />" class="menu-link">
+                        <div data-i18n="Basic"><spring:message code="view.layout.sidebar.manage.active" /></div>
                     </a>
                 </li>
             </ul>
@@ -350,15 +337,19 @@
             <span class="menu-header-text"><spring:message code="view.layout.sidebar.statistic"/></span>
         </li>
         <li class="menu-item">
-            <a href="" target="_blank" class="menu-link">
+            <a href="" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-support"></i>
-                <div data-i18n="User"><spring:message code="view.layout.sidebar.statistic-user" /></div>
+                <div data-i18n="User">
+                    <spring:message code="view.layout.sidebar.statistic-user" />
+                </div>
             </a>
         </li>
         <li class="menu-item">
-            <a href="" target="_blank" class="menu-link">
+            <a href="<c:url value="/admin/post" />" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
-                <div data-i18n="Post"><spring:message code="view.layout.sidebar.statistic-post" /></div>
+                <div data-i18n="Post">
+                    <spring:message code="view.layout.sidebar.statistic-post" />
+                </div>
             </a>
         </li>
         <div class="ps__rail-x" style="left: 0px; bottom: 0px;">

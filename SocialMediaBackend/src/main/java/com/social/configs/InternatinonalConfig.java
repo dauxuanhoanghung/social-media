@@ -52,4 +52,3 @@ public class InternatinonalConfig implements WebMvcConfigurer {
         registry.addInterceptor(localeInterceptor).addPathPatterns("/**");
     }
 }
-

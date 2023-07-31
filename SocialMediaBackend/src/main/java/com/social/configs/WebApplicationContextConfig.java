@@ -8,9 +8,11 @@ import com.social.formatters.RoleFormatter;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +21,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -42,6 +46,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 })
 public class WebApplicationContextConfig implements WebMvcConfigurer {
 
+    @Autowired
+    private MessageSource messageSource;
+
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
@@ -55,12 +62,14 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
 //        resolver.setSuffix(".jsp");
 //        return resolver;
 //    }
-    
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/vendor/**").addResourceLocations("/resources/vendor/");
-        registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
-        registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
+        registry.addResourceHandler("/vendor/**")
+                .addResourceLocations("/resources/vendor/").resourceChain(true);
+        registry.addResourceHandler("/css/**")
+                .addResourceLocations("/resources/css/").resourceChain(true);
+        registry.addResourceHandler("/js/**")
+                .addResourceLocations("/resources/js/").resourceChain(true);
 //        registry.addResourceHandler("/img/**").addResourceLocations("/resources/img/");
 
         registry.addResourceHandler("/swagger-ui/**")
@@ -80,12 +89,12 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
     public DateTimeFormatter getDateTimeFormatter() {
         return DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
     }
-    
+
     @Bean
     public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager("actions", "tags");
+        return new ConcurrentMapCacheManager("actions", "roles");
     }
-    
+
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
@@ -95,11 +104,24 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(new RoleFormatter());
     }
-    
+
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
         // Configure the builder with any additional settings, if needed
         converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
+    }
+
+    @Bean(name = "validator")
+    public LocalValidatorFactoryBean validator() {
+        LocalValidatorFactoryBean bean
+                = new LocalValidatorFactoryBean();
+        bean.setValidationMessageSource(messageSource);
+        return bean;
+    }
+
+    @Override
+    public Validator getValidator() {
+        return validator();
     }
 }

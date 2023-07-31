@@ -13,7 +13,7 @@ public interface StatsRepository {
      * LocalDateTime fromDate, toDate
      * @return  
     */
-    List<Object[]> countUsers(Map<String, String> params);
+    List<Object[]> countNewUsers(Map<String, String> params);
     
     /**
      * @param params 

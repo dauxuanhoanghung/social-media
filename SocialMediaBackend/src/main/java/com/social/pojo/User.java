@@ -114,6 +114,7 @@ public class User implements Serializable {
     {
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = LocalDateTime.now();
+        this.slug = null;
     }
 
     public User() {
