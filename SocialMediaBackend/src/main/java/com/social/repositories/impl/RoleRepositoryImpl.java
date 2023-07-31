@@ -11,6 +11,7 @@ import javax.persistence.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
@@ -37,6 +38,7 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
     
     @Override
+    @Cacheable("roles")
     public List<Role> getAll() {
         Session session = getSession();
         Query query = session.createNamedQuery("Role.findAll", Role.class);

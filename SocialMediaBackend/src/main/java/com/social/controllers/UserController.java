@@ -9,10 +9,12 @@ import com.social.enums.UserStatus;
 import com.social.pojo.User;
 import com.social.services.UserService;
 import java.util.Map;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,7 +55,12 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String createUser(@ModelAttribute(value = "user") UserRegisterDTO user) {
+    public String createUser(@ModelAttribute(value = "user") @Valid UserRegisterDTO user, 
+            BindingResult rs, Model model) {
+        if (rs.hasErrors()) {
+            model.addAttribute("user", user);
+            return "create-user";
+        }
         user.setStatus(UserStatus.valueOf(user.getStatus().toString()));
         this.userService.saveOrUpdateUser(user);
         return "redirect:/admin/user";
