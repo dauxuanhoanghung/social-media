@@ -5,6 +5,7 @@
 package com.social.configs;
 
 import com.social.formatters.RoleFormatter;
+import com.social.formatters.UserFormatter;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.modelmapper.ModelMapper;
@@ -103,6 +104,7 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(new RoleFormatter());
+        registry.addFormatter(new UserFormatter());
     }
 
     @Override

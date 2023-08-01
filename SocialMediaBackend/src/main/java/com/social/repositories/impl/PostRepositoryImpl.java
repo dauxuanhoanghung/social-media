@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -83,19 +84,32 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Optional<Post> getPostById(String id) {
         Session session = getSession();
-        return Optional.ofNullable(session.get(Post.class, id));
+        try {
+            Post post = session.get(Post.class, id);
+            return Optional.ofNullable(post);
+        } catch (NoResultException ex) {
+            // If no result is found, return an empty Optional
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Post saveOrUpdatePost(Post post) {
+    public Post save(Post post) {
         Session s = getSession();
         try {
-            if (post.getId() == null) {
-                s.save(post);
-            } else {
-                s.update(post);
-            }
+            s.save(post);
+            return post;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
 
+    @Override
+    public Post update(Post post) {
+        Session s = getSession();
+        try {
+            s.update(post);
             return post;
         } catch (HibernateException ex) {
             ex.printStackTrace();

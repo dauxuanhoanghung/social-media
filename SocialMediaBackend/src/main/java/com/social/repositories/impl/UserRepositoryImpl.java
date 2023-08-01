@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.persistence.NoResultException;
 import org.hibernate.Session;
 
 import org.hibernate.SessionFactory;
@@ -84,18 +85,30 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User getUserById(int id) {
+    public Optional<User> getUserById(int id) {
         Session s = getSession();
-        return s.get(User.class, id);
+        try {
+            User user = s.get(User.class, id);
+            return Optional.ofNullable(user);
+        } catch (NoResultException ex) {
+            // If no result is found, return an empty Optional
+            return Optional.empty();
+        }
 
     }
 
     @Override
-    public User getUserByUsername(String username) {
+    public Optional<User> getUserByUsername(String username) {
         Session session = getSession();
         Query query = session.createNamedQuery("User.findByUsername", User.class);
         query.setParameter("username", username);
-        return (User) query.getSingleResult();
+        try {
+            User user = (User) query.getSingleResult();
+            return Optional.ofNullable(user);
+        } catch (NoResultException ex) {
+            // If no result is found, return an empty Optional
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -114,7 +127,13 @@ public class UserRepositoryImpl implements UserRepository {
         Session session = getSession();
         Query query = session.createNamedQuery("User.findByEmail", User.class);
         query.setParameter("email", email);
-        return Optional.ofNullable((User) query.getSingleResult());
+        try {
+            User user = (User) query.getSingleResult();
+            return Optional.ofNullable(user);
+        } catch (NoResultException ex) {
+            // If no result is found, return an empty Optional
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -122,19 +141,32 @@ public class UserRepositoryImpl implements UserRepository {
         Session session = getSession();
         Query query = session.createNamedQuery("User.findBySlug", User.class);
         query.setParameter("slug", slug);
-        return Optional.ofNullable((User) query.getSingleResult());
+        try {
+            User user = (User) query.getSingleResult();
+            return Optional.ofNullable(user);
+        } catch (NoResultException ex) {
+            // If no result is found, return an empty Optional
+            return Optional.empty();
+        }
     }
 
     @Override
-    public User saveOrUpdateUser(User user) {
+    public User save(User user) {
         Session s = getSession();
         try {
-            if (user.getId() == null) {
-                s.save(user);
-            } else {
-                s.update(user);
-            }
+            s.save(user);
+            return user;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
 
+    @Override
+    public User update(User user) {
+        Session s = getSession();
+        try {
+            s.update(user);
             return user;
         } catch (HibernateException ex) {
             ex.printStackTrace();
