@@ -24,9 +24,8 @@
                     <div class="card-body">
                         <c:url value="/admin/user/create" var="action" />
                         <form:form action="${action}" method="post" modelAttribute="user" enctype="multipart/form-data">
-                            <form:errors path="*" element="div" cssClass="alert alert-danger" />
+                            <%--<form:errors path="*" element="div" cssClass="alert alert-danger" />--%>
                             <form:hidden path="id" />
-                            <form:hidden path="alumniId" />
                             <form:hidden path="password" value="ou@123" />
                             <form:hidden path="slug" />
                             <form:hidden path="status" value="${status[0]}"/>
@@ -46,12 +45,12 @@
                                             class="form-control"
                                             id="basic-icon-default-fullname"
                                             placeholder="${usernamePlacholder}"
-                                            path="username"
+                                            path="alumniId"
                                             aria-label="John Doe"
                                             aria-describedby="basic-icon-default-fullname2"
                                             />
                                     </div>
-                                    <div class="form-text"><form:errors path="username" cssClass="text-danger"/></div>
+                                    <div class="form-text"><form:errors path="alumniId" cssClass="text-danger"/></div>
                                 </div>
                             </div>
                             <div class="row mb-3">

@@ -90,13 +90,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     }
 
-    @Override
-    public User getUserByUsername(String username) {
-        Session session = getSession();
-        Query query = session.createNamedQuery("User.findByUsername", User.class);
-        query.setParameter("username", username);
-        return (User) query.getSingleResult();
-    }
+
 
     @Override
     public Optional<User> getUserByAlumniId(String alumniId) {
