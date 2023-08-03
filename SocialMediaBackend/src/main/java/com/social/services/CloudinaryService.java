@@ -14,4 +14,6 @@ public interface CloudinaryService {
     boolean deleteImage(String publicId);
     
     Map getCloudinaryUsage();
+    
+    boolean checkPublicIdExists(String publicId);
 }
