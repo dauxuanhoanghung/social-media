@@ -22,15 +22,14 @@ public class UserDTO {
 
     protected Integer id;
     @NotBlank(message = "{userDTO.username.notBlank}")
-    protected String username;
     protected String alumniId;
     @NotBlank(message = "{userDTO.displayName.notBlank}")
     protected String displayName;
     protected MultipartFile avatarFile;
     protected MultipartFile coverBgFile;
     @NotBlank(message = "{userDTO.email.notBlank}")
-    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", 
-            message="{userDTO.email.pattern}")
+    @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+            message = "{userDTO.email.pattern}")
     protected String email;
     protected UserStatus status;
     protected String slug;

@@ -38,7 +38,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
     @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id"),
-    @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
     @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
     @NamedQuery(name = "User.findByAlumniId", query = "SELECT u FROM User u WHERE u.alumniId = :alumniId"),
     @NamedQuery(name = "User.findByDisplayName", query = "SELECT u FROM User u WHERE u.displayName = :displayName"),
@@ -57,19 +56,15 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
+    @Size(max = 255)
     @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "username")
-    private String username;
+    @Column(name = "alumni_id")
+    private String alumniId;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "password")
     private String password;
-    @Size(max = 255)
-    @Column(name = "alumni_id")
-    private String alumniId;
     @Size(max = 255)
     @Column(name = "display_name")
     private String displayName;
@@ -124,9 +119,9 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public User(Integer id, String username, String password) {
+    public User(Integer id, String alumni, String password) {
         this.id = id;
-        this.username = username;
+        this.alumniId = alumni;
         this.password = password;
     }
 
@@ -138,13 +133,6 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getPassword() {
         return password;
