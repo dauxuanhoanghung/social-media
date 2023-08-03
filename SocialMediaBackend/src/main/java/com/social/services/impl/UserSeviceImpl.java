@@ -53,8 +53,8 @@ public class UserSeviceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return userRepository.getUserByUsername(username).get();
+    public User getUserByUsername(String AlumniId) {
+        return userRepository.getUserByAlumniId(AlumniId).get();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class UserSeviceImpl implements UserService {
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), authorities);
+                user.getAlumniId(), user.getPassword(), authorities);
     }
 
     @Override

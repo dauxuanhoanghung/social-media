@@ -53,7 +53,7 @@
                                     </li>
                                 </ul>
                             </td>
-                            <td>${user.username}</td>
+                            <td>${user.alumniId}</td>
                             <td>
                                 <c:choose>
                                     <c:when test="${user.role.name eq 'ROLE_ADMIN'}">

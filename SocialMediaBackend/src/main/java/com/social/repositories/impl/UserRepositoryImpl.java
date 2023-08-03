@@ -98,20 +98,6 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> getUserByUsername(String username) {
-        Session session = getSession();
-        Query query = session.createNamedQuery("User.findByUsername", User.class);
-        query.setParameter("username", username);
-        try {
-            User user = (User) query.getSingleResult();
-            return Optional.ofNullable(user);
-        } catch (NoResultException ex) {
-            // If no result is found, return an empty Optional
-            return Optional.empty();
-        }
-    }
-
-    @Override
     public Optional<User> getUserByAlumniId(String alumniId) {
         Session session = getSession();
         Query query = session.createNamedQuery("User.findByAlumniId", User.class);

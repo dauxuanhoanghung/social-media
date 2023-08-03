@@ -15,8 +15,6 @@ public interface UserRepository {
 
     Optional<User> getUserById(int id);
 
-    Optional<User> getUserByUsername(String username);
-
     Optional<User> getUserByAlumniId(String alumniId);
 
     Optional<User> getUserByEmail(String email);

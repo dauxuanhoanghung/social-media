@@ -20,7 +20,7 @@ public interface UserService extends UserDetailsService {
 
     User getUserById(int id);
 
-    User getUserByUsername(String username);
+    User getUserByUsername(String AlumniId);
 
     User getUserByAlumniId(String alumniId);
 
