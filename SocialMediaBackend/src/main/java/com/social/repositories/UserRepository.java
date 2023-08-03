@@ -13,7 +13,7 @@ public interface UserRepository {
 
     List<User> getUsers(Map<String, String> params);
 
-    User getUserById(int id);
+    Optional<User> getUserById(int id);
 
     Optional<User> getUserByAlumniId(String alumniId);
 
@@ -21,7 +21,9 @@ public interface UserRepository {
 
     Optional<User> getUserBySlug(String slug);
 
-    User saveOrUpdateUser(User user);
+    User save(User user);
+    
+    User update(User user);
 
     boolean deleteUser(Integer id);
 }

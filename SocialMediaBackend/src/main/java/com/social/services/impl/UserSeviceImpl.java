@@ -71,7 +71,7 @@ public class UserSeviceImpl implements UserService {
 
     @Override
     public User getUserById(int id) {
-        User user = this.userRepository.getUserById(id);
+        User user = this.userRepository.getUserById(id).get();
         return user;
     }
 
@@ -84,12 +84,16 @@ public class UserSeviceImpl implements UserService {
 
     @Override
     public User getUserByEmail(String email) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        User user = this.userRepository.getUserByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Email User not found", email, "/users/"));
+        return user;
     }
 
     @Override
     public User getUserBySlug(String slug) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        User user = this.userRepository.getUserBySlug(slug)
+                .orElseThrow(() -> new NotFoundException("User not found", slug, "/users/" + slug));
+        return user;
     }
 
     @Override
@@ -103,7 +107,7 @@ public class UserSeviceImpl implements UserService {
     public User saveOrUpdateUser(UserRegisterDTO user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User entity = modelMapper.map(user, User.class);
-        return this.userRepository.saveOrUpdateUser(entity);
+        return this.userRepository.save(entity);
     }
 
     @Override
@@ -122,7 +126,7 @@ public class UserSeviceImpl implements UserService {
             mailService.sendMail(user.getEmail(), "Thư chấp nhận",
                     "Tài khoản của bạn đã được xác nhận", "invitation");
         }
-        return this.userRepository.saveOrUpdateUser(user);
+        return this.userRepository.save(user);
     }
 
 }
