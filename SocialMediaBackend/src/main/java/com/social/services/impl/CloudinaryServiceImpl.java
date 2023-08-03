@@ -31,7 +31,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
 //                        "width", width, // Set the width for resizing
 //                        "height", height // Set the height for resizing
 //            )
-            return (String) uploadResult.get("url");
+            return (String) uploadResult.get("secure_url");
         } catch (IOException ex) {
             Logger.getLogger(CloudinaryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;

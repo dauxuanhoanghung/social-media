@@ -101,6 +101,8 @@
                         <p class="mb-0">Once you delete your account, there is no going back. Please be certain.</p>
                     </div>
                 </div>
+                <spring:message code="view.pages.account.btnDeactiveText" var="deactive"/>
+                <spring:message code="view.pages.account.btnActiveText" var="active"/>
                 <c:choose>
                     <c:when test="${user.status == status[1]}">
                         <c:url value="/admin/user/${user.id}/${status[0]}" var="action" />
@@ -110,7 +112,7 @@
                                 <label class="form-check-label" for="accountActivation">I confirm my account deactivation</label>
                             </div>
                             <button class="btn btn-danger deactivate-account" onclick="changeStatus('${action}')">
-                                <spring:message code="view.pages.account.btnDeactiveText"/>
+                                ${deactive}
                             </button>
                         </div>
                     </c:when>
@@ -118,7 +120,7 @@
                         <c:url value="/admin/user/${user.id}/${status[1]}" var="action"/>
                         <div id="formAccountDeactivation">
                             <button class="btn btn-success deactivate-account" onclick="changeStatus('${action}')">
-                                <spring:message code="view.pages.account.btnActiveText"/>
+                                ${active}
                             </button>
                         </div>
                     </c:otherwise>
@@ -133,13 +135,13 @@
         fetch(endpoint, {
             method: "PUT"
         })
-        .then(res => {
-            if (res.status === 200) {
-                location.reload();
-            } else {
-                alert("SOMETHING WRONG!!!");
-            }
-        });
+                .then(res => {
+                    if (res.status === 200) {
+                        location.reload();
+                    } else {
+                        alert("SOMETHING WRONG!!!");
+                    }
+                });
     }
 
 </script>

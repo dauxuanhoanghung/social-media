@@ -8,6 +8,7 @@ import com.social.pojo.Role;
 import com.social.pojo.User;
 import com.social.repositories.RoleRepository;
 import com.social.repositories.UserRepository;
+import com.social.services.CloudinaryService;
 import com.social.services.MailService;
 import com.social.services.UserService;
 import java.util.HashSet;
@@ -46,7 +47,10 @@ public class UserSeviceImpl implements UserService {
 
     @Autowired
     private MailService mailService;
-
+    
+    @Autowired
+    private CloudinaryService cloudinaryService;
+    
     @Override
     public List<User> getUsers(Map<String, String> params) {
         return this.userRepository.getUsers(params);
@@ -107,6 +111,13 @@ public class UserSeviceImpl implements UserService {
     public User saveOrUpdateUser(UserRegisterDTO user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User entity = modelMapper.map(user, User.class);
+        entity.setCoverBg("");
+        if (user.getAvatarFile() == null) {
+            entity.setAvatar("https://res.cloudinary.com/dzgugrqxz/image/upload/v1683031039/building_img/r3owjpmhhcehj29hgw2y.jpg");
+        } else {
+            String url = cloudinaryService.uploadImage(user.getAvatarFile());
+            entity.setAvatar(url);
+        }
         return this.userRepository.save(entity);
     }
 
@@ -126,7 +137,7 @@ public class UserSeviceImpl implements UserService {
             mailService.sendMail(user.getEmail(), "Thư chấp nhận",
                     "Tài khoản của bạn đã được xác nhận", "invitation");
         }
-        return this.userRepository.save(user);
+        return this.userRepository.update(user);
     }
 
 }
