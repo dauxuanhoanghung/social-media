@@ -1,374 +1,212 @@
-<style>
-    
-    ::selection{
-        color: #fff;
-        background: #4267B2;
-    }
-    .container{
-        width: 500px;
-        height: 480px;
-        overflow: hidden;
-        background: #fff;
-        border-radius: 10px;
-        transition: height 0.2s ease;
-        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-    }
-    .container.active{
-        height: 590px;
-    }
-    .container .wrapper{
-        width: 1000px;
-        display: flex;
-    }
-    .container .wrapper section{
-        width: 500px;
-        background: #fff;
-    }
-    .container img{
-        cursor: pointer;
-    }
-    .container .post{
-        transition: margin-left 0.18s ease;
-    }
-    .container.active .post{
-        margin-left: -500px;
-    }
-    .post header{
-        font-size: 22px;
-        font-weight: 600;
-        padding: 17px 0;
-        text-align: center;
-        border-bottom: 1px solid #bfbfbf;
-    }
-    .post form{
-        margin: 20px 25px;
-    }
-    .post form .content,
-    .audience .list li .column{
-        display: flex;
-        align-items: center;
-    }
-    .post form .content img{
-        cursor: default;
-        max-width: 52px;
-    }
-    .post form .content .details{
-        margin: -3px 0 0 12px;
-    }
-    form .content .details p{
-        font-size: 17px;
-        font-weight: 500;
-    }
-    .content .details .privacy{
-        display: flex;
-        height: 25px;
-        cursor: pointer;
-        padding: 0 10px;
-        font-size: 11px;
-        margin-top: 3px;
-        border-radius: 5px;
-        align-items: center;
-        max-width: 98px;
-        background: #E4E6EB;
-        justify-content: space-between;
-    }
-    .details .privacy span{
-        font-size: 13px;
-        margin-top: 1px;
-        font-weight: 500;
-    }
-    .details .privacy i:last-child{
-        font-size: 13px;
-        margin-left: 1px;
-    }
-    form :where(textarea, button){
-        width: 100%;
-        outline: none;
-        border: none;
-    }
-    form textarea{
-        resize: none;
-        font-size: 18px;
-        margin-top: 30px;
-        min-height: 100px;
-    }
-    form textarea::placeholder{
-        color: #858585;
-    }
-    form textarea:focus::placeholder{
-        color: #b3b3b3;
-    }
-    form :where(.theme-emoji, .options){
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .theme-emoji img:last-child{
-        max-width: 24px;
-    }
-    form .options{
-        height: 57px;
-        margin: 15px 0;
-        padding: 0 15px;
-        border-radius: 7px;
-        border: 1px solid #B9B9B9;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-    form .options :where(.list, li),
-    .audience :where(.arrow-back, .icon, li .radio){
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    form .options p{
-        color: #595959;
-        font-size: 15px;
-        font-weight: 500;
-        cursor: default;
-    }
-    form .options .list{
-        list-style: none;
-    }
-    .options .list li{
-        height: 42px;
-        width: 42px;
-        margin: 0 -1px;
-        cursor: pointer;
-        border-radius: 50%;
-    }
-    .options .list li:hover{
-        background: #f0f1f4;
-    }
-    .options .list li img{
-        width: 23px;
-    }
-    form button{
-        height: 53px;
-        color: #fff;
-        font-size: 18px;
-        font-weight: 500;
-        cursor: pointer;
-        color: #BCC0C4;
-        cursor: no-drop;
-        border-radius: 7px;
-        background: #e2e5e9;
-        transition: all 0.3s ease;
-    }
-    form textarea:valid ~ button{
-        color: #fff;
-        cursor: pointer;
-        background: #4267B2;
-    }
-    form textarea:valid ~ button:hover{
-        background: #4267B2;
-    }
-    .container .audience{
-        opacity: 0;
-        transition: opacity 0.12s ease;
-    }
-    .container.active .audience{
-        opacity: 1;
-    }
-    .audience header{
-        padding: 17px 0;
-        text-align: center;
-        position: relative;
-        border-bottom: 1px solid #bfbfbf;
-    }
-    .audience header .arrow-back{
-        position: absolute;
-        left: 25px;
-        width: 35px;
-        height: 35px;
-        cursor: pointer;
-        font-size: 15px;
-        color: #747474;
-        border-radius: 50%;
-        background: #E4E6EB;
-    }
-    .audience header p{
-        font-size: 22px;
-        font-weight: 600;
-    }
-    .audience .content{
-        margin: 20px 25px 0;
-    }
-    .audience .content p{
-        font-size: 17px;
-        font-weight: 500;
-    }
-    .audience .content span{
-        font-size: 14px;
-        color: #65676B;
-    }
-    .audience .list{
-        margin: 15px 16px 20px;
-        list-style: none;
-    }
-    .audience .list li{
-        display: flex;
-        cursor: pointer;
-        margin-bottom: 5px;
-        padding: 12px 10px;
-        border-radius: 7px;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .list li.active,
-    .audience .list li.active:hover{
-        background: #E5F1FF;
-    }
-    .audience .list li:hover{
-        background: #f0f1f4;
-    }
-    .audience .list li .column .icon{
-        height: 50px;
-        width: 50px;
-        color: #333;
-        font-size: 23px;
-        border-radius: 50%;
-        background: #E4E6EB;
-    }
-    .audience .list li.active .column .icon{
-        background: #cce4ff;
-    }
-    .audience .list li .column .details{
-        margin-left: 15px;
-    }
-    .list li .column .details p{
-        font-weight: 500;
-    }
-    .list li .column .details span{
-        font-size: 14px;
-        color: #65676B;
-    }
-    .list li .radio{
-        height: 20px;
-        width: 20px;
-        border-radius: 50%;
-        position: relative;
-        border: 1px solid #707070;
-    }
-    .list li.active .radio{
-        border: 2px solid #4267B2;
-    }
-    .list li .radio::before{
-        content: "";
-        width: 12px;
-        height: 12px;
-        border-radius: inherit;
-    }
-    .list li.active .radio::before{
-        background: #4267B2;
-    }
-    
-</style>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<h1>Tạo câu hỏi</h1>
+<input
+    placeholder="Nội dung câu hỏi"
+    id="question"
+    onkeyup="script.checkDisable(this.value)" />
+<button disabled id="btnAdd" onclick="script.renderCreateAnswer()">
+    Thêm câu trả lời
+</button>
+<button disabled id="btnDone" onclick="script.createAnswer()">
+    Hoàn thành câu hỏi
+</button>
 
-<div class="container">
-      <div class="wrapper">
-        <section class="post">
-            <header>CodeWithNepal</header>
-            <form action="#">
-                <div class="content">
-                    <img src="cwn.png" alt="logo">
-                    <div class="details">
-                        <p>CodeWithNepal</p>
-                        <div class="privacy">
-                            <i class="fas fa-user-friends"></i>
-                            <span>Friends</span>
-                            <i class="fas fa-caret-down"></i>
-                        </div>
-                    </div>
-                </div>
-                <textarea placeholder="What's on your mind, CodeWithNepal?" spellcheck="false" class="form-control" required></textarea>
-                <div class="theme-emoji">
-                    <img src="icons/theme.svg" alt="theme">
-                    <img src="icons/smile.svg" alt="smile">
-                </div>
-                <div class="options">
-                    <p>Add to Your Post</p>
-                </div>
-                <button class="btn btn-info">Post</button>
-            </form>
-        </section>
-        <section class="audience">
-            <header>
-                <div class="arrow-back"><i class="fas fa-arrow-left"></i></div>
-                <p>Select Audience</p>
-            </header>
-            <div class="content">
-                <p>Who can see your post?</p>
-                <span>Your post will show up in News Feed, on your profile and in search results.</span>
-            </div>
-            <ul class="list">
-                <li>
-                    <div class="column">
-                        <div class="icon"><i class="fas fa-globe-asia"></i></div>
-                        <div class="details">
-                            <p>Public</p>
-                            <span>Anyone on or off Facebook</span>
-                        </div>
-                    </div>
-                    <div class="radio"></div>
-                </li>
-                <li class="active">
-                    <div class="column">
-                        <div class="icon"><i class="fas fa-user-friends"></i></div>
-                        <div class="details">
-                            <p>Friends</p>
-                            <span>Your friends on Facebook</span>
-                        </div>
-                    </div>
-                    <div class="radio"></div>
-                </li>
-                <li>
-                    <div class="column">
-                        <div class="icon"><i class="fas fa-user"></i></div>
-                        <div class="details">
-                            <p>Specific</p>
-                            <span>Only show to some friends</span>
-                        </div>
-                    </div>
-                    <div class="radio"></div>
-                </li>
-                <li>
-                    <div class="column">
-                        <div class="icon"><i class="fas fa-lock"></i></div>
-                        <div class="details">
-                            <p>Only me</p>
-                            <span>Only you can see your post</span>
-                        </div>
-                    </div>
-                    <div class="radio"></div>
-                </li>
-                <li>
-                    <div class="column">
-                        <div class="icon"><i class="fas fa-cog"></i></div>
-                        <div class="details">
-                            <p>Custom</p>
-                            <span>Include and exclude friends</span>
-                        </div>
-                    </div>
-                    <div class="radio"></div>
-                </li>
-            </ul>
-        </section>
+<div id="option">
+    <div>
+        <input
+            type="radio"
+            value="checkbox"
+            class="questionType"
+            name="questionType" />
+        <label>checkbox</label>
     </div>
+    <div>
+        <input
+            type="radio"
+            value="radio"
+            class="questionType"
+            name="questionType" />
+        <label>radio</label>
+    </div>
+    <div>
+        <input
+            type="radio"
+            value="text"
+            class="questionType"
+            name="questionType" />
+        <label>text</label>
+    </div>
+    <!-- <button onclick="script.renderCreateAnswer()">Thêm câu trả lời</button> -->
 </div>
-
+<form id="form"></form>
+</body>
 
 <script>
-    const container = document.querySelector(".container"),
-            privacy = container.querySelector(".post .privacy"),
-            arrowBack = container.querySelector(".audience .arrow-back");
+    let questions = [
+        {
+            id: 1,
+            content: "Hỏi cái cc",
+            questionType: "checkbox",
+            answers: [
+                {
+                    content: "abc",
+                },
+                {
+                    content: "abc",
+                },
+                {
+                    content: "abc",
+                },
+            ],
+        },
+        {
+            id: 2,
+            content: "Hỏi cái cc2",
+            questionType: "checkbox",
+            answers: [
+                {
+                    content: "abc",
+                },
+                {
+                    content: "abc",
+                },
+                {
+                    content: "abc",
+                },
+            ],
+        },
+    ];
+    const root = document.getElementById("form");
+    let currCheckedType = null;
+    let currContentQuestion = "";
+    let currentAnswers = [];
+    let currentQuestion = {};
+    let id = 1;
+    let btnAdd = document.querySelector("#btnAdd");
+    let btnDone = document.querySelector("#btnDone");
+    const script = {
+        render() {
+            root.innerHTML = "";
+            document.querySelector("#question").innerHTML = "";
+            let a = document.querySelectorAll(".answer");
+            a.forEach((i) => i.remove());
+            const htmlList = questions.map((questionItem) => {
+                // Map the 'answers' array of each question to HTML elements
+                const answersHtml = questionItem.answers
+                        .map((answerItem) => {
+                            return `<li>Content: ${answerItem.content}</li>`;
+                        })
+                        .join("");
+                return `<li>Question: ${questionItem.content}, Type: ${questionItem.questionType}</li>
+         <button onclick="script.deleteQuestion(${questionItem.id})">Xoá câu hỏi</button>
+        <button onclick="script.updateQuestion(${questionItem.id})" >Sửa câu hỏi</button>
+        <ul>${answersHtml}</ul> `;
+            });
 
-
-    privacy.addEventListener("click", () => {
-        container.classList.add("active");
-    });
-
-
-    arrowBack.addEventListener("click", () => {
-        container.classList.remove("active");
-    });
+            const listHTML = htmlList.join("");
+            root.insertAdjacentHTML("beforeend", `<ul>${listHTML}</ul>`);
+        },
+        checkDisable(value) {
+            if (!!value) {
+                btnAdd.disabled = false;
+                btnDone.disabled = false;
+            } else {
+                btnAdd.disabled = true;
+                btnDone.disabled = true;
+            }
+        },
+        renderAddQuestion() {
+            const myRadio = document.querySelectorAll(".questionType");
+            myRadio.forEach((item) => {
+                item.addEventListener("change", (e) => {
+                    currCheckedType = e.currentTarget.value;
+                    if (currCheckedType === "text")
+                        btnAdd.disabled = true;
+                    this.render();
+                });
+            });
+        },
+        deleteQuestion(id) {
+            const event = window.event;
+            event.preventDefault();
+            questions = questions.filter((question) => question.id !== id);
+            this.render();
+        },
+        updateQuestion(id) {
+            const event = window.event;
+            event.preventDefault();
+            let q = questions.find((item) => item.id === id);
+            console.log(q);
+        },
+        renderQuestion(q) {},
+        renderMyInput(type) {
+            switch (type) {
+                case "checkbox":
+                    console.log("checkbox");
+                    // return input of type
+                    break;
+                case "radio":
+                    console.log("radio");
+                    break;
+                case "text":
+                    console.log("text");
+                    break;
+                default:
+                    break;
+            }
+        },
+        createAnswer(e) {
+            const event = e || window.event;
+            event.preventDefault();
+            let id = 1;
+            currContentQuestion = document.querySelector("#question").value;
+            const answers = document.querySelectorAll(".answer");
+            const t = [];
+            const myAnswers = answers.forEach((item) => {
+                const b = item.querySelector(".answer-content");
+                t.push({
+                    content: b.value,
+                });
+            });
+            currentQuestion = {
+                id: id++,
+                questionType: currCheckedType,
+                content: currContentQuestion,
+                answers: t,
+            };
+            console.log(currentQuestion);
+            questions.push(currentQuestion);
+            const a = document.querySelectorAll(".answer");
+            a.forEach((element) => {
+                element.remove();
+            });
+            this.renderAddQuestion();
+            document.querySelector("#question").value = "";
+            this.render();
+        },
+        renderCreateAnswer(e) {
+            const event = e || window.event;
+            event.preventDefault();
+            // const option = document.querySelector("#option");
+            root.insertAdjacentHTML(
+                    "beforebegin",
+                    !!currCheckedType && currCheckedType !== "text"
+                    ? `<div class="answer">
+              <input type = "text" class="answer-content" />
+              </div>`
+                    : ``
+                    );
+        },
+        handleClickBtnAdd() {
+            this.renderAddQuestion();
+        },
+        start() {
+            this.render();
+            this.renderAddQuestion();
+        },
+    };
+    script.start();
 </script>

@@ -66,11 +66,11 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/vendor/**")
-                .addResourceLocations("/resources/vendor/").resourceChain(true);
+                .addResourceLocations("/WEB-INF/resources/vendor/").resourceChain(true);
         registry.addResourceHandler("/css/**")
-                .addResourceLocations("/resources/css/").resourceChain(true);
+                .addResourceLocations("/WEB-INF/resources/css/").resourceChain(true);
         registry.addResourceHandler("/js/**")
-                .addResourceLocations("/resources/js/").resourceChain(true);
+                .addResourceLocations("/WEB-INF/resources/js/").resourceChain(true);
 //        registry.addResourceHandler("/img/**").addResourceLocations("/resources/img/");
 
         registry.addResourceHandler("/swagger-ui/**")
