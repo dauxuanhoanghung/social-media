@@ -1,7 +1,15 @@
 package com.social.repositories.impl;
 
+import com.social.dto.request.AnswerRequest;
+import com.social.dto.request.QuestionRequest;
+import com.social.dto.request.SurveyRequest;
+import com.social.enums.QuestionType;
+import com.social.pojo.Choice;
 import com.social.pojo.Post;
+import com.social.pojo.Question;
+import com.social.pojo.User;
 import com.social.repositories.PostRepository;
+import com.social.repositories.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +23,15 @@ import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -33,6 +45,12 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Autowired
     private LocalSessionFactoryBean sessionFactory;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ModelMapper mapper;
 
     @Autowired
     private Environment env;
@@ -130,6 +148,42 @@ public class PostRepositoryImpl implements PostRepository {
         } catch (HibernateException ex) {
             ex.printStackTrace();
             return false;
+        }
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Post saveSurvey(SurveyRequest surveyRequest) {
+        Session session = getSession();
+        Post surveyPost = mapper.map(surveyRequest, Post.class);
+        surveyPost.setQuestions(null);
+        surveyPost.setLockComment(Boolean.FALSE);
+        surveyPost.setCountAction(0);
+        try {
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = userRepository.getUserByAlumniId("2").get();
+            surveyPost.setUser(user);
+            session.save(surveyPost);
+
+            for (QuestionRequest qr : surveyRequest.getQuestions()) {
+                Question question = mapper.map(qr, Question.class);
+                question.setPost(surveyPost);
+                question.setChoices(null);
+                session.save(question);
+
+                if (!question.getQuestionType().equals(QuestionType.TEXT)) {
+                    for (AnswerRequest ar : qr.getAnswers()) {
+                        Choice choice = mapper.map(ar, Choice.class);
+                        choice.setQuestion(question);
+                        session.save(choice);
+                    }
+                }
+            }
+
+            return surveyPost;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            return null;
         }
     }
 

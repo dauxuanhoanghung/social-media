@@ -59,4 +59,19 @@ public class CloudinaryServiceImpl implements CloudinaryService {
             return null;
         }
     }
+    
+
+    @Override
+    public boolean checkPublicIdExists(String publicId) {
+        try {
+            // Make an API call to retrieve information about the resource
+            Map result = cloudinary.api().resource(publicId, ObjectUtils.emptyMap());
+
+            // If the result is not empty, it means the resource exists
+            return !result.isEmpty();
+        } catch (Exception ex) {
+            Logger.getLogger(CloudinaryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
 }
