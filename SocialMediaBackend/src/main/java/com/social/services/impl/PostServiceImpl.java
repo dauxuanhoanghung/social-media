@@ -1,5 +1,6 @@
 package com.social.services.impl;
 
+import com.social.dto.request.SurveyRequest;
 import com.social.pojo.Post;
 import com.social.repositories.PostRepository;
 import com.social.services.PostService;
@@ -33,6 +34,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post saveOrUpdatePost(Post post) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Post saveSurveyPost(SurveyRequest surveyRequest) {
+        return this.postRepository.saveSurvey(surveyRequest);
     }
     
 }

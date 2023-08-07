@@ -2,84 +2,65 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<h1>Tạo câu hỏi</h1>
-<input
-    placeholder="Nội dung câu hỏi"
-    id="question"
-    onkeyup="script.checkDisable(this.value)" />
-<button disabled id="btnAdd" onclick="script.renderCreateAnswer()">
-    Thêm câu trả lời
-</button>
-<button disabled id="btnDone" onclick="script.createAnswer()">
-    Hoàn thành câu hỏi
-</button>
+<h4 class="fw-bold py-3 mb-4">
+    <span class="text-muted fw-light">
+        <spring:message code="view.pages.create-post.post" /> /
+    </span> 
+    <spring:message code="view.pages.create-post.create" />
+</h4>
 
-<div id="option">
-    <div>
-        <input
-            type="radio"
-            value="checkbox"
-            class="questionType"
-            name="questionType" />
-        <label>checkbox</label>
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <div>
+            <h5 class="align-items-center"><spring:message code="view.pages.create-post.title" /></h5>
+        </div>
     </div>
-    <div>
-        <input
-            type="radio"
-            value="radio"
-            class="questionType"
-            name="questionType" />
-        <label>radio</label>
+    <div class="d-flex m-2">
+        <input type="text" placeholder="Tên bài khảo sát" id="title-survey" class="form-control me-2"/>
+        <button onclick="script.createSurvey()" class="btn btn-success">
+            <spring:message code="view.pages.create-post.posting" />
+        </button>
     </div>
-    <div>
+    <div class="container">
+        <h1 class="align-items-center">Tạo câu hỏi</h1>
         <input
-            type="radio"
-            value="text"
-            class="questionType"
-            name="questionType" />
-        <label>text</label>
+            placeholder="Nội dung câu hỏi"
+            id="question"
+            onkeyup="script.checkDisable(this.value)" 
+            class="form-control"/>
+        <button disabled id="btnDone" onclick="script.createAnswer()" class="btn btn-warning">
+            Hoàn thành câu hỏi
+        </button>
+
+        <div id="option">
+            <div>
+                <c:forEach items="${questionTypes}" var="type">
+                    <label class="form-check-label">
+                        <input
+                            type="radio"
+                            value="${type}"
+                            class="questionType"
+                            name="questionType" 
+                            class="form-check-input"
+                            />
+                        ${type}
+                    </label>
+                </c:forEach>
+            </div>
+            <button disabled id="btnAdd" onclick="script.renderCreateAnswer()" class="btn btn-info">
+                Thêm câu trả lời
+            </button>
+            <div id="answerContainer">
+
+            </div>
+        </div>
     </div>
-    <!-- <button onclick="script.renderCreateAnswer()">Thêm câu trả lời</button> -->
+    <form id="form"></form>
 </div>
-<form id="form"></form>
-</body>
-
 <script>
-    let questions = [
-        {
-            id: 1,
-            content: "Hỏi cái cc",
-            questionType: "checkbox",
-            answers: [
-                {
-                    content: "abc",
-                },
-                {
-                    content: "abc",
-                },
-                {
-                    content: "abc",
-                },
-            ],
-        },
-        {
-            id: 2,
-            content: "Hỏi cái cc2",
-            questionType: "checkbox",
-            answers: [
-                {
-                    content: "abc",
-                },
-                {
-                    content: "abc",
-                },
-                {
-                    content: "abc",
-                },
-            ],
-        },
-    ];
+    let questions = [];
     const root = document.getElementById("form");
+    const title = document.querySelector("#title-survey");
     let currCheckedType = null;
     let currContentQuestion = "";
     let currentAnswers = [];
@@ -87,6 +68,9 @@
     let id = 1;
     let btnAdd = document.querySelector("#btnAdd");
     let btnDone = document.querySelector("#btnDone");
+    let contentQuestion = document.querySelector("#question");
+    let answerContainer = document.querySelector("#answerContainer");
+    const myRadio = document.querySelectorAll(".questionType");
     const script = {
         render() {
             root.innerHTML = "";
@@ -100,34 +84,33 @@
                             return `<li>Content: ${answerItem.content}</li>`;
                         })
                         .join("");
-                return `<li>Question: ${questionItem.content}, Type: ${questionItem.questionType}</li>
-         <button onclick="script.deleteQuestion(${questionItem.id})">Xoá câu hỏi</button>
-        <button onclick="script.updateQuestion(${questionItem.id})" >Sửa câu hỏi</button>
-        <ul>${answersHtml}</ul> `;
+                return `
+                <li>Question: ${questionItem.content}, Type: ${questionItem.questionType}</li>
+                    <button class="btn btn-danger" onclick="script.deleteQuestion(${questionItem.id})">Xoá câu hỏi</button>
+                    <button class="btn" onclick="script.updateQuestion(${questionItem.id})" >Sửa câu hỏi</button>
+                <ul>${answersHtml}</ul> `;
             });
 
             const listHTML = htmlList.join("");
             root.insertAdjacentHTML("beforeend", `<ul>${listHTML}</ul>`);
         },
         checkDisable(value) {
-            if (!!value) {
-                btnAdd.disabled = false;
-                btnDone.disabled = false;
-            } else {
+            let questionType = document.querySelector(
+                    'input[name="questionType"]:checked'
+                    );
+            if (!value) {
                 btnAdd.disabled = true;
                 btnDone.disabled = true;
+                return;
             }
-        },
-        renderAddQuestion() {
-            const myRadio = document.querySelectorAll(".questionType");
-            myRadio.forEach((item) => {
-                item.addEventListener("change", (e) => {
-                    currCheckedType = e.currentTarget.value;
-                    if (currCheckedType === "text")
-                        btnAdd.disabled = true;
-                    this.render();
-                });
-            });
+            // checkbox or radio
+            if (!!value && questionType && questionType.value !== "text") {
+                btnAdd.disabled = false;
+                btnDone.disabled = false;
+            } else if (questionType && questionType.value === "text") {
+                btnAdd.disabled = true;
+                btnDone.disabled = false;
+            }
         },
         deleteQuestion(id) {
             const event = window.event;
@@ -161,8 +144,9 @@
         createAnswer(e) {
             const event = e || window.event;
             event.preventDefault();
-            let id = 1;
+            // lấy câu hỏi
             currContentQuestion = document.querySelector("#question").value;
+            // lấy các câu trả lời nếu có
             const answers = document.querySelectorAll(".answer");
             const t = [];
             const myAnswers = answers.forEach((item) => {
@@ -173,17 +157,18 @@
             });
             currentQuestion = {
                 id: id++,
-                questionType: currCheckedType,
+                questionType: currCheckedType.toUpperCase(),
                 content: currContentQuestion,
                 answers: t,
             };
             console.log(currentQuestion);
             questions.push(currentQuestion);
-            const a = document.querySelectorAll(".answer");
-            a.forEach((element) => {
-                element.remove();
+            answerContainer.innerHTML = "";
+            myRadio.forEach((element) => {
+                element.checked = false;
             });
-            this.renderAddQuestion();
+            btnAdd.disabled = true;
+            btnDone.disabled = true;
             document.querySelector("#question").value = "";
             this.render();
         },
@@ -191,22 +176,59 @@
             const event = e || window.event;
             event.preventDefault();
             // const option = document.querySelector("#option");
-            root.insertAdjacentHTML(
+            answerContainer.insertAdjacentHTML(
                     "beforebegin",
                     !!currCheckedType && currCheckedType !== "text"
                     ? `<div class="answer">
-              <input type = "text" class="answer-content" />
-              </div>`
+                <input type="text" class="answer-content" />
+                </div>`
                     : ``
                     );
         },
-        handleClickBtnAdd() {
-            this.renderAddQuestion();
+        createSurvey() {
+            if (questions.length === 0) {
+                alert("Chưa có câu hỏi nào");
+                return;
+            }
+            const rs = {
+                content: !!title.value ? title.value : "",
+                questions,
+            };
+            fetch('<c:url value="/admin/post"/>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(rs)
+            }).then(res => window.location.href = res.url)
+                    .catch(err => console.log(err))
+            console.log(rs);
         },
         start() {
             this.render();
-            this.renderAddQuestion();
         },
     };
     script.start();
+
+    myRadio.forEach((item) => {
+        item.addEventListener("change", (e) => {
+            currCheckedType = e.currentTarget.value;
+            console.log(currCheckedType);
+            // không có ndung câu hỏi --> disable
+            if (!contentQuestion.value) {
+                btnDone.disabled = true;
+                return;
+            }
+            // text -> không cho add & cho complete
+            if (currCheckedType === "text") {
+                btnAdd.disabled = true;
+                btnDone.disabled = false;
+            }
+            // checkbox & radio -> cho add & cho complete
+            else {
+                btnAdd.disabled = false;
+                btnDone.disabled = false;
+            }
+        });
+    });
 </script>
