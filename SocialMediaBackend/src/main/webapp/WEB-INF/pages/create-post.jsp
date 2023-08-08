@@ -79,20 +79,17 @@
             a.forEach((i) => i.remove());
             const htmlList = questions.map((questionItem) => {
                 // Map the 'answers' array of each question to HTML elements
-                const answersHtml = questionItem.answers
-                        .map((answerItem) => {
-                            return `<li>Content: ${answerItem.content}</li>`;
-                        })
-                        .join("");
+                const answersHtml = questionItem.answers.map((answerItem) => {
+                    return `<li>Content: \${answerItem.content}</li>`;
+                }).join("");
                 return `
-                <li>Question: ${questionItem.content}, Type: ${questionItem.questionType}</li>
-                    <button class="btn btn-danger" onclick="script.deleteQuestion(${questionItem.id})">Xoá câu hỏi</button>
-                    <button class="btn" onclick="script.updateQuestion(${questionItem.id})" >Sửa câu hỏi</button>
-                <ul>${answersHtml}</ul> `;
+                <li>Question: \${questionItem.content}, Type: \${questionItem.questionType}</li>
+                    <button class="btn btn-danger" onclick="script.deleteQuestion(\${questionItem.id})">Xoá câu hỏi</button>
+                    <button class="btn" onclick="script.updateQuestion(\${questionItem.id})" >Sửa câu hỏi</button>
+                <ul>\${answersHtml}</ul> `;
             });
-
             const listHTML = htmlList.join("");
-            root.insertAdjacentHTML("beforeend", `<ul>${listHTML}</ul>`);
+            root.insertAdjacentHTML("beforeend", `<ul>\${listHTML}</ul>`);
         },
         checkDisable(value) {
             let questionType = document.querySelector(
@@ -178,12 +175,11 @@
             // const option = document.querySelector("#option");
             answerContainer.insertAdjacentHTML(
                     "beforebegin",
-                    !!currCheckedType && currCheckedType !== "text"
-                    ? `<div class="answer">
-                <input type="text" class="answer-content" />
+                    !!currCheckedType && currCheckedType !== "text" ?
+                    `<div class="answer">
+                    <input type="text" class="answer-content form-control" />
                 </div>`
-                    : ``
-                    );
+                    : ``);
         },
         createSurvey() {
             if (questions.length === 0) {
@@ -199,7 +195,8 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(rs)
+                body: JSON.stringify(rs),
+                redirect: 'follow'
             }).then(res => window.location.href = res.url)
                     .catch(err => console.log(err))
             console.log(rs);
@@ -220,7 +217,7 @@
                 return;
             }
             // text -> không cho add & cho complete
-            if (currCheckedType === "text") {
+            if (currCheckedType === "TEXT") {
                 btnAdd.disabled = true;
                 btnDone.disabled = false;
             }
