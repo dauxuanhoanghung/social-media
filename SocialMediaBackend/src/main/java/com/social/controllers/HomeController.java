@@ -29,9 +29,6 @@ public class HomeController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private MailService mailService;
-
-    @Autowired
     private StatsService statsService;
 
     @GetMapping

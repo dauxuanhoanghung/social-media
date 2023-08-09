@@ -133,7 +133,6 @@ public class User implements Serializable {
         this.id = id;
     }
 
-
     public String getPassword() {
         return password;
     }
@@ -163,7 +162,11 @@ public class User implements Serializable {
     }
 
     public void setAvatar(String avatar) {
-        this.avatar = avatar;
+        if (!avatar.isEmpty()) {
+            this.avatar = avatar;
+        } else {
+            this.avatar = null;
+        }
     }
 
     public String getCoverBg() {
@@ -171,7 +174,11 @@ public class User implements Serializable {
     }
 
     public void setCoverBg(String coverBg) {
-        this.coverBg = coverBg;
+        if (!coverBg.isEmpty()) {
+            this.coverBg = coverBg;
+        } else {
+            this.coverBg = null;
+        }
     }
 
     public String getEmail() {
@@ -195,7 +202,11 @@ public class User implements Serializable {
     }
 
     public void setSlug(String slug) {
-        this.slug = slug;
+        if (!slug.isEmpty()) {
+            this.slug = slug;
+        } else {
+            this.slug = null;
+        }
     }
 
     public LocalDateTime getCreatedDate() {

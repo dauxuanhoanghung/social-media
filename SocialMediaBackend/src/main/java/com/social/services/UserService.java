@@ -29,6 +29,12 @@ public interface UserService extends UserDetailsService {
     User getUserBySlug(String slug);
 
     User saveOrUpdateUser(User user);
+    
+    User updateInfo(User user);
+    
+    User update(User user);
+    
+    User updateStatus(User user);
 
     User saveOrUpdateUser(UserDTO user);
 
