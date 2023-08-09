@@ -1,5 +1,6 @@
 package com.social.repositories;
 
+import com.social.dto.request.SurveyRequest;
 import com.social.pojo.Post;
 import java.util.List;
 import java.util.Map;
@@ -20,4 +21,6 @@ public interface PostRepository {
     Post update(Post post);
 
     boolean deletePost(Integer id);
+    
+    Post saveSurvey(SurveyRequest surveyRequest);
 }

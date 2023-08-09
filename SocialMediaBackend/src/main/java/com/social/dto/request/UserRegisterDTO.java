@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class UserRegisterDTO implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     protected String password;
 
     protected Integer id;
