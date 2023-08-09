@@ -1,5 +1,6 @@
 package com.social.services.impl;
 
+import com.social.dto.request.PostRequest;
 import com.social.dto.request.SurveyRequest;
 import com.social.pojo.Post;
 import com.social.repositories.PostRepository;
@@ -39,6 +40,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post saveSurveyPost(SurveyRequest surveyRequest) {
         return this.postRepository.saveSurvey(surveyRequest);
+    }
+
+    @Override
+    public Post save(PostRequest post) {
+        return postRepository.save(post);
     }
     
 }
