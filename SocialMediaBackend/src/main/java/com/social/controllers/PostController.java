@@ -43,12 +43,12 @@ public class PostController {
         model.addAttribute("questionTypes", QuestionType.values());
     }
 
-    @GetMapping
+    @GetMapping("/create")
     public String getForm(Model model) {
         return "create-post";
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String createForm(@RequestBody @Valid SurveyRequest surveyRequest, BindingResult rs) {
         if (rs.hasErrors()) {
             return "create-post";

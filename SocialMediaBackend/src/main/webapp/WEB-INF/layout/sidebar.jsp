@@ -1,6 +1,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<c:set var="url" value="${requestScope['javax.servlet.forward.request_uri']}" />
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" data-bg-class="bg-menu-theme">
     <div class="app-brand demo">
         <a href="<c:url value="/"/>" class="app-brand-link">
@@ -49,10 +51,10 @@
     <div class="menu-inner-shadow"></div>
     <ul class="menu-inner py-1 ps ps--active-y">
         <!-- Dashboard -->
-        <li class="menu-item active">
-            <a href="/" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Analytics"><spring:message code="view.layout.sidebar.dashboard" /></div>
+        <li class="menu-item <c:if test='${url eq "/"}'>active</c:if>">
+                <a href="/" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                    <div data-i18n="Analytics"><spring:message code="view.layout.sidebar.dashboard" /></div>
             </a>
         </li>
         <!-- Layouts -->
@@ -101,10 +103,16 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-                <div data-i18n="Authentications"><spring:message code="view.layout.sidebar.manage.user" /></div>
+
+        <!--User-->
+        <li class="menu-item
+            <c:if test='${fn:contains(url, "/admin/user")}'>active open</c:if>"
+                >
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
+                    <div data-i18n="<spring:message code="view.layout.sidebar.manage.user" />">
+                    <spring:message code="view.layout.sidebar.manage.user" />
+                </div>
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
@@ -124,20 +132,28 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-cube-alt"></i>
-                <div data-i18n="Misc">Misc</div>
+        <!--Post-->
+        <li class="menu-item
+            <c:if test='${fn:contains(url, "/admin/post")}'>active open</c:if>">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons bx bx-file"></i>
+                    <div data-i18n="<spring:message code="view.layout.sidebar.manage.post" />">
+                    <spring:message code="view.layout.sidebar.manage.post" />
+                </div>
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="pages-misc-error.html" class="menu-link">
-                        <div data-i18n="Error">Error</div>
+                    <a href="<c:url value="/admin/post" />" class="menu-link">
+                        <div data-i18n="<spring:message code="view.layout.sidebar.manage.manage" />">
+                            <spring:message code="view.layout.sidebar.manage.manage" />
+                        </div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="pages-misc-under-maintenance.html" class="menu-link">
-                        <div data-i18n="Under Maintenance">Under Maintenance</div>
+                    <a href="<c:url value="/admin/post/create" />" class="menu-link">
+                        <div data-i18n="<spring:message code="view.layout.sidebar.manage.create" />">
+                            <spring:message code="view.layout.sidebar.manage.create" />
+                        </div>
                     </a>
                 </li>
             </ul>
@@ -286,58 +302,12 @@
             </a>
         </li>
 
-        <!-- Forms & Tables -->
-        <li class="menu-header small text-uppercase"><span class="menu-header-text">Forms &amp; Tables</span></li>
-        <!-- Forms -->
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-detail"></i>
-                <div data-i18n="Form Elements">Form Elements</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="forms-basic-inputs.html" class="menu-link">
-                        <div data-i18n="Basic Inputs">Basic Inputs</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="forms-input-groups.html" class="menu-link">
-                        <div data-i18n="Input groups">Input groups</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-detail"></i>
-                <div data-i18n="Form Layouts">Form Layouts</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="form-layouts-vertical.html" class="menu-link">
-                        <div data-i18n="Vertical Form">Vertical Form</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="form-layouts-horizontal.html" class="menu-link">
-                        <div data-i18n="Horizontal Form">Horizontal Form</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <!-- Tables -->
-        <li class="menu-item">
-            <a href="tables-basic.html" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-table"></i>
-                <div data-i18n="Tables">Tables</div>
-            </a>
-        </li>
-        <!-- Misc -->
+        <!-- STATISTIC -->
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text"><spring:message code="view.layout.sidebar.statistic"/></span>
         </li>
         <li class="menu-item">
-            <a href="" class="menu-link">
+            <a href="<c:url value="/admin/statistic/users" />" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-support"></i>
                 <div data-i18n="User">
                     <spring:message code="view.layout.sidebar.statistic-user" />
@@ -345,7 +315,7 @@
             </a>
         </li>
         <li class="menu-item">
-            <a href="<c:url value="/admin/post" />" class="menu-link">
+            <a href="<c:url value="/admin/statistic/posts" />" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Post">
                     <spring:message code="view.layout.sidebar.statistic-post" />

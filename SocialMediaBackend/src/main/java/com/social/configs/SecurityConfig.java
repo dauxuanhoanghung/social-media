@@ -89,7 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/login?accessDenied");
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers(AUTH_BLACKLIST).authenticated()
+//                .antMatchers(AUTH_BLACKLIST).authenticated()
 //                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
