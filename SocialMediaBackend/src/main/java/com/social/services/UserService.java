@@ -41,4 +41,6 @@ public interface UserService extends UserDetailsService {
     User saveOrUpdateUser(UserRegisterDTO user);
 
     boolean deleteUser(Integer id);
+    
+    User save(UserRegisterDTO user); // Save new record
 }
