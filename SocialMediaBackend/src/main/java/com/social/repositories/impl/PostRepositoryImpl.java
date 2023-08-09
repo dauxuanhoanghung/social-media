@@ -1,6 +1,7 @@
 package com.social.repositories.impl;
 
 import com.social.dto.request.AnswerRequest;
+import com.social.dto.request.PostRequest;
 import com.social.dto.request.QuestionRequest;
 import com.social.dto.request.SurveyRequest;
 import com.social.enums.QuestionType;
@@ -181,6 +182,23 @@ public class PostRepositoryImpl implements PostRepository {
             }
 
             return surveyPost;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Post save(PostRequest post) {
+        Session s = getSession();
+        Post p = mapper.map(post, Post.class);
+        try {
+            p.setUser(userRepository.getUserByAlumniId("2051052013").get());
+            p.setImagePostSet(null);
+            p.setLockComment(Boolean.FALSE);
+            p.setCountAction(0);
+            s.save(p);
+            return p;
         } catch (HibernateException ex) {
             ex.printStackTrace();
             return null;

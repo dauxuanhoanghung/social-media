@@ -1,5 +1,6 @@
 package com.social.services;
 
+import com.social.dto.request.PostRequest;
 import com.social.dto.request.SurveyRequest;
 import com.social.pojo.Post;
 import java.util.List;
@@ -19,4 +20,6 @@ public interface PostService {
     Post saveOrUpdatePost(Post post);
     
     Post saveSurveyPost(SurveyRequest surveyRequest);
+    
+    Post save(PostRequest post);
 }
