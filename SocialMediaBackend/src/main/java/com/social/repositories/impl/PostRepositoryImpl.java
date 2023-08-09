@@ -3,6 +3,7 @@ package com.social.repositories.impl;
 import com.social.dto.request.AnswerRequest;
 import com.social.dto.request.QuestionRequest;
 import com.social.dto.request.SurveyRequest;
+import com.social.enums.PostType;
 import com.social.enums.QuestionType;
 import com.social.pojo.Choice;
 import com.social.pojo.Post;

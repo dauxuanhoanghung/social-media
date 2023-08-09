@@ -1,7 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">User /</span> Manage All</h4>
+<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">
+        <spring:message code="view.pages.user.user" /> /</span> <spring:message code="view.pages.user.manage-all" />
+</h4>
 
 <div class="card">
     <div class="card-header d-flex justify-content-between">
@@ -25,15 +27,14 @@
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Avatar</th>
-                        <th>Username</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th><spring:message code="view.pages.user.avatar" /></th>
+                        <th><spring:message code="view.pages.user.alumniId" /></th>
+                        <th><spring:message code="view.pages.user.role" /></th>
+                        <th><spring:message code="view.pages.user.status" /></th>
+                        <th><spring:message code="view.pages.user.actions" /></th>
                     </tr>
                 </thead>
                 <tbody>
-
                     <c:forEach var="user" items="${users}">
                         <tr>
                             <td>
@@ -47,9 +48,16 @@
                                         data-popup="tooltip-custom"
                                         data-bs-placement="top"
                                         class="avatar avatar-xs pull-up"
-                                        title="Lilian Fuller"
+                                        title="${user.displayName}"
                                         >
-                                        <img src="${user.avatar}" alt="Avatar" class="rounded-circle" />
+                                        <c:choose>
+                                            <c:when test="${user != null and user.avatar != null and user.avatar != ''}">
+                                                <img src="${user.avatar}" alt="user-avatar" alt="Avatar" class="rounded-circle" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg" alt="Avatar" class="rounded-circle">
+                                            </c:otherwise>
+                                        </c:choose>
                                     </li>
                                 </ul>
                             </td>
@@ -87,10 +95,10 @@
                                     </button>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" href="<c:url value="/admin/user/${user.id}"/>">
-                                            <i class="bx bx-edit-alt me-1"></i> Edit
+                                            <i class="bx bx-edit-alt me-1"></i><spring:message code="view.pages.user.edit" />
                                         </a>
                                         <a class="dropdown-item" href="javascript:void(0);">
-                                            <i class="bx bx-trash me-1"></i> Delete
+                                            <i class="bx bx-trash me-1"></i><spring:message code="view.pages.user.delete" />
                                         </a>
                                     </div>
                                 </div>

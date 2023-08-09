@@ -8,6 +8,8 @@ import com.social.dto.request.UserRegisterDTO;
 import com.social.enums.UserStatus;
 import com.social.pojo.User;
 import com.social.services.UserService;
+import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +57,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String createUser(@ModelAttribute(value = "user") @Valid UserRegisterDTO user, 
+    public String createUser(@ModelAttribute(value = "user") @Valid UserRegisterDTO user,
             BindingResult rs, Model model) {
         if (rs.hasErrors()) {
             model.addAttribute("user", user);
@@ -87,10 +89,24 @@ public class UserController {
             RedirectAttributes redirectAttributes) {
         User user = this.userService.getUserById(id);
         user.setStatus(UserStatus.valueOf(status));
-        this.userService.saveOrUpdateUser(user);
+        this.userService.updateStatus(user);
         System.out.println(status);
 //        redirectAttributes.addFlashAttribute("status", UserStatus.values());
 //        return "redirect:/admin/user/{id}";
+    }
+
+    @PostMapping("/{id}")
+    public String changeInfo(@PathVariable(value = "id") int id,
+            @ModelAttribute(value = "user") @Valid User user, BindingResult rs,
+            Model model, Principal principal) {
+        System.out.println("OK");
+        if (rs.hasErrors()) {
+            model.addAttribute("user", user);
+            return "account";
+        }
+        user.setModifiedDate(LocalDateTime.now());
+        this.userService.updateInfo(user);
+        return "redirect:/admin/user/" + id;
     }
 
 }

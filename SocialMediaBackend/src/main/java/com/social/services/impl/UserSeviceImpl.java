@@ -129,4 +129,23 @@ public class UserSeviceImpl implements UserService {
         return this.userRepository.save(user);
     }
 
+    @Override
+    public User updateInfo(User user) {
+        return this.userRepository.update(user);
+    }
+
+    @Override
+    public User update(User user) {
+        return this.userRepository.update(user);
+    }
+
+    @Override
+    public User updateStatus(User user) {
+        if (user.getStatus().equals(UserStatus.ACTIVE)) {
+            mailService.sendMail(user.getEmail(), "Thư chấp nhận",
+                    "Tài khoản của bạn đã được xác nhận", "invitation");
+        }
+        return update(user);
+    }
+
 }
