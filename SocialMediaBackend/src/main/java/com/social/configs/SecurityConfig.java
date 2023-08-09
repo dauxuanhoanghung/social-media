@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private static final String[] AUTH_BLACKLIST = {
-        "/api/**" // Các route không yêu cầu xác thực
+//        "/api/**" // Các route không yêu cầu xác thực
     };
 
     @Bean
@@ -86,10 +86,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/");
 
         http.logout().addLogoutHandler(this.logoutHandler);
-
         http.exceptionHandling()
                 .accessDeniedPage("/login?accessDenied");
-        http.csrf().disable()
+        http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers(AUTH_BLACKLIST).authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")

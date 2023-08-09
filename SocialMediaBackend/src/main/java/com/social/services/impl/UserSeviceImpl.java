@@ -140,4 +140,9 @@ public class UserSeviceImpl implements UserService {
         return this.userRepository.update(user);
     }
 
+    @Override
+    public User save(UserRegisterDTO user) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }
