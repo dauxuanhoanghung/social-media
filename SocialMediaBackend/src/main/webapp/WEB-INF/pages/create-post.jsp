@@ -22,14 +22,16 @@
         </button>
     </div>
     <div class="container">
-        <h1 class="align-items-center">Tạo câu hỏi</h1>
+        <h1 class="align-items-center">
+            <spring:message code="view.pages.create-post.createQuestion"/>
+        </h1>
         <input
             placeholder="Nội dung câu hỏi"
             id="question"
             onkeyup="script.checkDisable(this.value)" 
             class="form-control"/>
         <button disabled id="btnDone" onclick="script.createAnswer()" class="btn btn-warning">
-            Hoàn thành câu hỏi
+            <spring:message code="view.pages.create-post.completeQuestion"/>
         </button>
 
         <div id="option">
@@ -48,12 +50,19 @@
                 </c:forEach>
             </div>
             <button disabled id="btnAdd" onclick="script.renderCreateAnswer()" class="btn btn-info">
-                Thêm câu trả lời
+                <spring:message code="view.pages.create-post.addNewAnswer"/>
             </button>
             <div id="answerContainer">
 
             </div>
         </div>
+    </div>
+
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h1></h1>
     </div>
     <form id="form"></form>
 </div>
@@ -101,10 +110,10 @@
                 return;
             }
             // checkbox or radio
-            if (!!value && questionType && questionType.value !== "text") {
+            if (!!value && questionType && questionType.value !== "TEXT") {
                 btnAdd.disabled = false;
                 btnDone.disabled = false;
-            } else if (questionType && questionType.value === "text") {
+            } else if (questionType && questionType.value === "TEXT") {
                 btnAdd.disabled = true;
                 btnDone.disabled = false;
             }
@@ -190,7 +199,7 @@
                 content: !!title.value ? title.value : "",
                 questions,
             };
-            fetch('<c:url value="/admin/post"/>', {
+            fetch('<c:url value="/admin/post/create"/>', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
