@@ -1,5 +1,6 @@
 package com.social.validator;
 
+import com.social.dto.request.QuestionRequest;
 import com.social.dto.request.SurveyRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -21,13 +22,20 @@ public class SurveyRequestValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         SurveyRequest surveyRequest = (SurveyRequest) target;
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "questions", 
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "questions",
                 "validator.surveyRequest.questions.required", "At least one question is required");
 
-        if (surveyRequest.getQuestions() != null && surveyRequest.getQuestions().isEmpty()) {
-            errors.rejectValue("questions", 
+        if (surveyRequest.getQuestions() == null || surveyRequest.getQuestions().isEmpty()) {
+            errors.rejectValue("questions",
                     "validator.surveyRequest.questions.required", "At least one question is required");
         }
+
+        for (QuestionRequest questionRequest : surveyRequest.getQuestions()) {
+            if (questionRequest.getAnswers() == null || questionRequest.getAnswers().isEmpty()) {
+                errors.rejectValue("answers",
+                        "validator.surveyRequest.questions.required", "At least one question is required");
+            }
+        }
     }
-    
+
 }

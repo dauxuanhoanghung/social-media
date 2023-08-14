@@ -2,7 +2,6 @@ package com.social.controllers;
 
 import com.social.dto.request.SurveyRequest;
 import com.social.enums.QuestionType;
-import com.social.enums.UserStatus;
 import com.social.services.PostService;
 import com.social.validator.SurveyRequestValidator;
 import javax.validation.Valid;
@@ -41,6 +40,11 @@ public class PostController {
     @ModelAttribute
     public void commonAttributesUser(Model model) {
         model.addAttribute("questionTypes", QuestionType.values());
+    }
+    
+    @GetMapping
+    public String index(Model model) {
+        return "posts";
     }
 
     @GetMapping("/create")

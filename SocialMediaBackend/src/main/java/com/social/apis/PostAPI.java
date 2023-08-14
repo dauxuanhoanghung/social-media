@@ -8,7 +8,6 @@ import com.social.dto.request.PostRequest;
 import com.social.exceptions.NotFoundException;
 import com.social.services.PostService;
 import com.social.services.UserService;
-import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -28,11 +27,7 @@ import org.springframework.web.context.request.WebRequest;
 public class PostAPI {
 
     @Autowired
-    private UserService userService;
-    
-    @Resource
-    private transient MessageSource messageSource;
-    
+    private UserService userService; 
     @Autowired
     private PostService postService;
     

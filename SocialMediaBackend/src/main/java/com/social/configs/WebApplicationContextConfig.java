@@ -4,6 +4,8 @@
  */
 package com.social.configs;
 
+import com.social.formatters.CommentFormatter;
+import com.social.formatters.PostFormatter;
 import com.social.formatters.RoleFormatter;
 import com.social.formatters.UserFormatter;
 import java.time.format.DateTimeFormatter;
@@ -106,6 +108,9 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(new RoleFormatter());
         registry.addFormatter(new UserFormatter());
+        registry.addFormatter(new PostFormatter());
+        registry.addFormatter(new CommentFormatter());
+
     }
 
     @Override
@@ -127,8 +132,8 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
     public Validator getValidator() {
         return validator();
     }
-    
-      @Override
+
+    @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**");
     }
