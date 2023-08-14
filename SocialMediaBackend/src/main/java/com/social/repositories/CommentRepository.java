@@ -11,8 +11,11 @@ import com.social.pojo.SubCommentAction;
  */
 public interface CommentRepository {
     
-    Comment saveOrUpdateComment(Comment comment);
-    CommentAction saveOrUpdateCommentAction(CommentAction commentAction);
-    SubComment saveOrUpdateSubComment(SubComment subComment);
-    SubCommentAction saveOrUpdateSubCommentAction(SubCommentAction subCommentAction);
+    Comment save(Comment comment);
+    CommentAction save(CommentAction commentAction);
+    SubComment save(SubComment subComment);
+    SubCommentAction save(SubCommentAction subCommentAction);
+    
+    Comment update(Comment comment);
+    SubComment update(SubComment subComment);
 }

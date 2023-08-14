@@ -6,9 +6,7 @@ package com.social.apis;
 
 import com.social.exceptions.NotFoundException;
 import com.social.services.UserService;
-import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +23,6 @@ public class PostAPI {
 
     @Autowired
     private UserService userService;
-    
-    @Resource
-    private transient MessageSource messageSource;
 
     @GetMapping
     public String getAllPost() {

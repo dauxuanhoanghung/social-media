@@ -25,6 +25,7 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Dashboard Admin - Account Settings" />
         <put-attribute name="content" value="/WEB-INF/pages/account.jsp" />
     </definition>
+    <!--REGION USER-->
     <definition name="user" extends="baseLayout">
         <put-attribute name="title" value="Dashboard Admin - Manage User" />
         <put-attribute name="content" value="/WEB-INF/pages/user.jsp" />
@@ -37,8 +38,13 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Dashboard Admin - Account" />
         <put-attribute name="content" value="/WEB-INF/pages/account.jsp" />
     </definition>
-    <definition name="create-post" extends="baseLayout">
+    <!--REGION POST-->
+    <definition name="posts" extends="baseLayout">
         <put-attribute name="title" value="Dashboard Admin - Post" />
+        <put-attribute name="content" value="/WEB-INF/pages/posts.jsp" />
+    </definition>
+    <definition name="create-post" extends="baseLayout">
+        <put-attribute name="title" value="Dashboard Admin - Create Survey" />
         <put-attribute name="content" value="/WEB-INF/pages/create-post.jsp" />
     </definition>
 </tiles-definitions>
