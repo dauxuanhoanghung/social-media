@@ -53,13 +53,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post getPostById(String id) {
-        Optional<Post> post = this.postRepository.getPostById(id);
+        Optional<Post> post = this.postRepository.getPostById(String.valueOf(id));
         return post.orElseThrow();
-    }
-
-    @Override
-    public Post saveOrUpdatePost(Post post) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -87,7 +82,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post save(PostRequest post) {
-        Post savedPost = this.postRepository.save(post);
+//        Post savedPost = this.postRepository.save(post);
+        Post savedPost = mapper.map(post, Post.class);
+        this.postRepository.save(savedPost);
         for (MultipartFile file : post.getImages()) {
             String link = cloudinaryService.uploadImage(file);
             ImagePost imagePost = new ImagePost();

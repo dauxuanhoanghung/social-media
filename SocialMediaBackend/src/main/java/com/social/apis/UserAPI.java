@@ -40,7 +40,7 @@ public class UserAPI {
                 HttpStatus.OK
         );
     }
-    
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ModelResponse> createOrUpdateUser(@ModelAttribute @Valid UserRegisterDTO user, BindingResult rs) {
         if (rs.hasErrors()) {

@@ -4,6 +4,8 @@
  */
 package com.social.pojo;
 
+import com.social.enums.PostType;
+import com.social.enums.QuestionType;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -11,6 +13,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -58,6 +62,11 @@ public class Post implements Serializable {
     private Boolean lockComment;
     @Column(name = "count_action")
     private Integer countAction;
+    @Basic(optional = false)
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private PostType type;
     @Column(name = "created_date")
     private LocalDateTime createdDate;
     @Column(name = "modified_date")
@@ -71,8 +80,6 @@ public class Post implements Serializable {
     private Set<Comment> commentSet;
     @OneToMany(mappedBy = "postId")
     private Set<ImagePost> imagePostSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
-    private Set<PostReport> postReportSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private Set<PostAction> postActionSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
@@ -179,15 +186,6 @@ public class Post implements Serializable {
     }
 
     @XmlTransient
-    public Set<PostReport> getPostReportSet() {
-        return postReportSet;
-    }
-
-    public void setPostReportSet(Set<PostReport> postReportSet) {
-        this.postReportSet = postReportSet;
-    }
-
-    @XmlTransient
     public Set<PostAction> getPostActionSet() {
         return postActionSet;
     }
@@ -228,6 +226,20 @@ public class Post implements Serializable {
     @Override
     public String toString() {
         return "com.social.pojo.Post[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the type
+     */
+    public PostType getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(PostType type) {
+        this.type = type;
     }
 
 }
