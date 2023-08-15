@@ -7,6 +7,7 @@ import com.social.pojo.SubCommentAction;
 import com.social.pojo.User;
 import com.social.repositories.CommentRepository;
 import com.social.repositories.UserRepository;
+import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -129,6 +130,26 @@ public class CommentRepositoryImpl implements CommentRepository {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public List<Comment> getCommentsByPostId(int postId) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<SubComment> getReplyByCommentId(int commentId) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public long countActionById(int commentId) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public long countReplyActionById(int replyId) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

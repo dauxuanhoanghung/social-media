@@ -2,8 +2,10 @@ package com.social.controllers;
 
 import com.social.dto.request.SurveyRequest;
 import com.social.enums.QuestionType;
+import com.social.pojo.Post;
 import com.social.services.PostService;
 import com.social.validator.SurveyRequestValidator;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -44,6 +46,8 @@ public class PostController {
     
     @GetMapping
     public String index(Model model) {
+        List<Post> posts = this.postService.getPosts(null);
+        
         return "posts";
     }
 

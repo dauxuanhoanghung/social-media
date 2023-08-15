@@ -5,7 +5,6 @@ import com.social.dto.request.SurveyRequest;
 import com.social.pojo.Post;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  *
@@ -16,8 +15,6 @@ public interface PostService {
     List<Post> getPosts(Map<String, Object> params);
 
     Post getPostById(String id);
-
-    Post saveOrUpdatePost(Post post);
     
     Post saveSurveyPost(SurveyRequest surveyRequest);
     
