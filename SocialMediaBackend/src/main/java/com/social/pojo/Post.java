@@ -4,8 +4,9 @@
  */
 package com.social.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.social.enums.PostType;
-import com.social.enums.QuestionType;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -15,6 +16,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -67,24 +69,23 @@ public class Post implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private PostType type;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "created_date")
     private LocalDateTime createdDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", fetch = FetchType.EAGER) 
     private Set<Question> questions;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
-    private Set<Comment> commentSet;
-    @OneToMany(mappedBy = "postId")
+    @OneToMany(mappedBy = "postId", fetch = FetchType.EAGER)
     private Set<ImagePost> imagePostSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
-    private Set<PostAction> postActionSet;
+        @JsonIgnore
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
     private Set<PostTag> postTagSet;
-
     {
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = LocalDateTime.now();
@@ -167,14 +168,6 @@ public class Post implements Serializable {
         this.user = user;
     }
 
-    @XmlTransient
-    public Set<Comment> getCommentSet() {
-        return commentSet;
-    }
-
-    public void setCommentSet(Set<Comment> commentSet) {
-        this.commentSet = commentSet;
-    }
 
     @XmlTransient
     public Set<ImagePost> getImagePostSet() {
@@ -185,14 +178,6 @@ public class Post implements Serializable {
         this.imagePostSet = imagePostSet;
     }
 
-    @XmlTransient
-    public Set<PostAction> getPostActionSet() {
-        return postActionSet;
-    }
-
-    public void setPostActionSet(Set<PostAction> postActionSet) {
-        this.postActionSet = postActionSet;
-    }
 
     @XmlTransient
     public Set<PostTag> getPostTagSet() {

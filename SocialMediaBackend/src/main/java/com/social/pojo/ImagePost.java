@@ -4,6 +4,7 @@
  */
 package com.social.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -41,6 +42,7 @@ public class ImagePost implements Serializable {
     @Size(max = 255)
     @Column(name = "url")
     private String url;
+    @JsonIgnore
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     @ManyToOne
     private Post postId;

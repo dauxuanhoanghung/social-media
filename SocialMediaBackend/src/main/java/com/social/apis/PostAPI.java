@@ -1,12 +1,17 @@
 package com.social.apis;
 
+import com.social.dto.PostDTO;
 import com.social.dto.request.PostRequest;
 import com.social.pojo.Comment;
 import com.social.pojo.Post;
 import com.social.services.CommentService;
 import com.social.services.PostService;
 import com.social.services.UserService;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,16 +34,24 @@ public class PostAPI {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private PostService postService;
-    
+
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private ModelMapper mapper;
+
+//    @GetMapping
+//    public String getAllPost() {
+//        return "authen success";
+//    }
     @GetMapping
-    public String getAllPost() {
-        return "authen success";
+    public ResponseEntity<List<Post>> getPosts(Integer page) {
+        List<Post> posts = postService.getPosts(Collections.singletonMap("page", page.toString()));
+        return ResponseEntity.ok(posts);
     }
 
     @PostMapping(produces = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -53,4 +66,5 @@ public class PostAPI {
 //        List<Comment> comments = this.commentService
         return null;
     }
+
 }

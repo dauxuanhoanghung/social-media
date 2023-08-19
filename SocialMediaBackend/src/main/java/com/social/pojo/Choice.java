@@ -4,6 +4,7 @@
  */
 package com.social.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -44,6 +45,7 @@ public class Choice implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "content")
     private String content;
+    @JsonIgnore
     @JoinColumn(name = "question_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Question question;

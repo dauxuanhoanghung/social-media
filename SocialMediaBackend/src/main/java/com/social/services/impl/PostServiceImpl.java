@@ -1,5 +1,6 @@
 package com.social.services.impl;
 
+import com.social.dto.PostDTO;
 import com.social.dto.request.AnswerRequest;
 import com.social.dto.request.PostRequest;
 import com.social.dto.request.QuestionRequest;
@@ -14,6 +15,9 @@ import com.social.repositories.PostRepository;
 import com.social.repositories.QuestionRepository;
 import com.social.services.CloudinaryService;
 import com.social.services.PostService;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,7 +52,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getPosts(Map<String, Object> params) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return postRepository.getPosts(params);
     }
 
     @Override
@@ -94,6 +98,14 @@ public class PostServiceImpl implements PostService {
             this.imagePostRepository.save(imagePost);
         }
         return savedPost;
+    }
+
+    @Override
+    public List<PostDTO> getPost(Integer page) {
+//        List<Post> posts =  postRepository.getPosts(Collections.singletonMap("page", page));
+//        List<PostDTO> rs = new ArrayList<>();
+//        for (Post post)
+        return null;
     }
 
 }
