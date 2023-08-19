@@ -50,9 +50,6 @@ public class CommentRepositoryImpl implements CommentRepository {
     public Comment save(Comment comment) {
         Session session = getSession();
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User user = userRepository.getUserByAlumniId(authentication.getName()).get();
-            comment.setUser(user);
             session.save(comment);
             return comment;
         } catch (HibernateException ex) {
@@ -80,13 +77,9 @@ public class CommentRepositoryImpl implements CommentRepository {
     public SubComment save(SubComment subComment) {
         Session session = getSession();
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User user = userRepository.getUserByAlumniId(authentication.getName()).get();
-            subComment.setUser(user);
             session.save(subComment);
             return subComment;
         } catch (HibernateException ex) {
-            ex.printStackTrace();
             return null;
         }
     }

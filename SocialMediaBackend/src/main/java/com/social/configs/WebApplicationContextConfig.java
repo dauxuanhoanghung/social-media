@@ -4,6 +4,7 @@
  */
 package com.social.configs;
 
+import com.social.formatters.ActionFormatter;
 import com.social.formatters.CommentFormatter;
 import com.social.formatters.PostFormatter;
 import com.social.formatters.RoleFormatter;
@@ -110,7 +111,7 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
         registry.addFormatter(new UserFormatter());
         registry.addFormatter(new PostFormatter());
         registry.addFormatter(new CommentFormatter());
-
+        registry.addFormatter(new ActionFormatter());
     }
 
     @Override
