@@ -15,18 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/api/comment/")
 public class CommentAPI {
-    
+
     @Autowired
     private CommentService commentService;
-    
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void create() {
-        
+
+    }
+
+    @PostMapping(path = "/addReply")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addSubComment() {
+
     }
     
-    @PostMapping(path = "/addReply")
-    public void addSubComment() {
-        
-    }
 }
