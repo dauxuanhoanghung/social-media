@@ -1,5 +1,6 @@
 package com.social.services;
 
+import com.social.dto.PostDTO;
 import com.social.dto.request.PostRequest;
 import com.social.dto.request.SurveyRequest;
 import com.social.pojo.Post;
@@ -13,7 +14,9 @@ import java.util.Map;
 public interface PostService {
 
     List<Post> getPosts(Map<String, Object> params);
-
+    
+    List<PostDTO> getPost(Integer page);
+    
     Post getPostById(String id);
     
     Post saveSurveyPost(SurveyRequest surveyRequest);
