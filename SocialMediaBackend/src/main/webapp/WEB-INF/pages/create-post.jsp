@@ -9,14 +9,16 @@
     <spring:message code="view.pages.create-post.create" />
 </h4>
 
-<div class="card">
+<div class="card py-3">
     <div class="card-header d-flex justify-content-between">
         <div>
             <h5 class="align-items-center"><spring:message code="view.pages.create-post.title" /></h5>
         </div>
     </div>
     <div class="d-flex m-2">
-        <input type="text" placeholder="Tên bài khảo sát" id="title-survey" class="form-control me-2"/>
+        <input type="text" 
+               placeholder="<spring:message code="view.pages.create-post.survey.placeholder"/>" 
+               id="title-survey" class="form-control me-2"/>
         <button onclick="script.createSurvey()" class="btn btn-success">
             <spring:message code="view.pages.create-post.posting" />
         </button>
@@ -26,7 +28,7 @@
             <spring:message code="view.pages.create-post.createQuestion"/>
         </h1>
         <input
-            placeholder="Nội dung câu hỏi"
+            placeholder="<spring:message code="view.pages.create-post.question.placeholder"/>"
             id="question"
             onkeyup="script.checkDisable(this.value)" 
             class="form-control"/>
@@ -36,7 +38,7 @@
 
         <div id="option">
             <div>
-                <c:forEach items="${questionTypes}" var="type">
+                <c:forEach items="${questionTypes}" var="type" varStatus="status">
                     <label class="form-check-label">
                         <input
                             type="radio"
@@ -44,7 +46,8 @@
                             class="questionType"
                             name="questionType" 
                             class="form-check-input"
-                            />
+                            <c:if test="${status.index == 2}" >checked</c:if>
+                                />
                         ${type}
                     </label>
                 </c:forEach>
@@ -70,17 +73,20 @@
     let questions = [];
     const root = document.getElementById("form");
     const title = document.querySelector("#title-survey");
-    let currCheckedType = null;
+    let currCheckedType = "TEXT";
     let currContentQuestion = "";
     let currentAnswers = [];
     let currentQuestion = {};
     let id = 1;
     let btnAdd = document.querySelector("#btnAdd");
     let btnDone = document.querySelector("#btnDone");
+    // input for get question content
     let contentQuestion = document.querySelector("#question");
+    // container have answers of current question
     let answerContainer = document.querySelector("#answerContainer");
     const myRadio = document.querySelectorAll(".questionType");
     const script = {
+        // render when loading page and after add a question to list questions
         render() {
             root.innerHTML = "";
             document.querySelector("#question").innerHTML = "";
@@ -89,21 +95,25 @@
             const htmlList = questions.map((questionItem) => {
                 // Map the 'answers' array of each question to HTML elements
                 const answersHtml = questionItem.answers.map((answerItem) => {
-                    return `<li>Content: \${answerItem.content}</li>`;
+                    return `<li>                    
+                        <input type="\${questionItem.questionType}" value='\${answerItem.content}' name='question-id-\${questionItem.id}'/>
+                        <label>\${answerItem.content}</label>
+                    </li>`;
                 }).join("");
                 return `
                 <li>Question: \${questionItem.content}, Type: \${questionItem.questionType}</li>
+                <ul>\${answersHtml}</ul>
+                <div>
                     <button class="btn btn-danger" onclick="script.deleteQuestion(\${questionItem.id})">Xoá câu hỏi</button>
                     <button class="btn" onclick="script.updateQuestion(\${questionItem.id})" >Sửa câu hỏi</button>
-                <ul>\${answersHtml}</ul> `;
+                </div>`;
             });
             const listHTML = htmlList.join("");
             root.insertAdjacentHTML("beforeend", `<ul>\${listHTML}</ul>`);
         },
+        // Check when change input questions, if there's choose radio -> enable btn
         checkDisable(value) {
-            let questionType = document.querySelector(
-                    'input[name="questionType"]:checked'
-                    );
+            let questionType = document.querySelector('input[name="questionType"]:checked');
             if (!value) {
                 btnAdd.disabled = true;
                 btnDone.disabled = true;
@@ -147,18 +157,18 @@
                     break;
             }
         },
+        // add a question to list questions
         createAnswer(e) {
             const event = e || window.event;
             event.preventDefault();
-            // lấy câu hỏi
-            currContentQuestion = document.querySelector("#question").value;
-            // lấy các câu trả lời nếu có
-            const answers = document.querySelectorAll(".answer");
+            // lấy câu hỏi nội dung
+            currContentQuestion = contentQuestion.value;
+            // lấy các câu trả lời nếu có, lấy input
+            const answers = answerContainer.querySelectorAll(".answer-content");
             const t = [];
             const myAnswers = answers.forEach((item) => {
-                const b = item.querySelector(".answer-content");
                 t.push({
-                    content: b.value,
+                    content: item.value
                 });
             });
             currentQuestion = {
@@ -171,23 +181,24 @@
             questions.push(currentQuestion);
             answerContainer.innerHTML = "";
             myRadio.forEach((element) => {
-                element.checked = false;
+                element.checked = element.value == "TEXT";
             });
             btnAdd.disabled = true;
             btnDone.disabled = true;
             document.querySelector("#question").value = "";
             this.render();
         },
+        // add input to typing answer for question 
         renderCreateAnswer(e) {
             const event = e || window.event;
             event.preventDefault();
             // const option = document.querySelector("#option");
             answerContainer.insertAdjacentHTML(
-                    "beforebegin",
+                    "beforeend",
                     !!currCheckedType && currCheckedType !== "text" ?
-                    `<div class="answer">
-                    <input type="text" class="answer-content form-control" />
-                </div>`
+                    `<input type="text" 
+                            class="answer-content form-control" 
+                            placeholder='<spring:message code="view.pages.create-post.answer.placeholder" />' />`
                     : ``);
         },
         createSurvey() {
@@ -220,20 +231,30 @@
         item.addEventListener("change", (e) => {
             currCheckedType = e.currentTarget.value;
             console.log(currCheckedType);
-            // không có ndung câu hỏi --> disable
-            if (!contentQuestion.value) {
-                btnDone.disabled = true;
-                return;
-            }
             // text -> không cho add & cho complete
             if (currCheckedType === "TEXT") {
                 btnAdd.disabled = true;
                 btnDone.disabled = false;
+                answerContainer.innerHTML = "";
             }
             // checkbox & radio -> cho add & cho complete
             else {
                 btnAdd.disabled = false;
                 btnDone.disabled = false;
+                answerContainer.innerHTML = `
+                    <input type="text" 
+                            class="answer-content form-control" 
+                            placeholder='<spring:message code="view.pages.create-post.answer.placeholder" />' />
+                    <input type="text" 
+                            class="answer-content form-control" 
+                            placeholder='<spring:message code="view.pages.create-post.answer.placeholder" />' />
+                `;
+            }
+
+            // không có ndung câu hỏi --> disable
+            if (!contentQuestion.value) {
+                btnDone.disabled = true;
+                btnAdd.disabled = true;
             }
         });
     });

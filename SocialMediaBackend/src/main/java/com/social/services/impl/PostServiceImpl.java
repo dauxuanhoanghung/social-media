@@ -13,6 +13,7 @@ import com.social.pojo.Question;
 import com.social.repositories.ImagePostRepository;
 import com.social.repositories.PostRepository;
 import com.social.repositories.QuestionRepository;
+import com.social.repositories.UserRepository;
 import com.social.services.CloudinaryService;
 import com.social.services.PostService;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ import java.util.Map;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,9 +53,12 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public List<Post> getPosts(Map<String, Object> params) {
-        return postRepository.getPosts(params);
+        return this.postRepository.getPosts(params);
     }
 
     @Override
@@ -63,10 +69,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post saveSurveyPost(SurveyRequest surveyRequest) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Post surveyPost = mapper.map(surveyRequest, Post.class);
         surveyPost.setQuestions(null);
         surveyPost.setLockComment(Boolean.FALSE);
         surveyPost.setCountAction(0);
+//        surveyPost.setUser(this.userRepository.getUserByAlumniId(authentication.getName()).get());
         this.postRepository.save(surveyPost);
         for (QuestionRequest qr : surveyRequest.getQuestions()) {
             Question question = mapper.map(qr, Question.class);

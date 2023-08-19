@@ -88,7 +88,8 @@ public class PostRepositoryImpl implements PostRepository {
             }
             return query.getResultList();
         }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        return query.getResultList();
     }
 
     @Override
@@ -108,7 +109,6 @@ public class PostRepositoryImpl implements PostRepository {
     public Post save(Post post) {
         Session s = getSession();
         try {
-            //            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = userRepository.getUserByAlumniId("chuongdp").get();
             post.setUser(user);
             s.save(post);
