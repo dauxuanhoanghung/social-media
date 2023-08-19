@@ -86,7 +86,7 @@ public class PostRepositoryImpl implements PostRepository {
             } else {
                 query.setFirstResult(0);
             }
-
+            return query.getResultList();
         }
         
         return query.getResultList();

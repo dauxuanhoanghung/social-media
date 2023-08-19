@@ -4,6 +4,7 @@
  */
 package com.social.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.social.enums.UserStatus;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -88,21 +89,27 @@ public class User implements Serializable {
     private LocalDateTime createdDate;
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Set<SurveyResult> surveyResultSet;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+//    private Set<SurveyResult> surveyResultSet;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "founderId")
     private Set<Community> communitySet;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<UserSettings> userSettings;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Post> posts;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<SubComment> subComments;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Comment> comments;
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Role role;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<PostAction> postActions;
 
@@ -225,15 +232,14 @@ public class User implements Serializable {
         this.modifiedDate = modifiedDate;
     }
 
-    @XmlTransient
-    public Set<SurveyResult> getSurveyResultSet() {
-        return surveyResultSet;
-    }
-
-    public void setSurveyResultSet(Set<SurveyResult> surveyResultSet) {
-        this.surveyResultSet = surveyResultSet;
-    }
-
+//    @XmlTransient
+//    public Set<SurveyResult> getSurveyResultSet() {
+//        return surveyResultSet;
+//    }
+//
+//    public void setSurveyResultSet(Set<SurveyResult> surveyResultSet) {
+//        this.surveyResultSet = surveyResultSet;
+//    }
     @XmlTransient
     public Set<Community> getCommunitySet() {
         return communitySet;

@@ -4,6 +4,7 @@
  */
 package com.social.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.social.enums.QuestionType;
 import java.io.Serializable;
 import java.util.Set;
@@ -13,6 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -58,12 +60,15 @@ public class Question implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "question_type")
     private QuestionType questionType;
+    @JsonIgnore
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Post post;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "questionId")
     private Set<SurveyResult> surveyResultSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
+//    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question", fetch = FetchType.EAGER)
     private Set<Choice> choices;
 
     public Question() {
