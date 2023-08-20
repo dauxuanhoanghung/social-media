@@ -7,7 +7,13 @@ import com.social.pojo.SubCommentAction;
 import com.social.pojo.User;
 import com.social.repositories.CommentRepository;
 import com.social.repositories.UserRepository;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -50,9 +56,6 @@ public class CommentRepositoryImpl implements CommentRepository {
     public Comment save(Comment comment) {
         Session session = getSession();
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User user = userRepository.getUserByAlumniId(authentication.getName()).get();
-            comment.setUser(user);
             session.save(comment);
             return comment;
         } catch (HibernateException ex) {
@@ -80,13 +83,9 @@ public class CommentRepositoryImpl implements CommentRepository {
     public SubComment save(SubComment subComment) {
         Session session = getSession();
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User user = userRepository.getUserByAlumniId(authentication.getName()).get();
-            subComment.setUser(user);
             session.save(subComment);
             return subComment;
         } catch (HibernateException ex) {
-            ex.printStackTrace();
             return null;
         }
     }
@@ -138,8 +137,21 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public List<SubComment> getReplyByCommentId(int commentId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<SubComment> getRepliesByCommentId(int commentId) {
+        Session session = getSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<SubComment> criteriaQuery = criteriaBuilder.createQuery(SubComment.class);
+
+        Root<SubComment> subCommentRoot = criteriaQuery.from(SubComment.class);
+        // WHERE
+        List<Predicate> predicates = new ArrayList<>();
+        Predicate commentIdPredicate = criteriaBuilder.equal(subCommentRoot.get("comment"), commentId);
+        predicates.add(commentIdPredicate);
+        //
+        criteriaQuery.select(subCommentRoot).where(predicates.toArray(Predicate[]::new));
+        Query query = session.createQuery(criteriaQuery);
+
+        return query.getResultList();
     }
 
     @Override
@@ -150,6 +162,48 @@ public class CommentRepositoryImpl implements CommentRepository {
     @Override
     public long countReplyActionById(int replyId) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public boolean delete(Comment comment) {
+        Session s = getSession();
+        try {
+            s.delete(comment);
+            return true;
+        } catch (HibernateException ex) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(SubComment subComment) {
+        Session s = getSession();
+        try {
+            s.delete(subComment);
+            return true;
+        } catch (HibernateException ex) {
+            return false;
+        }
+    }
+
+    @Override
+    public Comment getCommentById(Integer id) {
+        Session s = getSession();
+        try {
+            return s.get(Comment.class, id);
+        } catch (HibernateException ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public SubComment getSubCommentById(Integer id) {
+        Session s = getSession();
+        try {
+            return s.get(SubComment.class, id);
+        } catch (HibernateException ex) {
+            return null;
+        }
     }
 
 }

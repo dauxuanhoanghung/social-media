@@ -15,5 +15,8 @@ public interface CommentService {
     SubComment save(SubComment subComment);
     
     List<Comment> getByPostId(Map<String, String> params);
+    List<SubComment> getRepliesByCommentId(Integer id);
     
+    boolean delete(Integer id);
+    boolean deleteSub(Integer id);
 }

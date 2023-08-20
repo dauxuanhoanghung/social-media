@@ -69,12 +69,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post saveSurveyPost(SurveyRequest surveyRequest) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Post surveyPost = mapper.map(surveyRequest, Post.class);
         surveyPost.setQuestions(null);
         surveyPost.setLockComment(Boolean.FALSE);
         surveyPost.setCountAction(0);
-//        surveyPost.setUser(this.userRepository.getUserByAlumniId(authentication.getName()).get());
+        surveyPost.setUser(this.userRepository.getUserByAlumniId(authentication.getName()).get());
         this.postRepository.save(surveyPost);
         for (QuestionRequest qr : surveyRequest.getQuestions()) {
             Question question = mapper.map(qr, Question.class);
