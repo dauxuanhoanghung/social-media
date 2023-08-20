@@ -12,8 +12,11 @@ import java.util.List;
  */
 public interface CommentRepository {
     
+    Comment getCommentById(Integer id);
+    SubComment getSubCommentById(Integer id);
+    
     List<Comment> getCommentsByPostId(int postId);
-    List<SubComment> getReplyByCommentId(int commentId);
+    List<SubComment> getRepliesByCommentId(int commentId);
     
     long countActionById(int commentId);
     long countReplyActionById(int replyId);
@@ -25,4 +28,7 @@ public interface CommentRepository {
     
     Comment update(Comment comment);
     SubComment update(SubComment subComment);
+    
+    boolean delete(Comment comment);
+    boolean delete(SubComment subComment);
 }

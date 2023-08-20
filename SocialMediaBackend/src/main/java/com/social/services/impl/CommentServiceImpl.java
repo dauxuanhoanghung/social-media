@@ -35,5 +35,35 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> getByPostId(Map<String, String> params) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
+    @Override
+    public boolean delete(Integer id) {
+        Comment comment = this.commentRepository.getCommentById(id);
+        if (comment == null) {
+            return false;
+        } else {
+            // Must delete all actions of comment here before delete comment
+            List<SubComment> subs = this.commentRepository.getRepliesByCommentId(id);
+            for(SubComment sub : subs) {
+                this.commentRepository.delete(sub);
+            }
+            return this.commentRepository.delete(comment);
+        }
+    }
+
+    @Override
+    public boolean deleteSub(Integer id) {
+        SubComment subComment = this.commentRepository.getSubCommentById(id);
+        if (subComment == null) {
+            return false;
+        } else {
+            // Must delete all actions of reply here before delete reply
+            return this.commentRepository.delete(subComment);
+        }
+    }
+
+    @Override
+    public List<SubComment> getRepliesByCommentId(Integer id) {
+        return null;
+    }
 }
