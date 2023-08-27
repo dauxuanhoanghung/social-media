@@ -22,6 +22,8 @@ public interface PostRepository {
     
     Post update(Post post);
 
-    boolean deletePost(Integer id);
+    boolean deleteById(Integer id);
+    
+    boolean delete(Post post);
     
 }

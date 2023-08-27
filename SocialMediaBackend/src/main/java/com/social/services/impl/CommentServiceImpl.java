@@ -3,6 +3,7 @@ package com.social.services.impl;
 import com.social.pojo.Comment;
 import com.social.pojo.SubComment;
 import com.social.repositories.CommentRepository;
+import com.social.repositories.SubCommentRepository;
 import com.social.services.CommentService;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,9 @@ public class CommentServiceImpl implements CommentService {
     
     @Autowired
     private CommentRepository commentRepository;
+    
+    @Autowired
+    private SubCommentRepository subCommentRepository;
 
     @Override
     public Comment save(Comment comment) {
@@ -28,7 +32,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public SubComment save(SubComment subComment) {
-        return this.commentRepository.save(subComment);
+        return this.subCommentRepository.save(subComment);
     }
 
     @Override
@@ -42,23 +46,19 @@ public class CommentServiceImpl implements CommentService {
         if (comment == null) {
             return false;
         } else {
-            // Must delete all actions of comment here before delete comment
-            List<SubComment> subs = this.commentRepository.getRepliesByCommentId(id);
-            for(SubComment sub : subs) {
-                this.commentRepository.delete(sub);
-            }
+            // Delete inside repo (subAction, subComment, commentAction)
             return this.commentRepository.delete(comment);
         }
     }
 
     @Override
     public boolean deleteSub(Integer id) {
-        SubComment subComment = this.commentRepository.getSubCommentById(id);
+        SubComment subComment = this.subCommentRepository.getById(id);
         if (subComment == null) {
             return false;
         } else {
-            // Must delete all actions of reply here before delete reply
-            return this.commentRepository.delete(subComment);
+            // Must delete all actions of reply here before delete reply (inside repo)
+            return this.subCommentRepository.delete(subComment);
         }
     }
 
