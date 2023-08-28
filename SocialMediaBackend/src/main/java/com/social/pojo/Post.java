@@ -5,7 +5,6 @@
 package com.social.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.social.enums.PostType;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -75,16 +74,14 @@ public class Post implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", fetch = FetchType.EAGER) 
-    private Set<Question> questions;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", fetch = FetchType.EAGER) 
+    private Set<Question> questions;
     @OneToMany(mappedBy = "postId", fetch = FetchType.EAGER)
     private Set<ImagePost> imagePostSet;
-        @JsonIgnore
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId", fetch = FetchType.EAGER)
     private Set<PostTag> postTagSet;
     {
         this.createdDate = LocalDateTime.now();

@@ -1,7 +1,7 @@
 package com.social.repositories.impl;
 
-import com.social.pojo.Choice;
-import com.social.repositories.ChoiceRepository;
+import com.social.pojo.CommentAction;
+import com.social.repositories.CommentActionRepository;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,7 +10,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ChoiceRepositoryImpl implements ChoiceRepository {
+public class CommentActionRepositoryImpl implements CommentActionRepository {
 
     @Autowired
     private LocalSessionFactoryBean sessionFactory;
@@ -22,33 +22,20 @@ public class ChoiceRepositoryImpl implements ChoiceRepository {
     }
 
     @Override
-    public Choice save(Choice choice) {
+    public CommentAction save(CommentAction commentAction) {
         Session session = getSession();
 
         try {
-            session.save(choice);
-            return choice;
+            session.save(commentAction);
+            return commentAction;
         } catch (HibernateException ex) {
             return null;
         }
     }
 
     @Override
-    public boolean delete(Choice choice) {
-        Session session = getSession();
-
-        try {
-            session.delete(choice);
-            return true;
-        } catch (HibernateException ex) {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean deleteById(Integer choiceId) {
-        Session session = getSession();
-        return this.delete(session.get(Choice.class, choiceId));
+    public Integer countByCommentId(Integer commentId) {
+        return 0;
     }
 
 }

@@ -10,15 +10,14 @@ import com.social.pojo.Choice;
 import com.social.pojo.ImagePost;
 import com.social.pojo.Post;
 import com.social.pojo.Question;
+import com.social.pojo.User;
 import com.social.repositories.ImagePostRepository;
 import com.social.repositories.PostRepository;
 import com.social.repositories.QuestionRepository;
+import com.social.repositories.TagsRepository;
 import com.social.repositories.UserRepository;
 import com.social.services.CloudinaryService;
 import com.social.services.PostService;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -56,6 +55,9 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TagsRepository tagsRepository;
+
     @Override
     public List<Post> getPosts(Map<String, Object> params) {
         return this.postRepository.getPosts(params);
@@ -69,12 +71,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post saveSurveyPost(SurveyRequest surveyRequest) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Post surveyPost = mapper.map(surveyRequest, Post.class);
         surveyPost.setQuestions(null);
         surveyPost.setLockComment(Boolean.FALSE);
         surveyPost.setCountAction(0);
-        surveyPost.setUser(this.userRepository.getUserByAlumniId(authentication.getName()).get());
+        surveyPost.setUser(getCurrentUser());
         this.postRepository.save(surveyPost);
         for (QuestionRequest qr : surveyRequest.getQuestions()) {
             Question question = mapper.map(qr, Question.class);
@@ -115,5 +116,10 @@ public class PostServiceImpl implements PostService {
 //        for (Post post)
         return null;
     }
-
+    
+    // Get current user
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return this.userRepository.getUserByAlumniId(authentication.getName()).get();
+    }
 }

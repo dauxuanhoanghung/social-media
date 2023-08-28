@@ -1,7 +1,7 @@
 package com.social.repositories.impl;
 
-import com.social.pojo.Choice;
-import com.social.repositories.ChoiceRepository;
+import com.social.pojo.PostAction;
+import com.social.repositories.PostActionRepository;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,7 +10,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ChoiceRepositoryImpl implements ChoiceRepository {
+public class PostActionRepositoryImpl implements PostActionRepository {
 
     @Autowired
     private LocalSessionFactoryBean sessionFactory;
@@ -22,23 +22,23 @@ public class ChoiceRepositoryImpl implements ChoiceRepository {
     }
 
     @Override
-    public Choice save(Choice choice) {
+    public PostAction save(PostAction postAction) {
         Session session = getSession();
 
         try {
-            session.save(choice);
-            return choice;
+            session.save(postAction);
+            return postAction;
         } catch (HibernateException ex) {
             return null;
         }
     }
 
     @Override
-    public boolean delete(Choice choice) {
+    public boolean delete(PostAction postAction) {
         Session session = getSession();
 
         try {
-            session.delete(choice);
+            session.delete(postAction);
             return true;
         } catch (HibernateException ex) {
             return false;
@@ -46,9 +46,9 @@ public class ChoiceRepositoryImpl implements ChoiceRepository {
     }
 
     @Override
-    public boolean deleteById(Integer choiceId) {
+    public boolean deleteById(Integer postActionId) {
         Session session = getSession();
-        return this.delete(session.get(Choice.class, choiceId));
+        return this.delete(session.get(PostAction.class, postActionId));
     }
 
 }

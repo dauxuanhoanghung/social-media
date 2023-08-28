@@ -9,5 +9,5 @@ import com.social.pojo.CommentAction;
 public interface CommentActionRepository {
     
     CommentAction save(CommentAction commentAction);
-    CommentAction get();
+    Integer countByCommentId(Integer commentId);
 }

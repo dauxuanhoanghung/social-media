@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author LENOVO
  */
 @RestController
-@RequestMapping("/api/post/")
+@RequestMapping("/api/posts/")
 public class PostAPI {
 
     @Autowired

@@ -5,6 +5,7 @@ import com.social.dto.request.ReplyRequest;
 import com.social.pojo.Comment;
 import com.social.pojo.SubComment;
 import com.social.services.CommentService;
+import com.social.services.SubCommentService;
 import com.social.services.UserService;
 import java.security.Principal;
 import org.modelmapper.ModelMapper;
@@ -33,35 +34,31 @@ public class CommentAPI {
     private CommentService commentService;
 
     @Autowired
+    private SubCommentService subCommentService;
+
+    @Autowired
     private UserService userService;
 
     /**
      * ENDPOINT: [POST][/api/comments/]
      *
      * @commentRequest commentRequest: { content, postId}
-     * @param principal
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody CommentRequest commentRequest, Principal principal) {
-        Comment comment = mapper.map(commentRequest, Comment.class);
-        comment.setCountAction(0);
-        comment.setUser(this.userService.getUserByAlumniId(principal.getName()));
-        this.commentService.save(comment);
+    public void create(@RequestBody CommentRequest commentRequest) {
+        this.commentService.save(commentRequest);
     }
 
     /**
      * ENDPOINT: [POST][/api/comments/addReply]
      *
      * @comment comment: { content, comment (commentId á)}
-     * @param principal
      */
     @PostMapping(path = "/addReply/")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addSubComment(@RequestBody ReplyRequest reply, Principal principal) {
-        SubComment subComment = mapper.map(reply, SubComment.class);
-        subComment.setUser(this.userService.getUserByAlumniId(principal.getName()));
-        this.commentService.save(subComment);
+    public void addSubComment(@RequestBody ReplyRequest reply) {
+        this.subCommentService.save(reply);
     }
 
     @PostMapping(path = "/actionOnComment/")
@@ -69,16 +66,16 @@ public class CommentAPI {
     public void actionOnComment(Principal principal) {
 
     }
-    
+
     @DeleteMapping(path = "/{id}/delete/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable int id, Principal principal) {
         this.commentService.delete(id);
     }
-    
+
     @DeleteMapping(path = "/{id}/deleteSub/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSubComment(@PathVariable int id, Principal principal) {
-        this.commentService.deleteSub(id);
+        this.subCommentService.delete(id);
     }
 }

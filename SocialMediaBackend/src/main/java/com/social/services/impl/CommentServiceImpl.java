@@ -1,13 +1,18 @@
 package com.social.services.impl;
 
+import com.social.dto.request.CommentRequest;
 import com.social.pojo.Comment;
 import com.social.pojo.SubComment;
+import com.social.pojo.User;
 import com.social.repositories.CommentRepository;
-import com.social.repositories.SubCommentRepository;
+import com.social.repositories.UserRepository;
 import com.social.services.CommentService;
 import java.util.List;
 import java.util.Map;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,19 +25,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentServiceImpl implements CommentService {
     
     @Autowired
-    private CommentRepository commentRepository;
-    
+    private ModelMapper mapper;
+
     @Autowired
-    private SubCommentRepository subCommentRepository;
+    private CommentRepository commentRepository;
 
-    @Override
-    public Comment save(Comment comment) {
-        return this.commentRepository.save(comment);
+    @Autowired
+    private UserRepository userRepository;
+    
+    // Get current user
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return this.userRepository.getUserByAlumniId(authentication.getName()).get();
     }
-
+    
     @Override
-    public SubComment save(SubComment subComment) {
-        return this.subCommentRepository.save(subComment);
+    public Comment save(CommentRequest commentRequest) {       
+        Comment comment = mapper.map(commentRequest, Comment.class);
+        comment.setCountAction(0);
+        comment.setUser(getCurrentUser());
+        return this.commentRepository.save(comment);
     }
 
     @Override
@@ -48,17 +60,6 @@ public class CommentServiceImpl implements CommentService {
         } else {
             // Delete inside repo (subAction, subComment, commentAction)
             return this.commentRepository.delete(comment);
-        }
-    }
-
-    @Override
-    public boolean deleteSub(Integer id) {
-        SubComment subComment = this.subCommentRepository.getById(id);
-        if (subComment == null) {
-            return false;
-        } else {
-            // Must delete all actions of reply here before delete reply (inside repo)
-            return this.subCommentRepository.delete(subComment);
         }
     }
 
