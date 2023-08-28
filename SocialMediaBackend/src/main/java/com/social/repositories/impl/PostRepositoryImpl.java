@@ -132,22 +132,6 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public boolean deletePost(Integer id) {
-        Session session = getSession();
-        Post post = session.get(Post.class, id);
-        try {
-            if (post != null) {
-                session.delete(post);
-                return true;
-            }
-            return false;
-        } catch (HibernateException ex) {
-            ex.printStackTrace();
-            return false;
-        }
-    }
-
-    @Override
     public Post save(PostRequest post) {
         Session s = getSession();
         Post p = mapper.map(post, Post.class);
@@ -164,4 +148,25 @@ public class PostRepositoryImpl implements PostRepository {
         }
     }
 
+    @Override
+    public boolean deleteById(Integer id) {
+        Session session = getSession();
+        Post post = session.get(Post.class, id);
+        try {
+            if (post != null) {
+                session.delete(post);
+                return true;
+            }
+            return false;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(Post post) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
 }

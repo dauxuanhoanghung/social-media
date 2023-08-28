@@ -1,25 +1,19 @@
 package com.social.repositories.impl;
 
-import com.social.pojo.ImagePost;
-import com.social.repositories.ImagePostRepository;
+import com.social.pojo.CommentAction;
+import com.social.repositories.CommentActionRepository;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@Transactional
-public class ImagePostRepositoryImpl implements ImagePostRepository {
+public class CommentActionRepositoryImpl implements CommentActionRepository {
 
     @Autowired
     private LocalSessionFactoryBean sessionFactory;
-
-    @Autowired
-    private Environment env;
 
     private Session getSession() {
         SessionFactory sessionFactory = this.sessionFactory.getObject();
@@ -28,21 +22,20 @@ public class ImagePostRepositoryImpl implements ImagePostRepository {
     }
 
     @Override
-    public ImagePost save(ImagePost imagePost) {
+    public CommentAction save(CommentAction commentAction) {
         Session session = getSession();
 
         try {
-            session.save(imagePost);
-            return imagePost;
+            session.save(commentAction);
+            return commentAction;
         } catch (HibernateException ex) {
-            ex.printStackTrace();
             return null;
         }
     }
 
     @Override
-    public boolean delete(String url) {
-        return false;
+    public Integer countByCommentId(Integer commentId) {
+        return 0;
     }
 
 }
