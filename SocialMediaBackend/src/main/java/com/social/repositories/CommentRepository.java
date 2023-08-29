@@ -2,9 +2,8 @@ package com.social.repositories;
 
 import com.social.pojo.Comment;
 import com.social.pojo.CommentAction;
-import com.social.pojo.SubComment;
-import com.social.pojo.SubCommentAction;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -14,9 +13,11 @@ public interface CommentRepository {
 
     Comment getCommentById(Integer id);
 
-    List<Comment> getCommentsByPostId(int postId);
+    List<Comment> getComments(Map<String, String> params);
 
-    long countActionById(int commentId);
+    Long countActionById(int commentId);
+    
+    Long countSubCommentById(Integer commentId);
 
     Comment save(Comment comment);
 

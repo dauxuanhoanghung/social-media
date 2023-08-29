@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class CommentServiceImpl implements CommentService {
-    
+
     @Autowired
     private ModelMapper mapper;
 
@@ -32,15 +32,15 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private UserRepository userRepository;
-    
+
     // Get current user
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return this.userRepository.getUserByAlumniId(authentication.getName()).get();
     }
-    
+
     @Override
-    public Comment save(CommentRequest commentRequest) {       
+    public Comment save(CommentRequest commentRequest) {
         Comment comment = mapper.map(commentRequest, Comment.class);
         comment.setCountAction(0);
         comment.setUser(getCurrentUser());
@@ -48,8 +48,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getByPostId(Map<String, String> params) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<Comment> getComments(Map<String, String> params) {
+        if (params != null && params.get("page") == null) {
+            params.put("page", "1");
+        }
+        return this.commentRepository.getComments(params);
     }
 
     @Override
@@ -66,5 +69,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<SubComment> getRepliesByCommentId(Integer id) {
         return null;
+    }
+
+    @Override
+    public Long countRepliesByCommentId(Integer commentId) {
+        return this.commentRepository.countSubCommentById(commentId);
     }
 }

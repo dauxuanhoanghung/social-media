@@ -8,6 +8,7 @@ import com.social.services.UserService;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author LENOVO
  */
+@Lazy
 @RestController
 @RequestMapping(path = "/api/users/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserAPI {

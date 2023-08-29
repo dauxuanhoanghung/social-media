@@ -8,7 +8,10 @@ Nhóm 7 - Social Media For OU Alumni
 git clone https://github.com/dauxuanhoanghung/social-media.git
 ```
 
-Change profile Database in database.properties
+## Properties
+
+1. Change profile of your mail to use Mail Service in src/main/resources/mail.properties
+1. Change profile of your database in src/main/resources/database.properties
 
 ## FrontEnd
 
@@ -29,6 +32,8 @@ Change profile Database in database.properties
 
 | Method   | Endpoint                       | Payload       | Description   |
 | :---     | :---                           |   :----:      | :---          |
+| GET      | /api/comments/?postId=&page=   | { postId, page } | Get comments by post, limit 5 |
+| GET      | /api/comments/getReplies/?commentId=&page= | { commentId, page } | Get replies by comment, limit 5 |
 | POST     | /api/comments/                 | { content, postId}                          | Post a comment      |
 | POST     | /api/comments/addReply/        | { content, comment (commentId á)}           | Reply a comment     |
 | POST     | /api/comments/actionOnComment/ | { actionId? }                               | Save action a post  |

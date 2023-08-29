@@ -3,20 +3,25 @@ package com.social.repositories.impl;
 import com.social.pojo.Comment;
 import com.social.pojo.CommentAction;
 import com.social.pojo.SubComment;
-import com.social.pojo.SubCommentAction;
 import com.social.pojo.User;
 import com.social.repositories.CommentRepository;
 import com.social.repositories.SubCommentRepository;
 import com.social.repositories.UserRepository;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.security.core.Authentication;
@@ -30,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
+@PropertySource("classpath:application.properties")
 public class CommentRepositoryImpl implements CommentRepository {
 
     @Autowired
@@ -40,9 +46,6 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Autowired
     private SubCommentRepository subCommentRepository;
-
-    @Autowired
-    private ModelMapper mapper;
 
     @Autowired
     private Environment env;
@@ -94,12 +97,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public List<Comment> getCommentsByPostId(int postId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public long countActionById(int commentId) {
+    public Long countActionById(int commentId) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -122,7 +120,7 @@ public class CommentRepositoryImpl implements CommentRepository {
             for (SubComment sub : subs) {
                 this.subCommentRepository.delete(sub);
             }
-            
+
             // DELETE Action in Comment
             CriteriaBuilder criteriaBuilder = s.getCriteriaBuilder();
             // DELETE 
@@ -138,7 +136,7 @@ public class CommentRepositoryImpl implements CommentRepository {
             );
 
             int deletedCount = s.createQuery(deleteComment).executeUpdate();
-            
+
             // DELETE comment Object after all
             s.delete(comment);
             return true;
@@ -152,4 +150,44 @@ public class CommentRepositoryImpl implements CommentRepository {
         return this.delete(getCommentById(commentId));
     }
 
+    @Override
+    public List<Comment> getComments(Map<String, String> params) {
+        Session session = getSession();
+        Integer size = env.getProperty("PAGINATION", Integer.class);
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Comment> criteriaQuery = criteriaBuilder.createQuery(Comment.class);
+        Root<Comment> commentRoot = criteriaQuery.from(Comment.class);
+        List<Predicate> predicates = new ArrayList<>();
+        String page = (String) params.get("page");
+        if (!params.isEmpty()) {
+            String postId = params.get("postId");
+            if (postId != null && postId.isBlank()) {
+                predicates.add(
+                        criteriaBuilder.equal(commentRoot.get("postId"), Integer.valueOf(postId)));
+            }
+
+            criteriaQuery.where(predicates.toArray(Predicate[]::new));
+        }
+        
+        criteriaQuery.orderBy(criteriaBuilder.desc(commentRoot.get("createdDate")));
+
+        Query query = session.createQuery(criteriaQuery);
+        query.setMaxResults(size);
+        query.setFirstResult((Integer.parseInt(page) - 1) * size);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public Long countSubCommentById(Integer commentId) {
+        Session session = getSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
+        Root<SubComment> subCommentRoot = query.from(SubComment.class);
+        
+        query.select(criteriaBuilder.count(subCommentRoot.get("id")))
+             .where(criteriaBuilder.equal(subCommentRoot.get("comment"), commentId));
+        
+        return session.createQuery(query).getSingleResult();
+    }
 }

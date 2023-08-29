@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
@@ -21,6 +22,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
  *
  * @author LENOVO
  */
+@Lazy
 @Service("mailService")
 @PropertySource("classpath:mail.properties")
 public class MailServiceImpl implements MailService {

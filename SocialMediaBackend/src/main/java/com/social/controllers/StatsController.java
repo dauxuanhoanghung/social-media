@@ -2,6 +2,7 @@ package com.social.controllers;
 
 import com.social.services.StatsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  *
  * @author LENOVO
  */
+@Lazy
 @Controller
 @RequestMapping("/admin/statistic")
 public class StatsController {

@@ -1,11 +1,13 @@
 package com.social.repositories.impl;
 
+import com.social.pojo.Comment;
 import com.social.pojo.SubComment;
 import com.social.pojo.SubCommentAction;
 import com.social.repositories.SubCommentActionRepository;
 import com.social.repositories.SubCommentRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
@@ -16,6 +18,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
@@ -29,7 +32,7 @@ public class SubCommentRepositoryImpl implements SubCommentRepository {
 
     @Autowired
     private LocalSessionFactoryBean sessionFactory;
-
+    @Lazy
     @Autowired
     private SubCommentActionRepository subCommentActionRepository;
 
@@ -121,9 +124,9 @@ public class SubCommentRepositoryImpl implements SubCommentRepository {
         try {
             // WHERE sub_comment_id = ?
             deleteSubComment.where(
-                criteriaBuilder.equal(
-                        subCommentActionRoot.get("subCommentId"), subComment.getId()
-                )
+                    criteriaBuilder.equal(
+                            subCommentActionRoot.get("subCommentId"), subComment.getId()
+                    )
             );
 
             int deletedCount = s.createQuery(deleteSubComment).executeUpdate();
@@ -137,6 +140,34 @@ public class SubCommentRepositoryImpl implements SubCommentRepository {
     @Override
     public boolean deleteById(Integer subCommentId) {
         return this.delete(getById(subCommentId));
+    }
+
+    @Override
+    public List<SubComment> getReplies(Map<String, String> params) {
+        Session session = getSession();
+        Integer size = env.getProperty("PAGINATION", Integer.class);
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<SubComment> criteriaQuery = criteriaBuilder.createQuery(SubComment.class);
+        Root<SubComment> subCommentRoot = criteriaQuery.from(SubComment.class);
+        List<Predicate> predicates = new ArrayList<>();
+        String page = (String) params.get("page");
+        if (!params.isEmpty()) {
+            String commentId = params.get("commentId");
+            if (commentId != null && commentId.isBlank()) {
+                predicates.add(
+                        criteriaBuilder.equal(subCommentRoot.get("comment"), Integer.valueOf(commentId)));
+            }
+
+            criteriaQuery.where(predicates.toArray(Predicate[]::new));
+        }
+
+        criteriaQuery.orderBy(criteriaBuilder.desc(subCommentRoot.get("createdDate")));
+
+        Query query = session.createQuery(criteriaQuery);
+        query.setMaxResults(size);
+        query.setFirstResult((Integer.parseInt(page) - 1) * size);
+
+        return query.getResultList();
     }
 
 }

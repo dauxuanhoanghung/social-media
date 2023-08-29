@@ -3,6 +3,7 @@ package com.social.repositories;
 import com.social.pojo.SubComment;
 import com.social.pojo.SubCommentAction;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -13,6 +14,8 @@ public interface SubCommentRepository {
     SubComment getById(Integer id);
     
     List<SubComment> getRepliesByCommentId(int commentId);
+    
+    List<SubComment> getReplies(Map<String, String> params);
 
     long countReplyActionById(int replyId);
 

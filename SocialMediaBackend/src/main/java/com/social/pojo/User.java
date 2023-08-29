@@ -4,6 +4,7 @@
  */
 package com.social.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.social.enums.UserStatus;
 import java.io.Serializable;
@@ -86,8 +87,10 @@ public class User implements Serializable {
     @Column(name = "slug")
     private String slug;
     @Column(name = "created_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime createdDate;
     @Column(name = "modified_date")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime modifiedDate;
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
 //    private Set<SurveyResult> surveyResultSet;
@@ -109,9 +112,6 @@ public class User implements Serializable {
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Role role;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<PostAction> postActions;
 
     {
         this.createdDate = LocalDateTime.now();
@@ -291,15 +291,6 @@ public class User implements Serializable {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    @XmlTransient
-    public Set<PostAction> getPostActions() {
-        return postActions;
-    }
-
-    public void setPostActions(Set<PostAction> postActions) {
-        this.postActions = postActions;
     }
 
     @Override

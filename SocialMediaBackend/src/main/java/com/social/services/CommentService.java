@@ -14,10 +14,11 @@ public interface CommentService {
 
     Comment save(CommentRequest commentRequest);
 
-    List<Comment> getByPostId(Map<String, String> params);
+    List<Comment> getComments(Map<String, String> params);
 
     List<SubComment> getRepliesByCommentId(Integer id);
 
     boolean delete(Integer id);
-
+    
+    Long countRepliesByCommentId(Integer commentId);
 }

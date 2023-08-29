@@ -7,14 +7,18 @@ import com.social.pojo.User;
 import com.social.repositories.SubCommentRepository;
 import com.social.repositories.UserRepository;
 import com.social.services.SubCommentService;
+import java.util.List;
+import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Lazy
 @Service
 @Transactional
 public class SubCommentServiceImpl implements SubCommentService {
@@ -55,5 +59,13 @@ public class SubCommentServiceImpl implements SubCommentService {
             throw new AccessDeniedException("You don't have permission to do that");
         // Must delete all actions of reply here before delete reply (inside repo)
         return this.subCommentRepository.delete(subComment);
+    }
+
+    @Override
+    public List<SubComment> getReplies(Map<String, String> params) {
+        if (params != null && params.get("page") == null) {
+            params.put("page", "1");
+        }
+        return this.subCommentRepository.getReplies(params);
     }
 }
