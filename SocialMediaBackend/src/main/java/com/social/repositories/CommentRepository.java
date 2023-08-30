@@ -14,8 +14,6 @@ public interface CommentRepository {
     Comment getCommentById(Integer id);
 
     List<Comment> getComments(Map<String, String> params);
-
-    Long countActionById(int commentId);
     
     Long countSubCommentById(Integer commentId);
 

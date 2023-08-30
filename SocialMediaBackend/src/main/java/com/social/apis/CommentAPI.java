@@ -50,7 +50,6 @@ public class CommentAPI {
         List<Comment> comments = this.commentService.getComments(params);
         List<CommentDTO> dtos = comments.stream().map(comment -> {
             CommentDTO dto = mapper.map(comment, CommentDTO.class);
-            dto.setCountReply(this.commentService.countRepliesByCommentId(comment.getId()));
             dto.setUser(mapper.map(comment.getUser(), UserResponse.class));
             return dto;
         }).collect(Collectors.toList());

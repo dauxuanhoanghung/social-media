@@ -1,6 +1,5 @@
 package com.social.repositories.impl;
 
-import com.social.pojo.Comment;
 import com.social.pojo.SubComment;
 import com.social.pojo.SubCommentAction;
 import com.social.repositories.SubCommentActionRepository;
@@ -167,6 +166,22 @@ public class SubCommentRepositoryImpl implements SubCommentRepository {
         query.setMaxResults(size);
         query.setFirstResult((Integer.parseInt(page) - 1) * size);
 
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Integer> getSubCommentIdsByComment(Integer commentId) {
+        Session session = getSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Integer> criteriaQuery = criteriaBuilder.createQuery(Integer.class);
+
+        Root<SubComment> subCommentRoot = criteriaQuery.from(SubComment.class);
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(
+                criteriaBuilder.equal(subCommentRoot.get("comment"), commentId));
+
+        criteriaQuery.where(predicates.toArray(Predicate[]::new));
+        Query query = session.createQuery(criteriaQuery);
         return query.getResultList();
     }
 
