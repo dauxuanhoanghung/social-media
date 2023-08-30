@@ -175,4 +175,21 @@ public class UserRepositoryImpl implements UserRepository {
             return false;
         }
     }
+
+    @Override
+    public boolean existsByAlumniId(String alumniId) {
+        Session session = getSession();
+        CriteriaBuilder b = session.getCriteriaBuilder();
+        CriteriaQuery<Integer> q = b.createQuery(Integer.class);
+        Root root = q.from(User.class);
+        q.select(root.get("id"));
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(b.equal(root.get("alumniId"), alumniId));
+        q.where(predicates.toArray(Predicate[]::new));
+
+        Query query = session.createQuery(q);
+        query.setMaxResults(1); // Limit the result to 1 row
+        List<Integer> results = query.getResultList();
+        return !results.isEmpty();
+    }
 }

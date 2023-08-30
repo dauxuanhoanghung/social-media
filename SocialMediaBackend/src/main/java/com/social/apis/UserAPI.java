@@ -43,12 +43,12 @@ public class UserAPI {
         );
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ModelResponse> createOrUpdateUser(@ModelAttribute @Valid UserRegisterDTO user, BindingResult rs) {
+    @PostMapping(value = "/register/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ModelResponse> create(@ModelAttribute @Valid UserRegisterDTO user, BindingResult rs) {
         if (rs.hasErrors()) {
-            return new ResponseEntity<>(new ModelResponse("400", "Bad request data user", null), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ModelResponse("400", "Bad request data user", rs.getFieldErrors()), HttpStatus.BAD_REQUEST);
         }
-        User newUser = userService.saveOrUpdateUser(user);
+        User newUser = userService.save(user);
         ModelResponse res = new ModelResponse();
         res.setData(newUser);
         res.setMessage("Request Success");

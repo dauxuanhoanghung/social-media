@@ -1,6 +1,5 @@
 package com.social.dto.request;
 
-import com.social.dto.UserDTO;
 import com.social.enums.UserStatus;
 import com.social.pojo.Role;
 import java.io.Serializable;

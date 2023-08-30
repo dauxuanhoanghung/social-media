@@ -169,7 +169,7 @@ public class User implements Serializable {
     }
 
     public void setAvatar(String avatar) {
-        if (!avatar.isEmpty()) {
+        if (avatar != null && !avatar.isEmpty()) {
             this.avatar = avatar;
         } else {
             this.avatar = null;
@@ -209,7 +209,7 @@ public class User implements Serializable {
     }
 
     public void setSlug(String slug) {
-        if (!slug.isEmpty()) {
+        if (slug != null && !slug.isEmpty()) {
             this.slug = slug;
         } else {
             this.slug = null;
