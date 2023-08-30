@@ -10,7 +10,6 @@ import com.social.pojo.Comment;
 import com.social.pojo.SubComment;
 import com.social.services.CommentService;
 import com.social.services.SubCommentService;
-import com.social.services.UserService;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -45,10 +44,7 @@ public class CommentAPI {
 
     @Autowired
     private SubCommentService subCommentService;
-
-    @Autowired
-    private UserService userService;
-
+    
     @GetMapping
     public ResponseEntity<ModelResponse> getComments(@RequestParam Map<String, String> params) {
         List<Comment> comments = this.commentService.getComments(params);
@@ -98,12 +94,6 @@ public class CommentAPI {
     @ResponseStatus(HttpStatus.CREATED)
     public void addSubComment(@RequestBody ReplyRequest reply) {
         this.subCommentService.save(reply);
-    }
-
-    @PostMapping(path = "/actionOnComment/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void actionOnComment(Principal principal) {
-
     }
 
     @DeleteMapping(path = "/{id}/delete/")

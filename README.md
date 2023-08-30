@@ -26,7 +26,8 @@ git clone https://github.com/dauxuanhoanghung/social-media.git
 | Method   | Endpoint                       | Payload       | Description   |
 | :---     | :---                           |   :----:      | :---          |
 | GET      | /api/users/{id}                | None          | Fetch to get user by ID |
-| POST     | /api/users/                    | { alumniId, displayName, avatarFile, email} | Register new client |
+| POST     | /api/users/register/           | { alumniId, displayName, avatarFile, email} | Register new client |
+
 
 #### API Comments
 
