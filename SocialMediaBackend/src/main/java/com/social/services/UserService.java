@@ -1,6 +1,5 @@
 package com.social.services;
 
-import com.social.dto.UserDTO;
 import com.social.dto.request.UserRegisterDTO;
 import com.social.pojo.Role;
 import com.social.pojo.User;
@@ -35,10 +34,6 @@ public interface UserService extends UserDetailsService {
     User update(User user);
     
     User updateStatus(User user);
-
-    User saveOrUpdateUser(UserDTO user);
-
-    User saveOrUpdateUser(UserRegisterDTO user);
 
     boolean deleteUser(Integer id);
     

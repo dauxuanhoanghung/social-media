@@ -47,10 +47,10 @@ public class UserSeviceImpl implements UserService {
 
     @Autowired
     private MailService mailService;
-    
+
     @Autowired
     private CloudinaryService cloudinaryService;
-    
+
     @Override
     public List<User> getUsers(Map<String, String> params) {
         return this.userRepository.getUsers(params);
@@ -101,27 +101,6 @@ public class UserSeviceImpl implements UserService {
     }
 
     @Override
-    public User saveOrUpdateUser(UserDTO user) {
-
-        return null;
-//        return this.userRepository.saveOrUpdateUser(user);
-    }
-
-    @Override
-    public User saveOrUpdateUser(UserRegisterDTO user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User entity = modelMapper.map(user, User.class);
-        entity.setCoverBg("");
-        if (user.getAvatarFile() == null) {
-            entity.setAvatar("https://res.cloudinary.com/dzgugrqxz/image/upload/v1683031039/building_img/r3owjpmhhcehj29hgw2y.jpg");
-        } else {
-            String url = cloudinaryService.uploadImage(user.getAvatarFile());
-            entity.setAvatar(url);
-        }
-        return this.userRepository.save(entity);
-    }
-
-    @Override
     public boolean deleteUser(Integer id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
@@ -142,7 +121,19 @@ public class UserSeviceImpl implements UserService {
 
     @Override
     public User save(UserRegisterDTO user) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (this.userRepository.existsByAlumniId(user.getAlumniId())) {
+            return null; // user exists
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User entity = modelMapper.map(user, User.class);
+        entity.setCoverBg("");
+        if (user.getAvatarFile() != null && !user.getAvatarFile().isEmpty()) {
+            String url = cloudinaryService.uploadImage(user.getAvatarFile());
+            entity.setAvatar(url);
+        } else {
+            entity.setAvatar("https://res.cloudinary.com/dzgugrqxz/image/upload/v1683031039/building_img/r3owjpmhhcehj29hgw2y.jpg");
+        }
+        return this.userRepository.save(entity);
     }
 
     @Override

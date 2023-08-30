@@ -153,7 +153,7 @@ public class SubCommentRepositoryImpl implements SubCommentRepository {
         String page = (String) params.get("page");
         if (!params.isEmpty()) {
             String commentId = params.get("commentId");
-            if (commentId != null && commentId.isBlank()) {
+            if (commentId != null && !commentId.isBlank()) {
                 predicates.add(
                         criteriaBuilder.equal(subCommentRoot.get("comment"), Integer.valueOf(commentId)));
             }

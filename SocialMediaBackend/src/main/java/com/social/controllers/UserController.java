@@ -62,7 +62,7 @@ public class UserController {
             return "create-user";
         }
         user.setStatus(UserStatus.valueOf(user.getStatus().toString()));
-        this.userService.saveOrUpdateUser(user);
+        this.userService.save(user);
         return "redirect:/admin/user";
     }
 

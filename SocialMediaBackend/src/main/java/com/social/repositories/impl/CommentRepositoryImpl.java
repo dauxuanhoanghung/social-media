@@ -19,7 +19,6 @@ import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -35,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:/application.properties")
 public class CommentRepositoryImpl implements CommentRepository {
 
     @Autowired
@@ -161,7 +160,7 @@ public class CommentRepositoryImpl implements CommentRepository {
         String page = (String) params.get("page");
         if (!params.isEmpty()) {
             String postId = params.get("postId");
-            if (postId != null && postId.isBlank()) {
+            if (postId != null && !postId.isBlank()) {
                 predicates.add(
                         criteriaBuilder.equal(commentRoot.get("postId"), Integer.valueOf(postId)));
             }
