@@ -52,7 +52,7 @@
                     </label>
                 </c:forEach>
             </div>
-            <button disabled id="btnAdd" onclick="script.renderCreateAnswer()" class="btn btn-info">
+            <button disabled id="btnAdd" onclick="script.renderCreateAnswer()" class="btn btn-info" hidden>
                 <spring:message code="view.pages.create-post.addNewAnswer"/>
             </button>
             <div id="answerContainer">
@@ -234,12 +234,14 @@
             // text -> không cho add & cho complete
             if (currCheckedType === "TEXT") {
                 btnAdd.disabled = true;
+                btnAdd.hidden = true;
                 btnDone.disabled = false;
                 answerContainer.innerHTML = "";
             }
             // checkbox & radio -> cho add & cho complete
             else {
                 btnAdd.disabled = false;
+                btnAdd.hidden = false;
                 btnDone.disabled = false;
                 answerContainer.innerHTML = `
                     <input type="text" 

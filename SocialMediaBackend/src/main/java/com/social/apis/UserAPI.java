@@ -50,8 +50,12 @@ public class UserAPI {
         }
         User newUser = userService.save(user);
         ModelResponse res = new ModelResponse();
-        res.setData(newUser);
-        res.setMessage("Request Success");
+        if (newUser != null) {
+            res.setData(newUser);
+            res.setMessage("Request Success");
+        }
+        else 
+            res.setData("Username exists");
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }
