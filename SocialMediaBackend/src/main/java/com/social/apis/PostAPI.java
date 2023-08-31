@@ -60,7 +60,8 @@ public class PostAPI {
         if (rs.hasErrors()) {
             return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("!", HttpStatus.CREATED);
+        Post newPost = postService.save(post);
+        return ResponseEntity.ok(newPost);
     }
 
     @GetMapping(value = "/{id}")
