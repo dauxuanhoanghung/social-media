@@ -5,6 +5,7 @@ import com.social.dto.request.AnswerRequest;
 import com.social.dto.request.PostRequest;
 import com.social.dto.request.QuestionRequest;
 import com.social.dto.request.SurveyRequest;
+import com.social.enums.PostType;
 import com.social.enums.QuestionType;
 import com.social.pojo.Choice;
 import com.social.pojo.ImagePost;
@@ -96,16 +97,24 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post save(PostRequest post) {
 //        Post savedPost = this.postRepository.save(post);
-        Post savedPost = mapper.map(post, Post.class);
+        Post savedPost = new Post();
+        savedPost.setContent(post.getContent());
+        savedPost.setCountAction(0);
+        savedPost.setUser(getCurrentUser());
+        savedPost.setLockComment(Boolean.FALSE);
+        savedPost.setType(PostType.POST);
         this.postRepository.save(savedPost);
-        for (MultipartFile file : post.getImages()) {
-            String link = cloudinaryService.uploadImage(file);
-            ImagePost imagePost = new ImagePost();
-            imagePost.setPostId(savedPost);
-            imagePost.setUrl(link);
+        if (post.getImages()!= null && !post.getImages().isEmpty()) {
+            for (MultipartFile file : post.getImages()) {
+                String link = cloudinaryService.uploadImage(file);
+                ImagePost imagePost = new ImagePost();
+                imagePost.setPostId(savedPost);
+                imagePost.setUrl(link);
 
-            this.imagePostRepository.save(imagePost);
+                this.imagePostRepository.save(imagePost);
+            }
         }
+
         return savedPost;
     }
 
@@ -116,7 +125,7 @@ public class PostServiceImpl implements PostService {
 //        for (Post post)
         return null;
     }
-    
+
     // Get current user
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

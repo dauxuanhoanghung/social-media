@@ -56,8 +56,9 @@ public class PostAPI {
 
     @PostMapping(produces = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createPost(@ModelAttribute PostRequest post) {
-        postService.save(post);
+    public ResponseEntity<Post> createPost(@ModelAttribute PostRequest post) {
+        Post newPost = postService.save(post);
+        return ResponseEntity.ok(newPost);
     }
 
     @GetMapping(value = "/{id}")
