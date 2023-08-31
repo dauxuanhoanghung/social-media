@@ -71,6 +71,7 @@ public class ImagePostRepositoryImpl implements ImagePostRepository {
 
             criteriaQuery.where(predicates.toArray(Predicate[]::new));
         }
+        criteriaQuery.select(imageRoot.get("url"));
         Query query = session.createQuery(criteriaQuery);
         return query.getResultList();
 

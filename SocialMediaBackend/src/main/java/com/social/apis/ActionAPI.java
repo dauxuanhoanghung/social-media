@@ -3,6 +3,7 @@ package com.social.apis;
 import com.social.dto.request.CommentActionRequest;
 import com.social.dto.request.PostActionRequest;
 import com.social.dto.request.ReplyActionRequest;
+import com.social.services.ActionService;
 import com.social.validator.ActionValidator;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class ActionAPI {
 
     @Autowired
     private ActionValidator actionValidator;
+    
+    @Autowired
+    private ActionService actionService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {

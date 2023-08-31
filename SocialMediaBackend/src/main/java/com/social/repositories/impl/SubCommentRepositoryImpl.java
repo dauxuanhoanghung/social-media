@@ -179,7 +179,7 @@ public class SubCommentRepositoryImpl implements SubCommentRepository {
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(
                 criteriaBuilder.equal(subCommentRoot.get("comment"), commentId));
-
+        criteriaQuery.select(subCommentRoot.get("id"));
         criteriaQuery.where(predicates.toArray(Predicate[]::new));
         Query query = session.createQuery(criteriaQuery);
         return query.getResultList();

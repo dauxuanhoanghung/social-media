@@ -8,10 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-/**
- *
- * @author LENOVO
- */
 @Component
 public class SurveyRequestValidator implements Validator {
 

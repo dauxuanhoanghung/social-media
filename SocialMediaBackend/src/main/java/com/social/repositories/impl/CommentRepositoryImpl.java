@@ -120,14 +120,17 @@ public class CommentRepositoryImpl implements CommentRepository {
             deleteSubAction.where(
                     subCommentActionRoot.get("subComment").in(subIds)
             );
-            
-            
+            // DELETE SubAction
+            int deleteSubActionCount = session.createQuery(deleteSubAction).executeUpdate();
 
             // DELETE Sub
-            List<SubComment> subs = this.subCommentRepository.getRepliesByCommentId(comment.getId());
-            for (SubComment sub : subs) {
-                this.subCommentRepository.delete(sub);
-            }
+            CriteriaDelete<SubComment> deleteSubComment
+                    = criteriaBuilder.createCriteriaDelete(SubComment.class);
+            Root<SubComment> subCommentRoot = deleteSubComment.from(SubComment.class);
+            deleteSubComment.where(
+                    subCommentRoot.get("comment").in(comment.getId())
+            );
+            int deleteSubCommentCount = session.createQuery(deleteSubComment).executeUpdate();
 
             // DELETE Action in Comment
             // DELETE 
@@ -138,7 +141,7 @@ public class CommentRepositoryImpl implements CommentRepository {
             // WHERE sub_comment_id = ?
             deleteComment.where(
                     criteriaBuilder.equal(
-                            commentActionRoot.get("commentId"), comment.getId()
+                            commentActionRoot.get("comment"), comment.getId()
                     )
             );
 
