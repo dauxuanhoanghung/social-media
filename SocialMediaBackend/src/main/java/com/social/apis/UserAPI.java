@@ -3,8 +3,10 @@ package com.social.apis;
 import com.social.dto.UserDTO;
 import com.social.dto.request.UserRegisterDTO;
 import com.social.dto.response.ModelResponse;
+import com.social.dto.response.UserResponse;
 import com.social.pojo.User;
 import com.social.services.UserService;
+import java.security.Principal;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,15 @@ public class UserAPI {
         );
     }
 
+    @GetMapping(value = "/current-user/")
+    public ResponseEntity<UserResponse> getCurrentUser(Principal principal) {
+        return new ResponseEntity<>(
+                modelMapper.map(this.userService.getUserByAlumniId(principal.getName()),
+                        UserResponse.class),
+                HttpStatus.OK
+        );
+    }
+
     @PostMapping(value = "/register/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ModelResponse> create(@ModelAttribute @Valid UserRegisterDTO user, BindingResult rs) {
         if (rs.hasErrors()) {
@@ -53,9 +64,9 @@ public class UserAPI {
         if (newUser != null) {
             res.setData(newUser);
             res.setMessage("Request Success");
-        }
-        else 
+        } else {
             res.setData("Username exists");
+        }
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }
