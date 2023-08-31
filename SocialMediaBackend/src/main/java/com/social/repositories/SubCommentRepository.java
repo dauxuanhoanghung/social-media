@@ -16,6 +16,8 @@ public interface SubCommentRepository {
     List<SubComment> getRepliesByCommentId(int commentId);
     
     List<SubComment> getReplies(Map<String, String> params);
+    
+    List<Integer> getSubCommentIdsByComment(Integer commentId);
 
     long countReplyActionById(int replyId);
 

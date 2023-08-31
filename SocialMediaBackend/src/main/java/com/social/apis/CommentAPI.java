@@ -4,22 +4,28 @@ import com.social.dto.CommentDTO;
 import com.social.dto.ReplyDTO;
 import com.social.dto.request.CommentRequest;
 import com.social.dto.request.ReplyRequest;
+import com.social.dto.response.ErrorResponse;
 import com.social.dto.response.ModelResponse;
 import com.social.dto.response.UserResponse;
 import com.social.pojo.Comment;
 import com.social.pojo.SubComment;
 import com.social.services.CommentService;
 import com.social.services.SubCommentService;
+import com.social.validator.CommentValidator;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,13 +50,20 @@ public class CommentAPI {
 
     @Autowired
     private SubCommentService subCommentService;
-    
+
+    @Autowired
+    private CommentValidator commentValidator;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.setValidator(commentValidator);
+    }
+
     @GetMapping
     public ResponseEntity<ModelResponse> getComments(@RequestParam Map<String, String> params) {
         List<Comment> comments = this.commentService.getComments(params);
         List<CommentDTO> dtos = comments.stream().map(comment -> {
             CommentDTO dto = mapper.map(comment, CommentDTO.class);
-            dto.setCountReply(this.commentService.countRepliesByCommentId(comment.getId()));
             dto.setUser(mapper.map(comment.getUser(), UserResponse.class));
             return dto;
         }).collect(Collectors.toList());
@@ -80,9 +93,12 @@ public class CommentAPI {
      * @commentRequest commentRequest: { content, postId}
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody CommentRequest commentRequest) {
+    public ResponseEntity create(@Valid @RequestBody CommentRequest commentRequest, BindingResult rs) {
+        if (rs.hasErrors()) {
+            return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
         this.commentService.save(commentRequest);
+        return new ResponseEntity(null, HttpStatus.CREATED);
     }
 
     /**
@@ -91,9 +107,12 @@ public class CommentAPI {
      * @comment comment: { content, comment (commentId á)}
      */
     @PostMapping(path = "/addReply/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void addSubComment(@RequestBody ReplyRequest reply) {
+    public ResponseEntity addSubComment(@Valid @RequestBody ReplyRequest reply, BindingResult rs) {
+        if (rs.hasErrors()) {
+            return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
         this.subCommentService.save(reply);
+        return new ResponseEntity(null, HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}/delete/")
