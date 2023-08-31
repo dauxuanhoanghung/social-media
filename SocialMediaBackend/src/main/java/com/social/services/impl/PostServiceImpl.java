@@ -6,6 +6,7 @@ import com.social.dto.request.PostRequest;
 import com.social.dto.request.QuestionRequest;
 import com.social.dto.request.SurveyRequest;
 import com.social.enums.QuestionType;
+import com.social.exceptions.NotFoundException;
 import com.social.pojo.Choice;
 import com.social.pojo.ImagePost;
 import com.social.pojo.Post;
@@ -64,8 +65,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post getPostById(String id) {
-        Optional<Post> post = this.postRepository.getPostById(String.valueOf(id));
+    public Post getPostById(Integer id) {
+        Optional<Post> post = this.postRepository.getPostById(id);
         return post.orElseThrow();
     }
 
@@ -121,5 +122,16 @@ public class PostServiceImpl implements PostService {
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return this.userRepository.getUserByAlumniId(authentication.getName()).get();
+    }
+
+    @Override
+    public Post toggleLockCOmment(Integer postId) {
+        Post currentPost = this.postRepository.getPostById(postId).get();
+        if (currentPost == null) {
+            throw new NotFoundException();
+        }
+        User user = getCurrentUser();
+        currentPost.setLockComment(!currentPost.getLockComment());
+        return this.postRepository.save(currentPost);
     }
 }
