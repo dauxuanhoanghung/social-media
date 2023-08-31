@@ -20,10 +20,12 @@ public class PostRequestValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         PostRequest postRequest = (PostRequest) target;
-        if ((postRequest.getContent() == null 
-                || postRequest.getContent().isBlank()) 
-                || (postRequest.getImages() == null
+        if (!(postRequest.getContent() == null 
+                || postRequest.getContent().isBlank()) //ko co content
+                && !(postRequest.getImages() == null  //ko anh
                 || postRequest.getImages().isEmpty())) {
+            Boolean a = !(postRequest.getContent() == null  || postRequest.getContent().isBlank()); //co ndung
+            Boolean b =!(postRequest.getImages() == null  || postRequest.getImages().isEmpty()); //ko co anh
             errors.reject("validator.postRequest", "POST is empty");
         }
     }
