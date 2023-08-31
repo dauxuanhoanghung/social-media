@@ -42,11 +42,12 @@ git clone https://github.com/dauxuanhoanghung/social-media.git
 
 #### API Posts
 
-| Method | Endpoint        |       Payload       | Description         |
-| :----- | :-------------- | :-----------------: | :------------------ |
-| GET    | /api/posts/     |        None         | Get a list of posts |
-| GET    | /api/posts/{id} |        None         | Get a post by ID    |
-| POST   | /api/posts/     | { content, images } | Create a post       |
+| Method | Endpoint                     |       Payload       | Description             |
+| :----- | :--------------------------- | :-----------------: | :---------------------- |
+| GET    | /api/posts/                  |        None         | Get a list of posts     |
+| GET    | /api/posts/{id}              |        None         | Get a post by ID        |
+| POST   | /api/posts/                  | { content, images } | Create a post           |
+| PATCH  | /api/posts/{id}/toggle-lock/ |        none         | Toggle the lock comment |
 
 #### API Actions
 

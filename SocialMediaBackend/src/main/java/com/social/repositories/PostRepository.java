@@ -14,7 +14,7 @@ public interface PostRepository {
 
     List<Post> getPosts(Map<String, Object> params);
 
-    Optional<Post> getPostById(String id);
+    Optional<Post> getPostById(Integer id);
 
     Post save(Post post);
     

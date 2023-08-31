@@ -93,7 +93,7 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public Optional<Post> getPostById(String id) {
+    public Optional<Post> getPostById(Integer id) {
         Session session = getSession();
         try {
             Post post = session.get(Post.class, id);

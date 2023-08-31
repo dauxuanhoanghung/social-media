@@ -15,8 +15,11 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -172,13 +175,12 @@ public class CommentRepositoryImpl implements CommentRepository {
 
         List<Predicate> predicates = new ArrayList<>();
         String page = (String) params.get("page");
+        Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
+        Root<SubComment> subCommentRoot = subquery.from(SubComment.class);
+        subquery.select(criteriaBuilder.count(subCommentRoot.get("id")));
+        subquery.where(criteriaBuilder.equal(subCommentRoot.get("comment"), commentRoot.get("id")));
         // SELECT comment, count()
-        criteriaQuery.multiselect(commentRoot, criteriaBuilder.count(replyRoot.get("id")));
-        // comment.id == sub_comment.comment_id
-        predicates.add(
-                criteriaBuilder.equal(
-                        commentRoot.get("id"), replyRoot.get("comment")
-                ));
+        criteriaQuery.multiselect(commentRoot,  subquery.getSelection());
         if (!params.isEmpty()) {
             // comment.post_id == :postId
             String postId = params.get("postId");

@@ -17,9 +17,11 @@ public interface PostService {
     
     List<PostDTO> getPost(Integer page);
     
-    Post getPostById(String id);
+    Post getPostById(Integer id);
     
     Post saveSurveyPost(SurveyRequest surveyRequest);
     
     Post save(PostRequest post);
+    
+    Post toggleLockCOmment(Integer postId);
 }
