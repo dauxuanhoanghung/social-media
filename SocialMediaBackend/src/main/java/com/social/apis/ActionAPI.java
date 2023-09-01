@@ -25,7 +25,7 @@ public class ActionAPI {
 
     @Autowired
     private ActionValidator actionValidator;
-    
+
     @Autowired
     private ActionService actionService;
 
@@ -40,12 +40,14 @@ public class ActionAPI {
      * @return
      */
     @PostMapping("/post/")
-    public ResponseEntity actionOnPost(@Valid @RequestBody PostActionRequest postActionRequest,
+    public ResponseEntity actionOnPost(@RequestBody @Valid PostActionRequest postActionRequest,
             BindingResult rs) {
         if (rs.hasErrors()) {
-            
+            return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(null, HttpStatus.CREATED);
+
+        return new ResponseEntity(actionService.saveOrUpdateOrDelete(postActionRequest),
+                HttpStatus.CREATED);
     }
 
     /**
@@ -54,12 +56,13 @@ public class ActionAPI {
      * @return
      */
     @PostMapping("/comment/")
-    public ResponseEntity actionOnComment(@Valid @RequestBody CommentActionRequest commentActionRequest,
+    public ResponseEntity actionOnComment(@RequestBody @Valid CommentActionRequest commentActionRequest,
             BindingResult rs) {
         if (rs.hasErrors()) {
-            
+            return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(null, HttpStatus.CREATED);
+        return new ResponseEntity(actionService.saveOrUpdateOrDelete(commentActionRequest),
+                HttpStatus.CREATED);
     }
 
     /**
@@ -68,11 +71,12 @@ public class ActionAPI {
      * @return
      */
     @PostMapping("/reply/")
-    public ResponseEntity actionOnReply(@Valid @RequestBody ReplyActionRequest replyActionRequest,
+    public ResponseEntity actionOnReply(@RequestBody @Valid ReplyActionRequest replyActionRequest,
             BindingResult rs) {
         if (rs.hasErrors()) {
-            
+            return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(null, HttpStatus.CREATED);
+        return new ResponseEntity(actionService.saveOrUpdateOrDelete(replyActionRequest),
+                HttpStatus.CREATED);
     }
 }
