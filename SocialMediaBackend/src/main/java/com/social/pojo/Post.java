@@ -54,9 +54,7 @@ public class Post implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
-    @NotNull
     @Lob
-    @Size(min = 1, max = 65535)
     @Column(name = "content")
     private String content;
     @Column(name = "lock_comment")

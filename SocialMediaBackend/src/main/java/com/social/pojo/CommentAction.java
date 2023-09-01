@@ -4,6 +4,7 @@
  */
 package com.social.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.social.enums.Action;
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -11,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,11 +47,13 @@ public class CommentAction implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "action")
     private Action action;
+    @JsonIgnore
     @JoinColumn(name = "comment_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Comment comment;
+    @JsonIgnore
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User user;
 
     public CommentAction() {
@@ -115,5 +119,5 @@ public class CommentAction implements Serializable {
     public String toString() {
         return "com.social.pojo.CommentAction[ id=" + id + " ]";
     }
-    
+
 }
