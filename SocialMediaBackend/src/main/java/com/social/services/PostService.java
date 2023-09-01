@@ -24,4 +24,5 @@ public interface PostService {
     Post save(PostRequest post);
     
     Post toggleLockCOmment(Integer postId);
+    
 }
