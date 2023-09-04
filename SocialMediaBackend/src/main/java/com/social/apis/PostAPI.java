@@ -6,7 +6,9 @@ import com.social.services.CommentService;
 import com.social.services.PostService;
 import com.social.validator.PostRequestValidator;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +52,12 @@ public class PostAPI {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getPosts(Integer page) {
-        List<Post> posts = postService.getPosts(Collections.singletonMap("page", page.toString()));
-        return ResponseEntity.ok(posts);
+    public ResponseEntity getPosts(Map<String, String> params) {
+        List<Post> posts = postService.getPosts(params);
+        Map<String, Object> res = new HashMap<>();
+        res.put("posts", posts);
+//        res.put("action", );
+        return ResponseEntity.ok(res);
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)

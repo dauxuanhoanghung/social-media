@@ -29,6 +29,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -50,6 +52,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "User.findBySlug", query = "SELECT u FROM User u WHERE u.slug = :slug"),
     @NamedQuery(name = "User.findByCreatedDate", query = "SELECT u FROM User u WHERE u.createdDate = :createdDate"),
     @NamedQuery(name = "User.findByModifiedDate", query = "SELECT u FROM User u WHERE u.modifiedDate = :modifiedDate")})
+@Getter
+@Setter
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -109,6 +113,9 @@ public class User implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Comment> comments;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<PostAction> postActions;
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Role role;

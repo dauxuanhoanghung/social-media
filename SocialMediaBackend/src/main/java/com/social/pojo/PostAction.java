@@ -4,6 +4,7 @@
  */
 package com.social.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.social.enums.Action;
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -46,9 +47,11 @@ public class PostAction implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "action")
     private Action action;
+    @JsonIgnore
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Post post;
+    @JsonIgnore
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User user;
@@ -116,5 +119,5 @@ public class PostAction implements Serializable {
     public String toString() {
         return "com.social.pojo.PostAction[ id=" + id + " ]";
     }
-    
+
 }

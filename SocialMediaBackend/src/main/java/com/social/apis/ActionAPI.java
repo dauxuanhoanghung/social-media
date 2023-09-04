@@ -3,12 +3,15 @@ package com.social.apis;
 import com.social.dto.request.CommentActionRequest;
 import com.social.dto.request.PostActionRequest;
 import com.social.dto.request.ReplyActionRequest;
+import com.social.dto.response.ModelResponse;
+import com.social.pojo.PostAction;
 import com.social.services.ActionService;
 import com.social.validator.ActionValidator;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -20,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Lazy
 @RestController
-@RequestMapping("/api/actions/")
+@RequestMapping(value = "/api/actions/", consumes = MediaType.APPLICATION_JSON_VALUE)
 public class ActionAPI {
 
     @Autowired
@@ -45,8 +48,10 @@ public class ActionAPI {
         if (rs.hasErrors()) {
             return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity(actionService.saveOrUpdateOrDelete(postActionRequest),
+        ModelResponse res = new ModelResponse();
+        res.setData(actionService.saveOrUpdateOrDelete(postActionRequest));
+        res.setCode("200");
+        return new ResponseEntity(res,
                 HttpStatus.CREATED);
     }
 

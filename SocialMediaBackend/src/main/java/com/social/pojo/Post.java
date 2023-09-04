@@ -5,6 +5,8 @@
 package com.social.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.social.enums.Action;
 import com.social.enums.PostType;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -26,10 +28,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -45,6 +50,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByCountAction", query = "SELECT p FROM Post p WHERE p.countAction = :countAction"),
     @NamedQuery(name = "Post.findByCreatedDate", query = "SELECT p FROM Post p WHERE p.createdDate = :createdDate"),
     @NamedQuery(name = "Post.findByModifiedDate", query = "SELECT p FROM Post p WHERE p.modifiedDate = :modifiedDate")})
+@Getter
+@Setter
 public class Post implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -75,12 +82,17 @@ public class Post implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    private Set<PostAction> postActions;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", fetch = FetchType.EAGER) 
     private Set<Question> questions;
     @OneToMany(mappedBy = "postId", fetch = FetchType.EAGER)
     private Set<ImagePost> imagePostSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId", fetch = FetchType.EAGER)
     private Set<PostTag> postTagSet;
+    @Transient
+    private Action currentAction;
     {
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = LocalDateTime.now();
@@ -206,20 +218,6 @@ public class Post implements Serializable {
     @Override
     public String toString() {
         return "com.social.pojo.Post[ id=" + id + " ]";
-    }
-
-    /**
-     * @return the type
-     */
-    public PostType getType() {
-        return type;
-    }
-
-    /**
-     * @param type the type to set
-     */
-    public void setType(PostType type) {
-        this.type = type;
     }
 
 }
