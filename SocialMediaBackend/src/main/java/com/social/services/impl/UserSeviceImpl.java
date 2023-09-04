@@ -1,6 +1,5 @@
 package com.social.services.impl;
 
-import com.social.dto.UserDTO;
 import com.social.dto.request.UserRegisterDTO;
 import com.social.enums.UserStatus;
 import com.social.exceptions.NotFoundException;
@@ -11,19 +10,25 @@ import com.social.repositories.UserRepository;
 import com.social.services.CloudinaryService;
 import com.social.services.MailService;
 import com.social.services.UserService;
+import com.social.utils.CloudinaryUtil;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -50,6 +55,17 @@ public class UserSeviceImpl implements UserService {
 
     @Autowired
     private CloudinaryService cloudinaryService;
+
+    // Get current user
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return this.userRepository.getUserByAlumniId(authentication.getName()).get();
+    }
+
+    @Override
+    public List<Role> getAllRoles() {
+        return this.roleRepository.getAll();
+    }
 
     @Override
     public List<User> getUsers(Map<String, String> params) {
@@ -106,11 +122,6 @@ public class UserSeviceImpl implements UserService {
     }
 
     @Override
-    public List<Role> getAllRoles() {
-        return this.roleRepository.getAll();
-    }
-
-    @Override
     public User saveOrUpdateUser(User user) {
         if (user.getStatus().equals(UserStatus.ACTIVE)) {
             mailService.sendMail(user.getEmail(), "Thư chấp nhận",
@@ -153,6 +164,27 @@ public class UserSeviceImpl implements UserService {
                     "Tài khoản của bạn đã được xác nhận", "invitation");
         }
         return update(user);
+    }
+
+    @Override
+    public User updateAvatar(MultipartFile avatarFile) {
+        User user = getCurrentUser();
+        try {
+            if (user.getAvatar() == null || user.getAvatar().isBlank()) {
+
+            } else {
+                String publicId = CloudinaryUtil.extractPublicIdFromUrl(user.getAvatar());
+                if (cloudinaryService.checkPublicIdExists(publicId)) {
+                    cloudinaryService.deleteImage(publicId);
+                }
+            }
+            user.setAvatar(cloudinaryService.uploadImage(avatarFile));
+            this.userRepository.update(user);
+            return user;
+        } catch (Exception ex) {
+            Logger.getLogger(UserSeviceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
 }

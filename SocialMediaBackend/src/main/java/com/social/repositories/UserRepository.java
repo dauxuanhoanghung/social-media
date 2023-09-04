@@ -24,7 +24,7 @@ public interface UserRepository {
     User save(User user);
     
     User update(User user);
-
+    
     boolean deleteUser(Integer id);
     
     boolean existsByAlumniId(String alumniId);

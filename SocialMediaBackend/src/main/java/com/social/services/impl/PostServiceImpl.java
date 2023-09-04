@@ -5,21 +5,25 @@ import com.social.dto.request.AnswerRequest;
 import com.social.dto.request.PostRequest;
 import com.social.dto.request.QuestionRequest;
 import com.social.dto.request.SurveyRequest;
+import com.social.enums.Action;
 import com.social.enums.PostType;
 import com.social.enums.QuestionType;
 import com.social.exceptions.NotFoundException;
 import com.social.pojo.Choice;
 import com.social.pojo.ImagePost;
 import com.social.pojo.Post;
+import com.social.pojo.PostAction;
 import com.social.pojo.Question;
 import com.social.pojo.User;
 import com.social.repositories.ImagePostRepository;
+import com.social.repositories.PostActionRepository;
 import com.social.repositories.PostRepository;
 import com.social.repositories.QuestionRepository;
 import com.social.repositories.TagsRepository;
 import com.social.repositories.UserRepository;
 import com.social.services.CloudinaryService;
 import com.social.services.PostService;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -53,6 +57,8 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private QuestionRepository questionRepository;
+    
+    @Autowired PostActionRepository postActionRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -61,8 +67,13 @@ public class PostServiceImpl implements PostService {
     private TagsRepository tagsRepository;
 
     @Override
-    public List<Post> getPosts(Map<String, Object> params) {
-        return this.postRepository.getPosts(params);
+    public List<Post> getPosts(Map<String, String> params) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && params != null) {
+            params.put("alumniId", authentication.getName());
+        }
+        List<Post> posts = this.postRepository.getPosts(params);
+        return posts;
     }
 
     @Override

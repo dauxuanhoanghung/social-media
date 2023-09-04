@@ -1,11 +1,13 @@
 package com.social.apis;
 
 import com.social.dto.UserDTO;
+import com.social.dto.request.FileUploadRequest;
 import com.social.dto.request.UserRegisterDTO;
 import com.social.dto.response.ModelResponse;
 import com.social.dto.response.UserResponse;
 import com.social.pojo.User;
 import com.social.services.UserService;
+import com.social.validator.FileValidator;
 import java.security.Principal;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -36,6 +38,9 @@ public class UserAPI {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private FileValidator fileValidator;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> get(@PathVariable(name = "id") String id) {
@@ -68,5 +73,27 @@ public class UserAPI {
             res.setData("Username exists");
         }
         return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/upload-avatar/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity uploadAvatar(@ModelAttribute @Valid FileUploadRequest file, BindingResult rs) {
+        fileValidator.validate(file, rs);
+        if (rs.hasErrors()) {
+            return ResponseEntity.badRequest().body(rs.getAllErrors());
+        }
+
+        // Process and save the file
+        // ...
+        // Return a success response if file processing is successful
+        return ResponseEntity.ok("File uploaded successfully");
+    }
+
+    @PostMapping(value = "/upload-bg/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity uploadBg(@ModelAttribute @Valid FileUploadRequest file, BindingResult rs) {
+        fileValidator.validate(file, rs);
+        if (rs.hasErrors()) {
+            return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(null);
     }
 }

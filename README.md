@@ -23,10 +23,13 @@ git clone https://github.com/dauxuanhoanghung/social-media.git
 
 #### API User
 
-| Method | Endpoint             |                   Payload                   | Description             |
-| :----- | :------------------- | :-----------------------------------------: | :---------------------- |
-| GET    | /api/users/{id}      |                    None                     | Fetch to get user by ID |
-| POST   | /api/users/register/ | { alumniId, displayName, avatarFile, email} | Register new client     |
+| Method | Endpoint                  |                   Payload                   | Description             |
+| :----- | :------------------------ | :-----------------------------------------: | :---------------------- |
+| GET    | /api/users/{id}           |                    None                     | Fetch to get user by ID |
+| GET    | /api/users/current-user/  |                    None                     | Get info current user   |
+| POST   | /api/users/register/      | { alumniId, displayName, avatarFile, email} | Register new client     |
+| POST   | /api/users/upload-avatar/ |                  { file }                   | Upload Avatar           |
+| POST   | /api/users/upload-bg/     |                  { file }                   | Upload Background image |
 
 #### API Comments
 
@@ -51,8 +54,8 @@ git clone https://github.com/dauxuanhoanghung/social-media.git
 
 #### API Actions
 
-| Method | Endpoint              |        Payload         | Description         |
-| :----- | :-------------------- | :--------------------: | :------------------ |
-| POST   | /api/actions/post/    |    { post, action }    | Get a list of posts |
-| POST   | /api/actions/comment/ |  { comment, action }   | Get a list of posts |
-| POST   | /api/actions/reply/   | { subComment, action } | Get a list of posts |
+| Method | Endpoint              |        Payload         | Description              |
+| :----- | :-------------------- | :--------------------: | :----------------------- |
+| POST   | /api/actions/post/    |    { post, action }    | Change action on post    |
+| POST   | /api/actions/comment/ |  { comment, action }   | Change action on comment |
+| POST   | /api/actions/reply/   | { subComment, action } | Change action on reply   |
