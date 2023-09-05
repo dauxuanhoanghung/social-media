@@ -24,8 +24,6 @@ public class PostRequestValidator implements Validator {
                 || postRequest.getContent().isBlank()) //ko co content
                 && (postRequest.getImages() == null  //ko anh
                 || postRequest.getImages().isEmpty())) {
-            Boolean a = !(postRequest.getContent() == null  || postRequest.getContent().isBlank()); //co ndung
-            Boolean b =!(postRequest.getImages() == null  || postRequest.getImages().isEmpty()); //ko co anh
             errors.reject("validator.postRequest", "POST is empty");
         }
     }
