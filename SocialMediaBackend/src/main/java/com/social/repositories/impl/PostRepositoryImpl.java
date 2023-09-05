@@ -115,6 +115,7 @@ public class PostRepositoryImpl implements PostRepository {
             } else {
                 query.setFirstResult(0);
             }
+        }
 
         List<Post> result = new ArrayList<>();
         List<Object[]> resultPosts = query.getResultList();
