@@ -7,6 +7,7 @@ import com.social.services.PostService;
 import com.social.services.SurveyService;
 import com.social.validator.PostRequestValidator;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
@@ -60,7 +61,10 @@ public class PostAPI {
     @GetMapping
     public ResponseEntity<List<Post>> getPosts(@RequestParam Map<String, Object> params) {
         List<Post> posts = postService.getPosts(params);
-        return ResponseEntity.ok(posts);
+        Map<String, Object> res = new HashMap<>();
+        res.put("posts", posts);
+        return ResponseEntity.ok(res);
+
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)

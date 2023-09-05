@@ -177,8 +177,8 @@ public class CommentRepositoryImpl implements CommentRepository {
         String page = (String) params.get("page");
         Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
         Root<SubComment> subCommentRoot = subquery.from(SubComment.class);
-        subquery.select(criteriaBuilder.count(subCommentRoot.get("id")));
-        subquery.where(criteriaBuilder.equal(subCommentRoot.get("comment"), commentRoot.get("id")));
+        subquery.select(criteriaBuilder.count(subCommentRoot.get("id")))
+                .where(criteriaBuilder.equal(subCommentRoot.get("comment"), commentRoot.get("id")));
         // SELECT comment, count()
         criteriaQuery.multiselect(commentRoot,  subquery.getSelection());
         if (!params.isEmpty()) {

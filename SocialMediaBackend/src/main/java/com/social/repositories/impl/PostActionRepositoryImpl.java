@@ -1,6 +1,8 @@
 package com.social.repositories.impl;
 
+import com.social.enums.Action;
 import com.social.pojo.PostAction;
+import com.social.pojo.User;
 import com.social.repositories.PostActionRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +93,31 @@ public class PostActionRepositoryImpl implements PostActionRepository {
         } catch (HibernateException ex) {
             return null;
         }
+    }
+
+    @Override
+    public Optional<Action> get(String alumniId, Integer postId) {
+        Session session = getSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Action> subquery = criteriaBuilder.createQuery(Action.class);
+        Root<PostAction> postActionRoot = subquery.from(PostAction.class);
+        Root<User> userRoot = subquery.from(User.class);
+        subquery.select(postActionRoot.get("act"));
+        List<Predicate> subPre = new ArrayList();
+        subPre.add(criteriaBuilder.equal(userRoot.get("id"), postActionRoot.get("user")));
+        subPre.add(criteriaBuilder.equal(userRoot.get("alumniId"), alumniId));
+        subPre.add(criteriaBuilder.equal(postActionRoot.get("post"), postId));
+
+        subquery.where(subPre.toArray(Predicate[]::new));
+        Object a = session.createQuery(subquery).getResultList().get(0);
+        try {
+            if (a != null) {
+                return Optional.ofNullable((Action) a);
+            }
+        } catch (HibernateException ex) {
+            return Optional.empty();
+        }
+        return null;
     }
 
 }

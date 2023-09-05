@@ -33,7 +33,6 @@ public class AuthenticateAPI {
     @Autowired  
     private UserService userService;
 
-
     @Autowired
     private AuthenticationManager authenticationManager;
 

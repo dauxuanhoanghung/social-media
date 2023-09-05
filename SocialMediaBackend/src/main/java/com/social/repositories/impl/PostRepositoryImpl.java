@@ -1,8 +1,11 @@
 package com.social.repositories.impl;
 
 import com.social.dto.request.PostRequest;
+import com.social.enums.Action;
 import com.social.pojo.Post;
+import com.social.pojo.PostAction;
 import com.social.pojo.User;
+import com.social.repositories.PostActionRepository;
 import com.social.repositories.PostRepository;
 import com.social.repositories.UserRepository;
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -42,6 +46,9 @@ public class PostRepositoryImpl implements PostRepository {
     private UserRepository userRepository;
 
     @Autowired
+    private PostActionRepository postActionRepository;
+
+    @Autowired
     private ModelMapper mapper;
 
     @Autowired
@@ -54,13 +61,14 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public List<Post> getPosts(Map<String, Object> params) {
+    public List<Post> getPosts(Map<String, String> params) {
         Session session = getSession();
         Integer size = env.getProperty("PAGINATION", Integer.class);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<Post> criteriaQuery = criteriaBuilder.createQuery(Post.class);
+        CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
 
         Root<Post> postRoot = criteriaQuery.from(Post.class);
+
         List<Predicate> predicates = new ArrayList<>();
         if (params != null) {
 //            String fromDate = params.get("fromDate");
@@ -72,13 +80,30 @@ public class PostRepositoryImpl implements PostRepository {
 //            if (fromDate != null && !fromDate.isEmpty()) {
 //                predicates.add(criteriaBuilder.lessThanOrEqualTo(userRoot.get("createdDate"),
 //                        LocalDateTime.parse(toDate, dateTimeFormatter)));
-//            }
+//            }  
+            String alumniId = (String) params.get("alumniId");
+            if (alumniId != null && !alumniId.isBlank()) {
+                Subquery<Action> subquery = criteriaQuery.subquery(Action.class);
+                Root<PostAction> postActionRoot = subquery.from(PostAction.class);
+                subquery.select(postActionRoot.get("action"));
+                subquery.where(
+                        criteriaBuilder.and(
+                                criteriaBuilder.equal(postActionRoot.get("user").get("alumniId"), alumniId),
+                                criteriaBuilder.equal(postActionRoot.get("post"), postRoot)
+                        )
+                );
+                criteriaQuery.multiselect(postRoot, subquery.getSelection());
+            } else {
+                criteriaQuery.multiselect(postRoot);
+            }
         }
         // Check if "userId" is present in params
         if (params != null && params.containsKey("userId")) {
             String userId = (String) params.get("userId");
             criteriaQuery.where(criteriaBuilder.equal(postRoot.get("user").get("id"), userId));
         }
+
+        criteriaQuery.where(predicates.toArray(Predicate[]::new));
         criteriaQuery.orderBy(criteriaBuilder.desc(postRoot.get("createdDate")));
 
         Query query = session.createQuery(criteriaQuery);
@@ -91,10 +116,19 @@ public class PostRepositoryImpl implements PostRepository {
                 query.setFirstResult(0);
             }
 
-            return query.getResultList();
+        List<Post> result = new ArrayList<>();
+        List<Object[]> resultPosts = query.getResultList();
+        for (Object[] object : resultPosts) {
+            Post p = (Post) object[0];
+            if (params != null) {
+                String alumniId = (String) params.get("alumniId");
+                if (alumniId != null && !alumniId.isBlank()) {
+                    p.setCurrentAction((Action) object[1]);
+                }
+            }
+            result.add(p);
         }
-
-        return query.getResultList();
+        return result;
     }
 
     @Override

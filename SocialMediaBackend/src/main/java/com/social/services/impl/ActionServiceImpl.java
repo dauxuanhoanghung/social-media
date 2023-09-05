@@ -75,25 +75,29 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     public PostAction saveOrUpdateOrDelete(PostActionRequest request) {
-        // GET
-        Optional<PostAction> action
-                = postActionRepository.get(getCurrentUser().getId(), request.getPost().getId());
-        // SAVE
-        if (action.isEmpty() && request.getAction() != null) {
-            PostAction savedEntity = mapper.map(request, PostAction.class);
-            savedEntity.setUser(getCurrentUser());
-            postActionRepository.save(savedEntity);
-            return savedEntity;
-        } // DELETE
-        else if (action.isPresent() && request.getAction() == null) {
-            postActionRepository.delete(action.get());
-            return action.get();
-        } else if (action.isPresent() && request.getAction() != null) {
-            action.get().setAction(request.getAction());
-            postActionRepository.update(action.get());
-            return action.get();
+        try {
+            // GET
+            Optional<PostAction> action
+                    = postActionRepository.get(getCurrentUser().getId(), request.getPost().getId());
+            // SAVE
+            if (action.isEmpty() && request.getAction() != null) {
+                PostAction savedEntity = mapper.map(request, PostAction.class);
+                savedEntity.setUser(getCurrentUser());
+                postActionRepository.save(savedEntity);
+                return savedEntity;
+            } // DELETE
+            else if (action.isPresent() && request.getAction() == null) {
+                postActionRepository.delete(action.get());
+                return action.get();
+            } else if (action.isPresent() && request.getAction() != null) {
+                action.get().setAction(request.getAction());
+                postActionRepository.update(action.get());
+                return action.get();
+            }
+            return null;
+        } catch (Exception ex) {
+            return null;
         }
-        return null;
     }
 
     @Override

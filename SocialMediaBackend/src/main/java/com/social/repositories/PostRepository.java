@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 public interface PostRepository {
 
-    List<Post> getPosts(Map<String, Object> params);
+    List<Post> getPosts(Map<String, String> params);
 
     Optional<Post> getPostById(Integer id);
 

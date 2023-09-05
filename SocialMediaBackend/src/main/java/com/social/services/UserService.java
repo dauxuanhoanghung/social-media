@@ -6,6 +6,7 @@ import com.social.pojo.User;
 import java.util.List;
 import java.util.Map;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -34,6 +35,8 @@ public interface UserService extends UserDetailsService {
     User update(User user);
     
     User updateStatus(User user);
+    
+    User updateAvatar(MultipartFile avatarFile);
 
     boolean deleteUser(Integer id);
     
