@@ -9,7 +9,6 @@ import lombok.Data;
  */
 @Data
 public class AnswerRequest implements Serializable {
-
     private static final long serialVersionUID = -5L;
     private String content;
 }

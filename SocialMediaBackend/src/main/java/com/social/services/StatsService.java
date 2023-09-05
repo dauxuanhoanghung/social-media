@@ -17,4 +17,6 @@ public interface StatsService {
     List<Object[]> countPosts(Map<String, String> params);
 
     List<Object[]> countPosts(LocalDateTime fromDate, LocalDateTime toDate);
+    
+    List<Object[]> getTop10MostActiveUser(Map<String, String> params);
 }

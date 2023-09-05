@@ -7,6 +7,7 @@ import com.social.pojo.Post;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -25,4 +26,5 @@ public interface PostService {
     Post save(PostRequest post);
     
     Post toggleLockCOmment(Integer postId);
+    
 }

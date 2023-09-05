@@ -97,6 +97,11 @@ public class PostRepositoryImpl implements PostRepository {
                 criteriaQuery.multiselect(postRoot);
             }
         }
+        // Check if "userId" is present in params
+        if (params != null && params.containsKey("userId")) {
+            String userId = (String) params.get("userId");
+            criteriaQuery.where(criteriaBuilder.equal(postRoot.get("user").get("id"), userId));
+        }
 
         criteriaQuery.where(predicates.toArray(Predicate[]::new));
         criteriaQuery.orderBy(criteriaBuilder.desc(postRoot.get("createdDate")));
@@ -110,7 +115,6 @@ public class PostRepositoryImpl implements PostRepository {
             } else {
                 query.setFirstResult(0);
             }
-        }
 
         List<Post> result = new ArrayList<>();
         List<Object[]> resultPosts = query.getResultList();
