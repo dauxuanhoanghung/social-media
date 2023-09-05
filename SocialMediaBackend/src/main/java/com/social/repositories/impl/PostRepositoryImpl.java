@@ -74,7 +74,11 @@ public class PostRepositoryImpl implements PostRepository {
 //                        LocalDateTime.parse(toDate, dateTimeFormatter)));
 //            }
         }
-
+        // Check if "userId" is present in params
+        if (params != null && params.containsKey("userId")) {
+            String userId = (String) params.get("userId");
+            criteriaQuery.where(criteriaBuilder.equal(postRoot.get("user").get("id"), userId));
+        }
         criteriaQuery.orderBy(criteriaBuilder.desc(postRoot.get("createdDate")));
 
         Query query = session.createQuery(criteriaQuery);
@@ -86,9 +90,10 @@ public class PostRepositoryImpl implements PostRepository {
             } else {
                 query.setFirstResult(0);
             }
+
             return query.getResultList();
         }
-        
+
         return query.getResultList();
     }
 
@@ -168,5 +173,5 @@ public class PostRepositoryImpl implements PostRepository {
     public boolean delete(Post post) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
 }

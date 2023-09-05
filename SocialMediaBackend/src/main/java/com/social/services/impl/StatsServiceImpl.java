@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 @Lazy
 @Service
 public class StatsServiceImpl implements StatsService {
+
     @Autowired
     private StatsRepository statsRepository;
 
@@ -37,5 +38,10 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public List<Object[]> countPosts(LocalDateTime fromDate, LocalDateTime toDate) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Object[]> getTop10MostActiveUser(Map<String, String> params) {
+        return statsRepository.top10MostActiveUser(params);
     }
 }

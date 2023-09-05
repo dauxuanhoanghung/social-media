@@ -8,6 +8,7 @@ import com.social.services.SurveyService;
 import com.social.validator.PostRequestValidator;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -56,8 +58,8 @@ public class PostAPI {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getPosts(Integer page) {
-        List<Post> posts = postService.getPosts(Collections.singletonMap("page", page.toString()));
+    public ResponseEntity<List<Post>> getPosts(@RequestParam Map<String, Object> params) {
+        List<Post> posts = postService.getPosts(params);
         return ResponseEntity.ok(posts);
     }
 

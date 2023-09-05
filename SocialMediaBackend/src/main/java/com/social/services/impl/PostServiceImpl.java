@@ -23,6 +23,7 @@ import com.social.services.PostService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -105,7 +106,7 @@ public class PostServiceImpl implements PostService {
         savedPost.setLockComment(Boolean.FALSE);
         savedPost.setType(PostType.POST);
         this.postRepository.save(savedPost);
-        if (post.getImages()!= null && !post.getImages().isEmpty()) {
+        if (post.getImages() != null && !post.getImages().isEmpty()) {
             for (MultipartFile file : post.getImages()) {
                 String link = cloudinaryService.uploadImage(file);
                 ImagePost imagePost = new ImagePost();
@@ -143,4 +144,6 @@ public class PostServiceImpl implements PostService {
         currentPost.setLockComment(!currentPost.getLockComment());
         return this.postRepository.save(currentPost);
     }
+
+
 }

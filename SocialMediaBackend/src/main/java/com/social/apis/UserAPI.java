@@ -4,9 +4,12 @@ import com.social.dto.UserDTO;
 import com.social.dto.request.UserRegisterDTO;
 import com.social.dto.response.ModelResponse;
 import com.social.dto.response.UserResponse;
+import com.social.pojo.Post;
 import com.social.pojo.User;
+import com.social.services.PostService;
 import com.social.services.UserService;
 import java.security.Principal;
+import java.util.List;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,9 @@ public class UserAPI {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private PostService postService;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> get(@PathVariable(name = "id") String id) {
@@ -69,4 +75,23 @@ public class UserAPI {
         }
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
+
+    @PostMapping
+    public ResponseEntity<ModelResponse> updateUser(@ModelAttribute @Valid UserRegisterDTO user, BindingResult rs,
+            Principal principal) {
+//        if (rs.hasErrors()) {
+//            return new ResponseEntity<>(new ModelResponse("400", "Bad request data user", rs.getFieldErrors()), HttpStatus.BAD_REQUEST);
+//        }
+        User currentUser = this.userService.getUserByAlumniId(principal.getName());
+        User updatedUser = modelMapper.map(user, User.class);
+        updatedUser.setPassword(currentUser.getPassword());
+        // get image update cloudinary -> set in updated user
+        updatedUser.setAvatar(null);
+        User newUser = userService.update(updatedUser);
+        ModelResponse res = new ModelResponse();
+        res.setData(newUser);
+        res.setMessage("Request Success");
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.social.repositories.impl;
 
+import com.social.pojo.Comment;
+import com.social.pojo.Post;
 import com.social.pojo.Role;
 import com.social.pojo.User;
 import com.social.repositories.StatsRepository;
@@ -11,10 +13,12 @@ import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +55,7 @@ public class StatsRepositoryImpl implements StatsRepository {
         CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
 
         Root<User> userRoot = criteriaQuery.from(User.class);
-        Join<Role, User> roleJoin = userRoot.join("role", JoinType.LEFT); 
+        Join<Role, User> roleJoin = userRoot.join("role", JoinType.LEFT);
 
         criteriaQuery.multiselect(
                 roleJoin.get("id"),
@@ -88,6 +92,37 @@ public class StatsRepositoryImpl implements StatsRepository {
     @Override
     public List<Object[]> countPosts(Map<String, String> params) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Object[]> top10MostActiveUser(Map<String, String> params) {
+        Session session = getSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
+        Root<User> userRoot = criteriaQuery.from(User.class);
+        // Using SubQuery is ok
+//        Subquery<Long> countPost = criteriaQuery.subquery(Long.class);
+//        Subquery<Long> countAction = criteriaQuery.subquery(Long.class);
+//        Subquery<Long> countComment = criteriaQuery.subquery(Long.class);
+        Join<User, Comment> userCommentJoin = userRoot.join("comments", JoinType.LEFT);
+
+        Expression<Long> commentCount = criteriaBuilder.count(userCommentJoin.get("id"));
+
+        // Subquery to count posts
+        Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
+        Root<Post> postRoot = subquery.from(Post.class);
+        subquery.select(criteriaBuilder.count(postRoot.get("id")));
+        subquery.where(criteriaBuilder.equal(postRoot.get("user"), userRoot));
+
+        // Join the subquery with the User table
+        Expression<Long> postCount = subquery.getSelection();
+
+        criteriaQuery.multiselect(userRoot, commentCount.alias("countCmt"), postCount.alias("countPost"));
+        criteriaQuery.groupBy(userRoot.get("id"));
+        criteriaQuery.orderBy(criteriaBuilder.desc(criteriaBuilder.sum(commentCount, postCount)));
+        Query query = session.createQuery(criteriaQuery);
+        query.setMaxResults(10);
+        return query.getResultList();
     }
 
 }
