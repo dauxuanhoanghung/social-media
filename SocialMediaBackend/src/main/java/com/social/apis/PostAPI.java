@@ -59,7 +59,7 @@ public class PostAPI {
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getPosts(@RequestParam Map<String, Object> params) {
+    public ResponseEntity getPosts(@RequestParam Map<String, String> params) {
         List<Post> posts = postService.getPosts(params);
         Map<String, Object> res = new HashMap<>();
         res.put("posts", posts);
