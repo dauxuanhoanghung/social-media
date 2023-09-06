@@ -124,7 +124,7 @@ public class SubCommentRepositoryImpl implements SubCommentRepository {
             // WHERE sub_comment_id = ?
             deleteSubComment.where(
                     criteriaBuilder.equal(
-                            subCommentActionRoot.get("subCommentId"), subComment.getId()
+                            subCommentActionRoot.get("subComment"), subComment.getId()
                     )
             );
 
