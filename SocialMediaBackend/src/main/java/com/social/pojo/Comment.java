@@ -4,6 +4,7 @@
  */
 package com.social.pojo;
 
+import com.social.enums.Action;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -55,7 +56,6 @@ public class Comment implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "content")
     private String content;
-    
     @Column(name = "created_date")
     private LocalDateTime createdDate;
     @Column(name = "modified_date")
@@ -70,11 +70,14 @@ public class Comment implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;
-    
+
     @Transient
     private Long countReply;
     @Transient
     private Integer countAction;
+    @Transient
+    private Action currentAction;
+
     {
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = LocalDateTime.now();
@@ -190,5 +193,5 @@ public class Comment implements Serializable {
     public String toString() {
         return "com.social.pojo.Comment[ id=" + id + " ]";
     }
-    
+
 }

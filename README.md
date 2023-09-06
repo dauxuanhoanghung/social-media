@@ -25,6 +25,8 @@ git clone https://github.com/dauxuanhoanghung/social-media.git
 
 | Method | Endpoint                  |                   Payload                   | Description             |
 | :----- | :------------------------ | :-----------------------------------------: | :---------------------- |
+| GET    | /api/users/?userId=       |                    None                     | Fetch to get user by ID |
+| GET    | /api/users/{id}           |                    None                     | Fetch to get user by ID |
 | GET    | /api/users/{id}           |                    None                     | Fetch to get user by ID |
 | GET    | /api/users/current-user/  |                    None                     | Get info current user   |
 | POST   | /api/users/register/      | { alumniId, displayName, avatarFile, email} | Register new client     |
@@ -47,7 +49,7 @@ git clone https://github.com/dauxuanhoanghung/social-media.git
 
 | Method | Endpoint                     |       Payload       | Description             |
 | :----- | :--------------------------- | :-----------------: | :---------------------- |
-| GET    | /api/posts/                  |        None         | Get a list of posts     |
+| GET    | /api/posts/?userId=&page=    |        None         | Get a list of posts     |
 | GET    | /api/posts/{id}              |        None         | Get a post by ID        |
 | POST   | /api/posts/                  | { content, images } | Create a post           |
 | PATCH  | /api/posts/{id}/toggle-lock/ |        none         | Toggle the lock comment |

@@ -70,7 +70,7 @@ public class UserAPI {
     }
 
     @GetMapping
-    public ResponseEntity<UserResponse> getCurrentUser(@RequestParam Map<String, String> params) {
+    public ResponseEntity<UserResponse> getProfileUser(@RequestParam Map<String, String> params) {
         String slug = params.getOrDefault("slug", null);
         String id = params.getOrDefault("id", null);
         if (slug != null) {
