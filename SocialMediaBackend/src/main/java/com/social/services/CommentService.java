@@ -21,4 +21,5 @@ public interface CommentService {
     boolean delete(Integer id);
     
     Long countRepliesByCommentId(Integer commentId);
+    
 }
