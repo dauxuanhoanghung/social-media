@@ -5,7 +5,6 @@ import com.social.enums.Action;
 import com.social.pojo.Post;
 import com.social.pojo.PostAction;
 import com.social.pojo.User;
-import com.social.repositories.PostActionRepository;
 import com.social.repositories.PostRepository;
 import com.social.repositories.UserRepository;
 import java.util.ArrayList;
@@ -68,15 +67,14 @@ public class PostRepositoryImpl implements PostRepository {
 
         List<Predicate> predicates = new ArrayList<>();
         if (params != null) {
-            String userId = params.get("userId");
-            String slug = params.get("slug");
-            if (slug != null && !slug.isBlank()) {
+            if (params.containsKey("slug")) {
+                String slug = params.get("slug");
                 predicates.add(criteriaBuilder.equal(
                         postRoot.get("user").get("slug"),
                         Integer.valueOf(slug))
                 );
-            } 
-            else if (userId != null && !userId.isEmpty()) {
+            } else if (params.containsKey("userId")) {
+                String userId = params.get("userId");
                 predicates.add(criteriaBuilder.equal(
                         postRoot.get("user").get("id"),
                         Integer.valueOf(userId))
@@ -103,11 +101,6 @@ public class PostRepositoryImpl implements PostRepository {
                 criteriaQuery.multiselect(postRoot);
             }
         }
-        // Check if "userId" is present in params
-        if (params != null && params.containsKey("userId")) {
-            String userId = (String) params.get("userId");
-            criteriaQuery.where(criteriaBuilder.equal(postRoot.get("user").get("id"), userId));
-        }
 
         criteriaQuery.where(predicates.toArray(Predicate[]::new));
         criteriaQuery.orderBy(criteriaBuilder.desc(postRoot.get("createdDate")));
@@ -124,16 +117,15 @@ public class PostRepositoryImpl implements PostRepository {
         }
 
         List<Post> result = new ArrayList<>();
-        List<Object[]> resultPosts = query.getResultList();
-        for (Object[] object : resultPosts) {
-            Post p = (Post) object[0];
-            if (params != null) {
-                String alumniId = (String) params.get("alumniId");
-                if (alumniId != null && !alumniId.isBlank()) {
-                    p.setCurrentAction((Action) object[1]);
-                }
+        if (params != null && params.containsKey("alumniId")) {
+            List<Object[]> resultPosts = query.getResultList();
+            for (Object[] object : resultPosts) {
+                Post p = (Post) object[0];
+                p.setCurrentAction((Action) object[1]);
+                result.add(p);
             }
-            result.add(p);
+        } else {
+            return query.getResultList();
         }
         return result;
     }
@@ -141,8 +133,10 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Optional<Post> getPostById(Integer id) {
         Session session = getSession();
+
         try {
-            Post post = session.get(Post.class, id);
+            Post post = session.get(Post.class,
+                    id);
             return Optional.ofNullable(post);
         } catch (NoResultException ex) {
             // If no result is found, return an empty Optional
@@ -160,7 +154,6 @@ public class PostRepositoryImpl implements PostRepository {
             s.save(post);
             return post;
         } catch (HibernateException ex) {
-            ex.printStackTrace();
             return null;
         }
     }
@@ -172,7 +165,6 @@ public class PostRepositoryImpl implements PostRepository {
             s.update(post);
             return post;
         } catch (HibernateException ex) {
-            ex.printStackTrace();
             return null;
         }
     }
@@ -180,7 +172,8 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Post save(PostRequest post) {
         Session s = getSession();
-        Post p = mapper.map(post, Post.class);
+        Post p = mapper.map(post, Post.class
+        );
         try {
             p.setUser(userRepository.getUserByAlumniId("2051052013").get());
             p.setImagePostSet(null);
@@ -196,7 +189,8 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public boolean deleteById(Integer id) {
         Session session = getSession();
-        Post post = session.get(Post.class, id);
+        Post post = session.get(Post.class,
+                id);
         try {
             if (post != null) {
                 session.delete(post);
@@ -204,7 +198,6 @@ public class PostRepositoryImpl implements PostRepository {
             }
             return false;
         } catch (HibernateException ex) {
-            ex.printStackTrace();
             return false;
         }
     }

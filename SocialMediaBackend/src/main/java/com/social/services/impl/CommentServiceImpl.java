@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -49,8 +50,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getComments(Map<String, String> params) {
-        if (params != null && params.get("page") == null) {
-            params.put("page", "1");
+        if (params != null) {
+            if (params.get("page") == null) {
+                params.put("page", "1");
+            }
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+                params.put("alumniId", authentication.getName());
+            }
         }
         return this.commentRepository.getComments(params);
     }

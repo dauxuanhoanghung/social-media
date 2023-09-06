@@ -52,12 +52,13 @@ public class ActionServiceImpl implements ActionService {
     @Override
     public CommentAction saveOrUpdateOrDelete(CommentActionRequest request) {
         // GET
+        User currentUser = getCurrentUser();
         Optional<CommentAction> action
-                = commentActionRepository.get(getCurrentUser().getId(), request.getComment().getId());
+                = commentActionRepository.get(currentUser.getId(), request.getComment().getId());
         // SAVE
         if (action.isEmpty() && request.getAction() != null) {
             CommentAction savedEntity = mapper.map(request, CommentAction.class);
-            savedEntity.setUser(getCurrentUser());
+            savedEntity.setUser(currentUser);
             commentActionRepository.save(savedEntity);
             return savedEntity;
         } // DELETE
@@ -77,12 +78,13 @@ public class ActionServiceImpl implements ActionService {
     public PostAction saveOrUpdateOrDelete(PostActionRequest request) {
         try {
             // GET
+            User currentUser = getCurrentUser();
             Optional<PostAction> action
-                    = postActionRepository.get(getCurrentUser().getId(), request.getPost().getId());
+                    = postActionRepository.get(currentUser.getId(), request.getPost().getId());
             // SAVE
             if (action.isEmpty() && request.getAction() != null) {
                 PostAction savedEntity = mapper.map(request, PostAction.class);
-                savedEntity.setUser(getCurrentUser());
+                savedEntity.setUser(currentUser);
                 postActionRepository.save(savedEntity);
                 return savedEntity;
             } // DELETE
@@ -103,12 +105,13 @@ public class ActionServiceImpl implements ActionService {
     @Override
     public SubCommentAction saveOrUpdateOrDelete(ReplyActionRequest request) {
         // GET
+        User currentUser = getCurrentUser();
         Optional<SubCommentAction> action
-                = subCommentActionRepository.get(getCurrentUser().getId(), request.getSubComment().getId());
+                = subCommentActionRepository.get(currentUser.getId(), request.getSubComment().getId());
         // SAVE
         if (action.isEmpty() && request.getAction() != null) {
             SubCommentAction savedEntity = mapper.map(request, SubCommentAction.class);
-            savedEntity.setUser(getCurrentUser());
+            savedEntity.setUser(currentUser);
             subCommentActionRepository.save(savedEntity);
             return savedEntity;
         } // DELETE

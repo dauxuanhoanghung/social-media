@@ -1,7 +1,9 @@
 package com.social.repositories.impl;
 
+import com.social.enums.Action;
 import com.social.pojo.Comment;
 import com.social.pojo.CommentAction;
+import com.social.pojo.PostAction;
 import com.social.pojo.SubComment;
 import com.social.pojo.SubCommentAction;
 import com.social.pojo.User;
@@ -171,8 +173,6 @@ public class CommentRepositoryImpl implements CommentRepository {
         CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
 
         Root<Comment> commentRoot = criteriaQuery.from(Comment.class);
-        Root<SubComment> replyRoot = criteriaQuery.from(SubComment.class);
-
         List<Predicate> predicates = new ArrayList<>();
         String page = (String) params.get("page");
         Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
@@ -180,7 +180,7 @@ public class CommentRepositoryImpl implements CommentRepository {
         subquery.select(criteriaBuilder.count(subCommentRoot.get("id")))
                 .where(criteriaBuilder.equal(subCommentRoot.get("comment"), commentRoot.get("id")));
         // SELECT comment, count()
-        criteriaQuery.multiselect(commentRoot,  subquery.getSelection());
+
         if (!params.isEmpty()) {
             // comment.post_id == :postId
             String postId = params.get("postId");
@@ -190,6 +190,23 @@ public class CommentRepositoryImpl implements CommentRepository {
             }
 
             criteriaQuery.where(predicates.toArray(Predicate[]::new));
+
+            if (params.containsKey("alumniId")) {
+                String alumniId = (String) params.get("alumniId");
+                Subquery<Action> actionSubquery = criteriaQuery.subquery(Action.class);
+                Root<CommentAction> commentActionRoot = actionSubquery.from(CommentAction.class);
+                actionSubquery.select(commentActionRoot.get("action"));
+                actionSubquery.where(
+                        criteriaBuilder.and(
+                                criteriaBuilder.equal(commentActionRoot.get("user").get("alumniId"), alumniId),
+                                criteriaBuilder.equal(commentActionRoot.get("comment"), commentRoot)
+                        )
+                );
+                criteriaQuery.multiselect(
+                        commentRoot, subquery.getSelection(), actionSubquery.getSelection());
+            } else {
+                criteriaQuery.multiselect(commentRoot, subquery.getSelection());
+            }
         }
 
         criteriaQuery.orderBy(criteriaBuilder.desc(commentRoot.get("createdDate")));
@@ -205,6 +222,9 @@ public class CommentRepositoryImpl implements CommentRepository {
             Comment comment = (Comment) result[0];
             Long subcommentCount = (Long) result[1];
             comment.setCountReply(subcommentCount);
+            if (!params.isEmpty() && params.containsKey("alumniId")) {
+                comment.setCurrentAction((Action) result[2]);
+            }
             commentsWithCounts.add(comment);
         }
         return commentsWithCounts;
