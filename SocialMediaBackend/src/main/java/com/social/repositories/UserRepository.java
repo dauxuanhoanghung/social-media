@@ -28,4 +28,5 @@ public interface UserRepository {
     boolean deleteUser(Integer id);
     
     boolean existsByAlumniId(String alumniId);
+    
 }

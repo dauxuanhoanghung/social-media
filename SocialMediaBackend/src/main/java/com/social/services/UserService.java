@@ -42,4 +42,6 @@ public interface UserService extends UserDetailsService {
     
     User save(UserRegisterDTO user); // Save new record
     
+    User activeLecture(String password, String oldPassword);
+    
 }

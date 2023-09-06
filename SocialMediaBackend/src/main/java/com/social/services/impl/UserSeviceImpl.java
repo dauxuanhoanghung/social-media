@@ -191,4 +191,15 @@ public class UserSeviceImpl implements UserService {
         }
     }
 
+    @Override
+    public User activeLecture(String password, String oldPassword) {
+        User user = getCurrentUser();
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(password));
+            user.setStatus(UserStatus.ACTIVE);
+            return userRepository.update(user);
+        }
+        return null;
+    }
+
 }
