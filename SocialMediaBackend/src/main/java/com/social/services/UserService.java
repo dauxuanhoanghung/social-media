@@ -36,7 +36,7 @@ public interface UserService extends UserDetailsService {
     
     User updateStatus(User user);
     
-    User updateAvatar(MultipartFile avatarFile);
+    User updateAvatar(MultipartFile avatarFile, Boolean isBackground);
 
     boolean deleteUser(Integer id);
     

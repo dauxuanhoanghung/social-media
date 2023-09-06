@@ -10,6 +10,7 @@ public class UserResponse {
     private Integer id;
     private String alumniId;
     private String displayName;
+    private String slug;
     private String coverBg;
     private String avatar;
     private UserStatus status;
