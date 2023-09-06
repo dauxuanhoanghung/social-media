@@ -21,6 +21,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -152,5 +154,21 @@ public class UserAPI {
         Map res = new HashMap();
         res.put("data", user);
         return ResponseEntity.ok(user);
+    }
+
+    @PostMapping(value = "/lecture-active/")
+    public ResponseEntity<UserResponse> activeLecturePassword(@RequestBody Map<String, String> request) {
+        String oldPassword = request.getOrDefault("oldPassword", null);
+        if (oldPassword != null) {
+            if (request.containsKey("password")) {
+                User user = userService.activeLecture(request.get("password"), oldPassword);
+                if (user != null)
+                    return new ResponseEntity<>(modelMapper.map(user, UserResponse.class),
+                            HttpStatus.OK
+                    );
+            }
+        }
+
+        return null;
     }
 }
