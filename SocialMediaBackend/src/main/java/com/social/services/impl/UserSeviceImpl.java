@@ -167,7 +167,7 @@ public class UserSeviceImpl implements UserService {
     }
 
     @Override
-    public User updateAvatar(MultipartFile avatarFile) {
+    public User updateAvatar(MultipartFile avatarFile, Boolean isBackground) {
         User user = getCurrentUser();
         try {
             if (user.getAvatar() == null || user.getAvatar().isBlank()) {
@@ -178,7 +178,11 @@ public class UserSeviceImpl implements UserService {
                     cloudinaryService.deleteImage(publicId);
                 }
             }
-            user.setAvatar(cloudinaryService.uploadImage(avatarFile));
+            if (!isBackground) {
+                user.setAvatar(cloudinaryService.uploadImage(avatarFile));
+            } else {
+                user.setCoverBg(cloudinaryService.uploadImage(avatarFile));
+            }
             this.userRepository.update(user);
             return user;
         } catch (Exception ex) {

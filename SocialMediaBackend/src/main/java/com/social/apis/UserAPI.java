@@ -11,7 +11,9 @@ import com.social.services.PostService;
 import com.social.services.UserService;
 import com.social.validator.FileValidator;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -44,7 +48,7 @@ public class UserAPI {
 
     @Autowired
     private PostService postService;
-  
+
     @Autowired
     private FileValidator fileValidator;
 
@@ -65,6 +69,26 @@ public class UserAPI {
         );
     }
 
+    @GetMapping
+    public ResponseEntity<UserResponse> getCurrentUser(@RequestParam Map<String, String> params) {
+        String slug = params.getOrDefault("slug", null);
+        String id = params.getOrDefault("id", null);
+        if (slug != null) {
+            return new ResponseEntity<>(
+                    modelMapper.map(this.userService.getUserBySlug(slug),
+                            UserResponse.class),
+                    HttpStatus.OK
+            );
+        } else if (slug == null && id != null) {
+            return new ResponseEntity<>(
+                    modelMapper.map(this.userService.getUserById(Integer.parseInt(id)),
+                            UserResponse.class),
+                    HttpStatus.OK
+            );
+        }
+        return null;
+    }
+
     @PostMapping(value = "/register/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ModelResponse> create(@ModelAttribute @Valid UserRegisterDTO user, BindingResult rs) {
         if (rs.hasErrors()) {
@@ -81,25 +105,32 @@ public class UserAPI {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-
+    // slug and 
     @PostMapping
-    public ResponseEntity<ModelResponse> updateUser(@ModelAttribute @Valid UserRegisterDTO user, BindingResult rs,
-            Principal principal) {
-//        if (rs.hasErrors()) {
-//            return new ResponseEntity<>(new ModelResponse("400", "Bad request data user", rs.getFieldErrors()), HttpStatus.BAD_REQUEST);
-//        }
+    public ResponseEntity<ModelResponse> updateUser(@RequestBody Map<String, String> updateUser, Principal principal) {
         User currentUser = this.userService.getUserByAlumniId(principal.getName());
-        User updatedUser = modelMapper.map(user, User.class);
-        updatedUser.setPassword(currentUser.getPassword());
-        // get image update cloudinary -> set in updated user
-        updatedUser.setAvatar(null);
-        User newUser = userService.update(updatedUser);
-        ModelResponse res = new ModelResponse();
-        res.setData(newUser);
-        res.setMessage("Request Success");
-        return new ResponseEntity<>(res, HttpStatus.OK);
-    }
+        String slug = updateUser.getOrDefault("slug", null);
+        String displayName = updateUser.getOrDefault("displayName", null);
 
+        if (slug != null && !slug.equals(currentUser.getSlug())) {
+            currentUser.setSlug(slug);
+        }
+
+        if (displayName != null && !displayName.equals(currentUser.getDisplayName())) {
+            currentUser.setDisplayName(displayName);
+        }
+
+        if (slug != null || displayName != null) {
+            User newUser = userService.updateInfo(currentUser);
+            ModelResponse res = new ModelResponse();
+            res.setData(newUser);
+            res.setMessage("Request Success");
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        }
+
+        // No changes were made, return an appropriate response
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @PostMapping(value = "/upload-avatar/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity uploadAvatar(@ModelAttribute @Valid FileUploadRequest file, BindingResult rs) {
@@ -107,10 +138,7 @@ public class UserAPI {
         if (rs.hasErrors()) {
             return ResponseEntity.badRequest().body(rs.getAllErrors());
         }
-
-        // Process and save the file
-        // ...
-        // Return a success response if file processing is successful
+        userService.updateAvatar(file.getFiles().get(0), false);
         return ResponseEntity.ok("File uploaded successfully");
     }
 
@@ -120,6 +148,9 @@ public class UserAPI {
         if (rs.hasErrors()) {
             return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(null);
+        User user = userService.updateAvatar(file.getFiles().get(0), true);
+        Map res = new HashMap();
+        res.put("data", user);
+        return ResponseEntity.ok(user);
     }
 }
