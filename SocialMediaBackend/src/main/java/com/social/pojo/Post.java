@@ -47,7 +47,6 @@ import lombok.Setter;
     @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p"),
     @NamedQuery(name = "Post.findById", query = "SELECT p FROM Post p WHERE p.id = :id"),
     @NamedQuery(name = "Post.findByLockComment", query = "SELECT p FROM Post p WHERE p.lockComment = :lockComment"),
-    @NamedQuery(name = "Post.findByCountAction", query = "SELECT p FROM Post p WHERE p.countAction = :countAction"),
     @NamedQuery(name = "Post.findByCreatedDate", query = "SELECT p FROM Post p WHERE p.createdDate = :createdDate"),
     @NamedQuery(name = "Post.findByModifiedDate", query = "SELECT p FROM Post p WHERE p.modifiedDate = :modifiedDate")})
 @Getter
@@ -66,8 +65,7 @@ public class Post implements Serializable {
     private String content;
     @Column(name = "lock_comment")
     private Boolean lockComment;
-    @Column(name = "count_action")
-    private Integer countAction;
+    
     @Basic(optional = false)
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -93,6 +91,8 @@ public class Post implements Serializable {
     private Set<PostTag> postTagSet;
     @Transient
     private Action currentAction;
+    @Transient
+    private Integer countAction;
     {
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = LocalDateTime.now();

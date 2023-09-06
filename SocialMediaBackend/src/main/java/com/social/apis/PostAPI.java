@@ -6,7 +6,6 @@ import com.social.pojo.Post;
 import com.social.services.PostService;
 import com.social.services.SurveyService;
 import com.social.validator.PostRequestValidator;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,7 @@ public class PostAPI {
 
     @Autowired
     private PostService postService;
-    
+
     @Autowired
     private SurveyService surveyService;
 
@@ -67,6 +66,24 @@ public class PostAPI {
 
     }
 
+    @GetMapping("/slug/{slug}/")
+    public ResponseEntity getPostsWithSlug(@PathVariable(name = "slug", required = true) String slug,
+            @RequestParam Map<String, String> params) {
+        params.put("slug", slug);
+        List<Post> posts = postService.getPosts(params);
+        Map<String, Object> res = new HashMap<>();
+        res.put("posts", posts);
+        return ResponseEntity.ok(res);
+
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Post> getPostById(@PathVariable(name = "id") int id) {
+        Post post = this.postService.getPostById(id);
+//        List<Comment> comments = this.commentService
+        return null;
+    }
+
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createPost(@Valid @ModelAttribute PostRequest post, BindingResult rs) {
         if (rs.hasErrors()) {
@@ -82,13 +99,6 @@ public class PostAPI {
     public ResponseEntity createAnswer(@RequestBody ResultSurveyRequest result) {
         surveyService.save(result);
         return ResponseEntity.ok(result);
-    }
-
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable(name = "id") int id) {
-        Post post = this.postService.getPostById(id);
-//        List<Comment> comments = this.commentService
-        return null;
     }
 
     @PatchMapping(value = "/{id}/toggle-lock/")
