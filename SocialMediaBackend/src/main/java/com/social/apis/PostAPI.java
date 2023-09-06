@@ -2,10 +2,12 @@ package com.social.apis;
 
 import com.social.dto.request.PostRequest;
 import com.social.dto.request.ResultSurveyRequest;
+import com.social.dto.response.ModelResponse;
 import com.social.pojo.Post;
 import com.social.services.PostService;
 import com.social.services.SurveyService;
 import com.social.validator.PostRequestValidator;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,5 +111,13 @@ public class PostAPI {
         } else {
             return new ResponseEntity(HttpStatus.CREATED);
         }
+    }
+
+    @GetMapping("/block-comment/{postId}")
+    public ResponseEntity<ModelResponse> blockComment(@PathVariable int postId) {
+        ModelResponse res = new ModelResponse();
+        Post post = postService.toggleBlockComment(postId);
+        res.setData(post);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }

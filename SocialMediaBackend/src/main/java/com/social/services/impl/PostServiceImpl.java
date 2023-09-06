@@ -24,6 +24,7 @@ import com.social.services.PostService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -144,6 +145,21 @@ public class PostServiceImpl implements PostService {
         User user = getCurrentUser();
         currentPost.setLockComment(!currentPost.getLockComment());
         return this.postRepository.save(currentPost);
+    }
+
+    @Override
+    public Post toggleBlockComment(int postId) {
+        User user = getCurrentUser();
+        Set<Post> posts = user.getPosts();
+        Post toggleBlockPost = posts.stream()
+                .filter(post -> post.getId() == postId)
+                .findFirst()
+                .orElse(null);
+        if (toggleBlockPost != null) {
+            toggleBlockPost.setLockComment(!toggleBlockPost.getLockComment());
+            return postRepository.update(toggleBlockPost);
+        }
+        return toggleBlockPost;
     }
 
 }
