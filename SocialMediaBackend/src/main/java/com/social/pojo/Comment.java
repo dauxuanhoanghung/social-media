@@ -39,7 +39,6 @@ import lombok.Data;
     @NamedQuery(name = "Comment.findAll", query = "SELECT c FROM Comment c"),
     @NamedQuery(name = "Comment.findById", query = "SELECT c FROM Comment c WHERE c.id = :id"),
     @NamedQuery(name = "Comment.findByContent", query = "SELECT c FROM Comment c WHERE c.content = :content"),
-    @NamedQuery(name = "Comment.findByCountAction", query = "SELECT c FROM Comment c WHERE c.countAction = :countAction"),
     @NamedQuery(name = "Comment.findByCreatedDate", query = "SELECT c FROM Comment c WHERE c.createdDate = :createdDate"),
     @NamedQuery(name = "Comment.findByModifiedDate", query = "SELECT c FROM Comment c WHERE c.modifiedDate = :modifiedDate")})
 @Data
@@ -56,8 +55,7 @@ public class Comment implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "content")
     private String content;
-    @Column(name = "count_action")
-    private Integer countAction;
+    
     @Column(name = "created_date")
     private LocalDateTime createdDate;
     @Column(name = "modified_date")
@@ -75,7 +73,8 @@ public class Comment implements Serializable {
     
     @Transient
     private Long countReply;
-    
+    @Transient
+    private Integer countAction;
     {
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = LocalDateTime.now();

@@ -46,9 +46,6 @@ public class PostRepositoryImpl implements PostRepository {
     private UserRepository userRepository;
 
     @Autowired
-    private PostActionRepository postActionRepository;
-
-    @Autowired
     private ModelMapper mapper;
 
     @Autowired
@@ -71,11 +68,20 @@ public class PostRepositoryImpl implements PostRepository {
 
         List<Predicate> predicates = new ArrayList<>();
         if (params != null) {
-//            String fromDate = params.get("fromDate");
-//            if (fromDate != null && !fromDate.isEmpty()) {
-//                predicates.add(criteriaBuilder.greaterThanOrEqualTo(userRoot.get("createdDate"),
-//                        LocalDateTime.parse(fromDate, dateTimeFormatter)));
-//            }
+            String userId = params.get("userId");
+            String slug = params.get("slug");
+            if (slug != null && !slug.isBlank()) {
+                predicates.add(criteriaBuilder.equal(
+                        postRoot.get("user").get("slug"),
+                        Integer.valueOf(slug))
+                );
+            } 
+            else if (userId != null && !userId.isEmpty()) {
+                predicates.add(criteriaBuilder.equal(
+                        postRoot.get("user").get("id"),
+                        Integer.valueOf(userId))
+                );
+            }
 //            String toDate = params.get("toDate");
 //            if (fromDate != null && !fromDate.isEmpty()) {
 //                predicates.add(criteriaBuilder.lessThanOrEqualTo(userRoot.get("createdDate"),
@@ -183,7 +189,6 @@ public class PostRepositoryImpl implements PostRepository {
             s.save(p);
             return p;
         } catch (HibernateException ex) {
-            ex.printStackTrace();
             return null;
         }
     }

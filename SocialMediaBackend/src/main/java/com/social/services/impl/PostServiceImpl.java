@@ -5,14 +5,12 @@ import com.social.dto.request.AnswerRequest;
 import com.social.dto.request.PostRequest;
 import com.social.dto.request.QuestionRequest;
 import com.social.dto.request.SurveyRequest;
-import com.social.enums.Action;
 import com.social.enums.PostType;
 import com.social.enums.QuestionType;
 import com.social.exceptions.NotFoundException;
 import com.social.pojo.Choice;
 import com.social.pojo.ImagePost;
 import com.social.pojo.Post;
-import com.social.pojo.PostAction;
 import com.social.pojo.Question;
 import com.social.pojo.User;
 import com.social.repositories.ImagePostRepository;
@@ -23,13 +21,12 @@ import com.social.repositories.TagsRepository;
 import com.social.repositories.UserRepository;
 import com.social.services.CloudinaryService;
 import com.social.services.PostService;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -58,8 +55,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private QuestionRepository questionRepository;
-    
-    @Autowired PostActionRepository postActionRepository;
+
+    @Autowired
+    private PostActionRepository postActionRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -70,7 +68,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getPosts(Map<String, String> params) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && params != null) {
+        if (params != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication != null) {
             params.put("alumniId", authentication.getName());
         }
         List<Post> posts = this.postRepository.getPosts(params);
@@ -131,14 +129,6 @@ public class PostServiceImpl implements PostService {
         return savedPost;
     }
 
-    @Override
-    public List<PostDTO> getPost(Integer page) {
-//        List<Post> posts =  postRepository.getPosts(Collections.singletonMap("page", page));
-//        List<PostDTO> rs = new ArrayList<>();
-//        for (Post post)
-        return null;
-    }
-
     // Get current user
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -155,6 +145,5 @@ public class PostServiceImpl implements PostService {
         currentPost.setLockComment(!currentPost.getLockComment());
         return this.postRepository.save(currentPost);
     }
-
 
 }
