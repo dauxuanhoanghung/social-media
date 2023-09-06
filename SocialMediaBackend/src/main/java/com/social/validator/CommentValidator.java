@@ -27,20 +27,30 @@ public class CommentValidator implements Validator {
     }
 
     private void validateCommentRequest(CommentRequest target, Errors errors) {
+        if (target.getPostId() == null) {
+            errors.rejectValue("postId", "validator.commentRequest.postId",
+                    "Lack of field postId");
+        }
         if (target.getContent() == null || target.getContent().isBlank()) {
             errors.rejectValue("content", "validator.commentRequest.content",
                     "Please enter your comment");
-        }
-        else if (target.getContent().length() > 255) {
+        } else if (target.getContent().length() > 255) {
             errors.rejectValue("content", "validator.commentRequest.content.length",
                     "Comment is too long, longer than 255 is not valid");
         }
     }
 
     private void validateReplyRequestRequest(ReplyRequest target, Errors errors) {
-        if (target.getContent()== null || target.getContent().isBlank()) {
+        if (target.getComment() == null) {
+            errors.rejectValue("comment", "validator.replyRequest.comment",
+                    "Lack of field comment");
+        }
+        if (target.getContent() == null || target.getContent().isBlank()) {
             errors.rejectValue("content", "validator.replyRequest.content.length",
                     "Reply is too long, longer than 255 is not valid");
+        } else if (target.getContent().length() > 255) {
+            errors.rejectValue("content", "validator.replyRequest.content.length",
+                    "Comment is too long, longer than 255 is not valid");
         }
     }
 }

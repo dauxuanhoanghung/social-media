@@ -99,8 +99,7 @@ public class CommentAPI {
         if (rs.hasErrors()) {
             return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        this.commentService.save(commentRequest);
-        return new ResponseEntity(null, HttpStatus.CREATED);
+        return new ResponseEntity(this.commentService.save(commentRequest), HttpStatus.CREATED);
     }
 
     /**
@@ -113,8 +112,7 @@ public class CommentAPI {
         if (rs.hasErrors()) {
             return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        this.subCommentService.save(reply);
-        return new ResponseEntity(null, HttpStatus.CREATED);
+        return new ResponseEntity(this.subCommentService.save(reply), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}/delete/")
