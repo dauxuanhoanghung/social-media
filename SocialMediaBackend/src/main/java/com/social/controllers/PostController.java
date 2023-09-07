@@ -6,6 +6,7 @@ import com.social.pojo.Post;
 import com.social.services.PostService;
 import com.social.validator.SurveyRequestValidator;
 import java.util.List;
+import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -47,9 +48,9 @@ public class PostController {
     }
     
     @GetMapping
-    public String index(Model model) {
-        List<Post> posts = this.postService.getPosts(null);
-        
+    public String index(Map<String, String> params, Model model) {
+        List<Post> posts = this.postService.getPosts(params);
+        model.addAttribute("posts", posts);
         return "posts";
     }
 
