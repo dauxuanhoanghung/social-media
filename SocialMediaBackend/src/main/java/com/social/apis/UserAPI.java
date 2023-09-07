@@ -5,14 +5,12 @@ import com.social.dto.request.FileUploadRequest;
 import com.social.dto.request.UserRegisterDTO;
 import com.social.dto.response.ModelResponse;
 import com.social.dto.response.UserResponse;
-import com.social.pojo.Post;
 import com.social.pojo.User;
 import com.social.services.PostService;
 import com.social.services.UserService;
 import com.social.validator.FileValidator;
 import java.security.Principal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -21,8 +19,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -53,6 +49,12 @@ public class UserAPI {
 
     @Autowired
     private FileValidator fileValidator;
+    
+//    @InitBinder("file")
+//    public void initBinder(WebDataBinder binder) {
+//        binder.setBindEmptyMultipartFiles(false);
+//        binder.setValidator(fileValidator);
+//    }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> get(@PathVariable(name = "id") String id) {

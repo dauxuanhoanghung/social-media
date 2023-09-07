@@ -4,7 +4,6 @@ import com.social.dto.request.CommentActionRequest;
 import com.social.dto.request.PostActionRequest;
 import com.social.dto.request.ReplyActionRequest;
 import com.social.dto.response.ModelResponse;
-import com.social.pojo.PostAction;
 import com.social.services.ActionService;
 import com.social.validator.ActionValidator;
 import javax.validation.Valid;

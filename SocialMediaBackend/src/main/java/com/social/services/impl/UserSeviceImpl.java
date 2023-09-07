@@ -170,21 +170,20 @@ public class UserSeviceImpl implements UserService {
     public User updateAvatar(MultipartFile avatarFile, Boolean isBackground) {
         User user = getCurrentUser();
         try {
-            if (user.getAvatar() == null || user.getAvatar().isBlank()) {
-
+            String url = cloudinaryService.uploadImage(avatarFile);
+            if (!isBackground) {
+                if (user.getAvatar() != null && !user.getAvatar().isBlank()) {
+                    String publicId = CloudinaryUtil.extractPublicIdFromUrl(user.getAvatar());
+                    cloudinaryService.deleteImage(publicId);
+                }
             } else {
-                String publicId = CloudinaryUtil.extractPublicIdFromUrl(user.getAvatar());
-                if (cloudinaryService.checkPublicIdExists(publicId)) {
+                if (user.getCoverBg()!= null && !user.getCoverBg().isBlank()) {
+                    String publicId = CloudinaryUtil.extractPublicIdFromUrl(user.getAvatar());
                     cloudinaryService.deleteImage(publicId);
                 }
             }
-            if (!isBackground) {
-                user.setAvatar(cloudinaryService.uploadImage(avatarFile));
-            } else {
-                user.setCoverBg(cloudinaryService.uploadImage(avatarFile));
-            }
-            this.userRepository.update(user);
-            return user;
+            this.userRepository.updateAvatarOrBg(user.getAlumniId(), url, isBackground);
+            return getCurrentUser();
         } catch (Exception ex) {
             Logger.getLogger(UserSeviceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
