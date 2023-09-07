@@ -99,7 +99,12 @@ public class CommentAPI {
         if (rs.hasErrors()) {
             return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(this.commentService.save(commentRequest), HttpStatus.CREATED);
+        // Check Post có lock CMT hay ko
+        Comment cmt = this.commentService.save(commentRequest);
+        if (cmt == null) {
+            return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+        }
+        return new ResponseEntity(cmt, HttpStatus.CREATED);
     }
 
     /**
@@ -126,7 +131,5 @@ public class CommentAPI {
     public void deleteSubComment(@PathVariable int id, Principal principal) {
         this.subCommentService.delete(id);
     }
-    
-
     
 }

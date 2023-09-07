@@ -7,7 +7,6 @@ import com.social.pojo.Post;
 import com.social.services.PostService;
 import com.social.services.SurveyService;
 import com.social.validator.PostRequestValidator;
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,14 +75,6 @@ public class PostAPI {
         Map<String, Object> res = new HashMap<>();
         res.put("posts", posts);
         return ResponseEntity.ok(res);
-
-    }
-
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable(name = "id") int id) {
-        Post post = this.postService.getPostById(id);
-//        List<Comment> comments = this.commentService
-        return null;
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -105,7 +96,6 @@ public class PostAPI {
 
     @PatchMapping(value = "/{id}/toggle-lock/")
     public ResponseEntity lockCommentOnPost(@PathVariable(name = "id") int id) {
-
         if (this.postService.toggleLockCOmment(id) != null) {
             return new ResponseEntity(null, HttpStatus.ACCEPTED);
         } else {
