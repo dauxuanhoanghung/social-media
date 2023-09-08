@@ -1,32 +1,8 @@
-function drawChart(data, label, title, type = "pie", canvasId = "myCateChart") {
-    const ctx = document.getElementById(canvasId);
-
-    let colors = [];
-    for (let i = 0; i < data.length; i++)
-        colors.push(randomColor());
-
-    new Chart(ctx, {
-        type: type,
-        data: {
-            labels: label,
-            datasets: [{
-                    label: title,
-                    data: data,
-                    borderWidth: 1,
-                    backgroundColor: colors
-                }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-}
-
+let chartInDraw = null;
 function draw(data, labels, title, type = "pie", canvasId = "donutChart") {
+    if (chartInDraw) {
+        chartInDraw.destroy();
+    }
     const donutChartEl = document.querySelector(`#${canvasId}`);
     chartConfig = {
         chart: {
@@ -170,7 +146,57 @@ function draw(data, labels, title, type = "pie", canvasId = "donutChart") {
         ]
     };
     if (typeof donutChartEl !== undefined && donutChartEl !== null) {
-        const chart = new ApexCharts(donutChartEl, chartConfig);
-        chart.render();
+        chartInDraw = new ApexCharts(donutChartEl, chartConfig);
+
+        chartInDraw.render();
 }
+}
+
+function drawColChart(data, label, title, type = 'bar', canvasId = "barChart") {
+    var options = {
+        series: data,
+        chart: {
+            type: type,
+            height: 350
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                endingShape: 'rounded'
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: (val) => {
+                return val;
+            }
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        xaxis: {
+            categories: label
+        },
+        yaxis: {
+            title: {
+                text: title
+            }
+        },
+        fill: {
+            opacity: 1
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val;
+                }
+            }
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector(`#${canvasId}`), options);
+    chart.render();
 }

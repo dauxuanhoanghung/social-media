@@ -1,7 +1,9 @@
 package com.social.repositories.impl;
 
 import com.social.pojo.Comment;
+import com.social.pojo.CommentAction;
 import com.social.pojo.Post;
+import com.social.pojo.PostAction;
 import com.social.pojo.Role;
 import com.social.pojo.User;
 import com.social.repositories.StatsRepository;
@@ -104,22 +106,34 @@ public class StatsRepositoryImpl implements StatsRepository {
 //        Subquery<Long> countPost = criteriaQuery.subquery(Long.class);
 //        Subquery<Long> countAction = criteriaQuery.subquery(Long.class);
 //        Subquery<Long> countComment = criteriaQuery.subquery(Long.class);
-        Join<User, Comment> userCommentJoin = userRoot.join("comments", JoinType.LEFT);
+        Join<User, Comment> userJoinComment = userRoot.join("comments", JoinType.LEFT);
+        Join<User, Post> userJoinPost = userRoot.join("posts", JoinType.LEFT);
+        Join<User, PostAction> userJoinPostAction = userRoot.join("postActions", JoinType.LEFT);
+        Join<User, CommentAction> userJoinCommentAction = userRoot.join("commentActions", JoinType.LEFT);
 
-        Expression<Long> commentCount = criteriaBuilder.count(userCommentJoin.get("id"));
-
-        // Subquery to count posts
-        Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
-        Root<Post> postRoot = subquery.from(Post.class);
-        subquery.select(criteriaBuilder.count(postRoot.get("id")));
-        subquery.where(criteriaBuilder.equal(postRoot.get("user"), userRoot));
-
-        // Join the subquery with the User table
-        Expression<Long> postCount = subquery.getSelection();
-
-        criteriaQuery.multiselect(userRoot, commentCount.alias("countCmt"), postCount.alias("countPost"));
+        criteriaQuery.multiselect(
+                userRoot,
+                criteriaBuilder.countDistinct(userJoinPost.get("id")).alias("post_count"),
+                criteriaBuilder.countDistinct(userJoinComment.get("id")).alias("comment_count"),
+                criteriaBuilder.sum(
+                        criteriaBuilder.countDistinct(userJoinPostAction.get("id")),
+                        criteriaBuilder.countDistinct(userJoinCommentAction.get("id"))
+                ).alias("action_count")
+        );
         criteriaQuery.groupBy(userRoot.get("id"));
-        criteriaQuery.orderBy(criteriaBuilder.desc(criteriaBuilder.sum(commentCount, postCount)));
+        criteriaQuery.orderBy(
+                criteriaBuilder.desc(
+                        criteriaBuilder.sum(
+                                criteriaBuilder.sum(
+                                        criteriaBuilder.countDistinct(userJoinPost.get("id")),
+                                        criteriaBuilder.countDistinct(userJoinComment.get("id"))
+                                ),
+                                criteriaBuilder.sum(
+                                        criteriaBuilder.countDistinct(userJoinPostAction.get("id")),
+                                        criteriaBuilder.countDistinct(userJoinCommentAction.get("id"))
+                                )
+                        ))
+        );
         Query query = session.createQuery(criteriaQuery);
         query.setMaxResults(10);
         return query.getResultList();

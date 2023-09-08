@@ -22,12 +22,6 @@
     </div>
 </div>
 
-<div id="donutChart"></div>
-<c:forEach items="${userStats}" var="stats">
-    <h1>${stats[0]} - ${stats[1]} - ${stats[2]}</h1>
-    <div id="donutChart"></div>
-</c:forEach>
-
 <script src="<c:url value="/js/stats.js"/>"></script>
 <script>
     let data = [], labels = [];
