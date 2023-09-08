@@ -103,9 +103,6 @@ public class User implements Serializable {
     private Set<Community> communitySet;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<UserSettings> userSettings;
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Post> posts;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
@@ -254,15 +251,6 @@ public class User implements Serializable {
 
     public void setCommunitySet(Set<Community> communitySet) {
         this.communitySet = communitySet;
-    }
-
-    @XmlTransient
-    public Set<UserSettings> getUserSettings() {
-        return userSettings;
-    }
-
-    public void setUserSettings(Set<UserSettings> userSettings) {
-        this.userSettings = userSettings;
     }
 
     @XmlTransient

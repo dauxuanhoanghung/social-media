@@ -67,8 +67,7 @@ public class Community implements Serializable {
             joinColumns = @JoinColumn(name = "community_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-
-    private Set<User> users = new HashSet<>();
+    private Set<User> users;
 
     // Constructors, getters, setters, and other methods...
     public Set<User> getUsers() {

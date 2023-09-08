@@ -30,7 +30,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import lombok.Getter;
@@ -87,8 +86,6 @@ public class Post implements Serializable {
     private Set<Question> questions;
     @OneToMany(mappedBy = "postId", fetch = FetchType.EAGER)
     private Set<ImagePost> imagePostSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId", fetch = FetchType.EAGER)
-    private Set<PostTag> postTagSet;
     @Transient
     private Action currentAction;
     @Transient
@@ -183,16 +180,6 @@ public class Post implements Serializable {
 
     public void setImagePostSet(Set<ImagePost> imagePostSet) {
         this.imagePostSet = imagePostSet;
-    }
-
-
-    @XmlTransient
-    public Set<PostTag> getPostTagSet() {
-        return postTagSet;
-    }
-
-    public void setPostTagSet(Set<PostTag> postTagSet) {
-        this.postTagSet = postTagSet;
     }
 
     @Override
