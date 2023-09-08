@@ -130,6 +130,11 @@
                         <div data-i18n="Basic"><spring:message code="view.layout.sidebar.manage.active" /></div>
                     </a>
                 </li>
+                <li class="menu-item">
+                    <a href="<c:url value="/admin/user/group" />" class="menu-link">
+                        <div data-i18n="Basic"><spring:message code="view.layout.sidebar.manage.group" /></div>
+                    </a>
+                </li>
             </ul>
         </li>
         <!--Post-->

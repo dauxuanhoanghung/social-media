@@ -2,10 +2,13 @@ package com.social.controllers;
 
 import com.social.dto.request.UserRegisterDTO;
 import com.social.enums.UserStatus;
+import com.social.pojo.Community;
 import com.social.pojo.User;
+import com.social.services.CommunityService;
 import com.social.services.UserService;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CommunityService communityService;
+
     @ModelAttribute
     public void commonAttributesUser(Model model) {
         model.addAttribute("roles", this.userService.getAllRoles());
@@ -48,10 +54,23 @@ public class UserController {
         return "user";
     }
 
+    @GetMapping("/group")
+    public String group(Model model, @RequestParam Map<String, String> params) {
+        model.addAttribute("users", userService.getUsers(params));
+        List<Community> groups = communityService.getCommunities(params);
+        model.addAttribute("groups", groups);
+        return "group";
+    }
+
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("user", new UserRegisterDTO());
         return "create-user";
+    }
+    
+    @PostMapping("/create-group")
+    public String createGroup(Model model){
+        return "group";
     }
 
     @PostMapping("/create")

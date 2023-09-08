@@ -6,6 +6,8 @@ package com.social.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -34,8 +38,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Community.findAll", query = "SELECT c FROM Community c"),
     @NamedQuery(name = "Community.findById", query = "SELECT c FROM Community c WHERE c.id = :id"),
     @NamedQuery(name = "Community.findByName", query = "SELECT c FROM Community c WHERE c.name = :name"),
-    @NamedQuery(name = "Community.findByCreatedDate", query = "SELECT c FROM Community c WHERE c.createdDate = :createdDate"),
-    @NamedQuery(name = "Community.findByCountMember", query = "SELECT c FROM Community c WHERE c.countMember = :countMember")})
+    @NamedQuery(name = "Community.findByCreatedDate", query = "SELECT c FROM Community c WHERE c.createdDate = :createdDate"),})
 public class Community implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,6 +47,10 @@ public class Community implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+    
+    @Column(name = "status")
+    private String status;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -51,13 +58,37 @@ public class Community implements Serializable {
     private String name;
     @Column(name = "created_date")
     private Date createdDate;
-    @Column(name = "count_member")
-    private Integer countMember;
     @JoinColumn(name = "founder_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User founderId;
+    @ManyToMany
+    @JoinTable(
+            name = "community_user",
+            joinColumns = @JoinColumn(name = "community_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+
+    private Set<User> users = new HashSet<>();
+
+    // Constructors, getters, setters, and other methods...
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
 
     public Community() {
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Community(Integer id) {
@@ -93,14 +124,6 @@ public class Community implements Serializable {
         this.createdDate = createdDate;
     }
 
-    public Integer getCountMember() {
-        return countMember;
-    }
-
-    public void setCountMember(Integer countMember) {
-        this.countMember = countMember;
-    }
-
     public User getFounderId() {
         return founderId;
     }
@@ -133,5 +156,5 @@ public class Community implements Serializable {
     public String toString() {
         return "com.social.pojo.Community[ id=" + id + " ]";
     }
-    
+
 }
