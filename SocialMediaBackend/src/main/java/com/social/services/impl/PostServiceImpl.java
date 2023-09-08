@@ -1,6 +1,5 @@
 package com.social.services.impl;
 
-import com.social.dto.PostDTO;
 import com.social.dto.request.AnswerRequest;
 import com.social.dto.request.PostRequest;
 import com.social.dto.request.QuestionRequest;
@@ -17,7 +16,6 @@ import com.social.repositories.ImagePostRepository;
 import com.social.repositories.PostActionRepository;
 import com.social.repositories.PostRepository;
 import com.social.repositories.QuestionRepository;
-import com.social.repositories.TagsRepository;
 import com.social.repositories.UserRepository;
 import com.social.services.CloudinaryService;
 import com.social.services.PostService;
@@ -62,9 +60,6 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private TagsRepository tagsRepository;
 
     @Override
     public List<Post> getPosts(Map<String, String> params) {
