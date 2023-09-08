@@ -26,5 +26,7 @@ public interface CommunityService {
     boolean deleteCommunity(int communityId);
 
     Community toggleActiveCommunity(int communityId, boolean status);
+    
+     Community updateGroup(Community community);
 
 }

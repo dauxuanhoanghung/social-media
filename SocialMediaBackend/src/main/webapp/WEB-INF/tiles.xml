@@ -38,9 +38,13 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Dashboard Admin - Account" />
         <put-attribute name="content" value="/WEB-INF/pages/account.jsp" />
     </definition>
-     <definition name="group" extends="baseLayout">
+    <definition name="group" extends="baseLayout">
         <put-attribute name="title" value="Dashboard Admin - Manage User" />
         <put-attribute name="content" value="/WEB-INF/pages/group.jsp" />
+    </definition>
+    <definition name="group-update" extends="baseLayout">
+        <put-attribute name="title" value="Dashboard Admin - Manage User" />
+        <put-attribute name="content" value="/WEB-INF/pages/group-update.jsp" />
     </definition>
     <!--REGION POST-->
     <definition name="posts" extends="baseLayout">

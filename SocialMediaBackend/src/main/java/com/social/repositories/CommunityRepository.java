@@ -26,4 +26,6 @@ public interface CommunityRepository {
     boolean deleteCommunity(int communityId);
 
     Community toggleActiveCommunity(int communityId, boolean status);
+    
+    Community updateGroup (Community community);
 }
