@@ -86,7 +86,7 @@
                                                 </c:choose>
                                             </td>
                                             <td >
-                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                <input class="form-check-input group-member" type="checkbox" value="${user.id}"/>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -105,12 +105,12 @@
                                 <div class="col-md-9">
                                     <div class="mb-3">
                                         <label for="exampleTextField" class="form-label"><spring:message code="view.pages.group-user.group-name" /></label>
-                                        <input type="text" class="form-control" id="exampleTextField" placeholder="Enter text">
+                                        <input type="text" class="form-control" id="groupName" placeholder="Enter text">
                                     </div>
                                 </div>
                                 <div class="col-md-3 d-flex justify-content-center">
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="toggleSwitch">
+                                        <input class="form-check-input" type="checkbox" id="toggleSwitch" >
                                         <label class="form-check-label" for="toggleSwitch">Active</label>
                                     </div>
                                 </div>
@@ -120,7 +120,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCommunity()">Save changes</button>
                 </div>
             </div>
 
@@ -221,5 +221,27 @@
 </div>
 
 <script>
-    
+    const saveCommunity = () => {
+        const groupName = document.getElementById("groupName").value;
+        const checkBoxs = document.querySelectorAll('.group-member');
+        const toggleSwitch = document.getElementById("toggleSwitch").checked;
+        const users = Array.from(checkBoxs).filter(cb => cb.checked).map(item => parseInt(item.value));
+        console.log(users);
+        const data = {
+            users, // assuming 'users' is defined elsewhere in your code
+            name: groupName, // assuming 'groupName' is defined elsewhere in your code
+            status: toggleSwitch ? "ACTIVE" : "DEACTIVE"
+        };
+        fetch('<c:url value="/admin/community/create-group" />', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json' // Tell the server we're sending JSON data
+            },
+            body: JSON.stringify(data),
+            redirect: 'follow'
+        }).then(res => {
+            console.log(res);
+            res => window.location.href = res.url;
+        }).catch();
+    }
 </script>

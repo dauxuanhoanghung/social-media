@@ -1,15 +1,11 @@
 package com.social.controllers;
 
-import com.social.dto.request.CommunityRequest;
 import com.social.dto.request.UserRegisterDTO;
 import com.social.enums.UserStatus;
-import com.social.pojo.Community;
 import com.social.pojo.User;
-import com.social.services.CommunityService;
 import com.social.services.UserService;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,14 +31,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Lazy
 @Controller
+@ControllerAdvice
 @RequestMapping("/admin/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private CommunityService communityService;
 
     @ModelAttribute
     public void commonAttributesUser(Model model) {
@@ -57,23 +50,10 @@ public class UserController {
         return "user";
     }
 
-    @GetMapping("/group")
-    public String group(Model model, @RequestParam Map<String, String> params) {
-        model.addAttribute("users", userService.getUsers(params));
-        List<Community> groups = communityService.getCommunities(params);
-        model.addAttribute("groups", groups);
-        return "group";
-    }
-
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("user", new UserRegisterDTO());
         return "create-user";
-    }
-
-    @PostMapping("/create-group")
-    public String createGroup(Model model) {
-        return "group";
     }
 
     @PostMapping("/create")
@@ -129,25 +109,4 @@ public class UserController {
         return "redirect:/admin/user/" + id;
     }
 
-    // Test Community
-    @PostMapping("/create-group/")
-    public Community createCommunity(@RequestBody Community community) {
-        return communityService.createCommunity(community);
-    }
-
-    @PostMapping("/add-user/")
-    public Community addUserCommunity(@RequestBody CommunityRequest request) {
-        return communityService.addUser(request.getCommunityId(), request.getUsers());
-    }
-
-    @DeleteMapping("/delete-user/")
-    public Community deleteUserCommunity(@RequestBody CommunityRequest request) {
-        return communityService.removeUser(request.getCommunityId(), request.getUsers());
-    }
-
-    @DeleteMapping("/delete-community/{id}")
-    public String deleteCommunity(@PathVariable int id) {
-        boolean isDeleted = communityService.deleteCommunity(id);
-        return isDeleted == true ? "Xoá thànnh công" : "Xoá thất bại";
-    }
 }

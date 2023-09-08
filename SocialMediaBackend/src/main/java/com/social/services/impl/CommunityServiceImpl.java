@@ -7,10 +7,13 @@ package com.social.services.impl;
 import com.social.pojo.Community;
 import com.social.pojo.User;
 import com.social.repositories.CommunityRepository;
+import com.social.repositories.UserRepository;
 import com.social.services.CommunityService;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +26,20 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommunityServiceImpl implements CommunityService {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private CommunityRepository communityRepository;
     
+    // Get current user
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return this.userRepository.getUserByAlumniId(authentication.getName()).get();
+    }
+
     @Override
     public List<Community> getCommunities(Map<String, String> params) {
-       return communityRepository.getCommunities(params);
+        return communityRepository.getCommunities(params);
     }
 
     @Override
@@ -47,6 +59,7 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public Community createCommunity(Community community) {
+        community.setFounderId(getCurrentUser());
         return communityRepository.createCommunity(community);
     }
 
@@ -54,7 +67,5 @@ public class CommunityServiceImpl implements CommunityService {
     public Community removeUser(int communityId, List<User> users) {
         return communityRepository.removeUser(communityId, users);
     }
-
-   
 
 }
