@@ -24,7 +24,7 @@ public interface StatsRepository {
     /**
      *
      * @param params LocalDateTime fromDate, toDate
-     * @return User, count Post, count Action, count Comment
+     * @return User, count Post, count Comment + reply, count Action + reply
      */
     List<Object[]> top10MostActiveUser(Map<String, String> params);
 }
