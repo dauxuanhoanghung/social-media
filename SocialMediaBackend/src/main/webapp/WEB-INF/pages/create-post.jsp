@@ -65,12 +65,16 @@
 
 <div class="card mt-4">
     <div class="card-header">
-        <h1></h1>
+        <h1>Bản Preview của mẫu câu hỏi</h1>
     </div>
-    <form id="form"></form>
+    <form id="form">
+
+    </form>
 </div>
 <script>
     let questions = [];
+    let updateMode = false;
+    let updateQuestion = null;
     const root = document.getElementById("form");
     const title = document.querySelector("#title-survey");
     let currCheckedType = "TEXT";
@@ -139,6 +143,7 @@
             event.preventDefault();
             let q = questions.find((item) => item.id === id);
             console.log(q);
+            this.renderUpdateQuestion(q)
         },
         renderQuestion(q) {},
         renderMyInput(type) {
@@ -172,17 +177,31 @@
                 });
             });
             currentQuestion = {
-                id: id++,
+                id: updateMode ? updateQuestion.id : id++,
                 questionType: currCheckedType.toUpperCase(),
                 content: currContentQuestion,
                 answers: t,
             };
             console.log(currentQuestion);
-            questions.push(currentQuestion);
+            if (!updateMode) {
+                questions.push(currentQuestion);
+            } else {
+                const indexToUpdate = questions.findIndex(q => q.id === currentQuestion.id);
+                if (indexToUpdate !== -1) {
+                    // Update the existing question
+                    questions[indexToUpdate] = currentQuestion;
+                } else {
+                    // Handle the case where the question with the same ID was not found
+                    console.log("Question not found for updating.");
+                }
+                updateMode = false;
+                
+            }
             answerContainer.innerHTML = "";
             myRadio.forEach((element) => {
                 element.checked = element.value == "TEXT";
             });
+            currCheckedType = "TEXT";
             btnAdd.disabled = true;
             btnDone.disabled = true;
             document.querySelector("#question").value = "";
@@ -224,6 +243,39 @@
         start() {
             this.render();
         },
+        renderPreview() {
+            console.log(questions);
+        },
+        renderUpdateQuestion(q) {
+            contentQuestion.value = q.content;
+            updateMode = true;
+            updateQuestion = q;
+            btnDone.removeAttribute("disabled");
+            btnAdd.removeAttribute("disabled");
+            const labels = document.querySelectorAll(".form-check-label input");
+            for (let label of labels) {
+                if (label.value == q.questionType) {
+                    label.checked = true;
+                } else {
+                    label.checked = false;
+                }
+            }
+            if (!!q.answers) {
+                answerContainer.innerHTML = "";
+                for (let answer of q.answers) {
+                    answerContainer.insertAdjacentHTML(
+                            "beforeend",
+                            !!currCheckedType && currCheckedType !== "TEXT" ?
+                            `<input type="text" 
+                            value="\${answer.content}"
+                            class="answer-content form-control" 
+                            placeholder='<spring:message code="view.pages.create-post.answer.placeholder" />' />`
+                            : ``);
+                }
+            }
+
+
+        }
     };
     script.start();
 
