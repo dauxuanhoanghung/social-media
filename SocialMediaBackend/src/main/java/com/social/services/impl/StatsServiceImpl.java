@@ -2,7 +2,6 @@ package com.social.services.impl;
 
 import com.social.repositories.StatsRepository;
 import com.social.services.StatsService;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,22 +25,17 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<Object[]> countNewUsers(LocalDateTime fromDate, LocalDateTime toDate) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
     public List<Object[]> countPosts(Map<String, String> params) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Object[]> countPosts(LocalDateTime fromDate, LocalDateTime toDate) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public List<Object[]> getTop10MostActiveUser(Map<String, String> params) {
         return statsRepository.top10MostActiveUser(params);
+    }
+
+    @Override
+    public List<Object[]> getNumberOfUsersInLastestMonth(int months) {
+        return this.statsRepository.getNumberOfUsersInLastestMonth(months);
     }
 }

@@ -57,26 +57,6 @@
                     <div data-i18n="Analytics"><spring:message code="view.layout.sidebar.dashboard" /></div>
             </a>
         </li>
-        <!-- Layouts -->
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-layout"></i>
-                <div data-i18n="Layouts">Layouts</div>
-            </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item">
-                    <a href="layouts-without-menu.html" class="menu-link">
-                        <div data-i18n="Without menu">Without menu</div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="layouts-without-navbar.html" class="menu-link">
-                        <div data-i18n="Without navbar">Without navbar</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text"><spring:message code="view.layout.sidebar.manage" /></span>
         </li>

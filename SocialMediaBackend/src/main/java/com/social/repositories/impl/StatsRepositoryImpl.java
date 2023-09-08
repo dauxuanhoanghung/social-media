@@ -20,7 +20,6 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +92,12 @@ public class StatsRepositoryImpl implements StatsRepository {
 
     @Override
     public List<Object[]> countPosts(Map<String, String> params) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Session session = getSession();
+
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
+        Root<Post> postRoot = criteriaQuery.from(Post.class);
+        return null;
     }
 
     @Override
@@ -137,6 +141,33 @@ public class StatsRepositoryImpl implements StatsRepository {
         Query query = session.createQuery(criteriaQuery);
         query.setMaxResults(10);
         return query.getResultList();
+    }
+
+    /**
+     *
+     * @param months
+     * @return
+     */
+    @Override
+    public List<Object[]> getNumberOfUsersInLastestMonth(int months) {
+        Session session = getSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
+        Root<User> userRoot = criteriaQuery.from(User.class);
+        Expression<String> registrationMonth = criteriaBuilder.function(
+                "DATE_FORMAT", String.class, userRoot.get("createdDate"), criteriaBuilder.literal("%m-%Y")
+        );
+        Expression<Long> userCount = criteriaBuilder.count(userRoot);
+        criteriaQuery.multiselect(registrationMonth, userCount);
+        LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
+
+// Create the predicate
+        Predicate predicate = criteriaBuilder.greaterThanOrEqualTo(userRoot.get("createdDate"), threeMonthsAgo);
+        criteriaQuery.where(predicate);
+        criteriaQuery.groupBy(registrationMonth);
+        criteriaQuery.orderBy(criteriaBuilder.desc(registrationMonth));
+        List<Object[]> results = session.createQuery(criteriaQuery).getResultList();
+        return results;
     }
 
 }
