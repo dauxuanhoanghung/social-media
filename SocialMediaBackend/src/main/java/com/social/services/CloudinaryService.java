@@ -11,7 +11,7 @@ public interface CloudinaryService {
 
     String uploadImage(MultipartFile file);
 
-    boolean deleteImage(String publicId);
+    String deleteImage(String publicId);
     
     Map getCloudinaryUsage();
     

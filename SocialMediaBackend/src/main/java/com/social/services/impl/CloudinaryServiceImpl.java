@@ -1,9 +1,12 @@
 package com.social.services.impl;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.Uploader;
 import com.cloudinary.utils.ObjectUtils;
 import com.social.services.CloudinaryService;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,14 +44,24 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     }
 
     @Override
-    public boolean deleteImage(String publicId) {
+    public String deleteImage(String publicId) {
         try {
-            this.cloudinary.uploader()
-                    .destroy(publicId, ObjectUtils.emptyMap());
-            return true;
+            List<String> deleteUrl = new ArrayList<>();
+            deleteUrl.add(publicId);
+//            Map res = this.cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("invalidate", true));
+            Map res = this.cloudinary.api().deleteResources(deleteUrl,
+                    ObjectUtils.asMap("type", "upload",
+                            "invalidate", true,
+                            "keep_original", true));
+            return (String) res.getOrDefault("secure_url", "");
         } catch (IOException ex) {
             Logger.getLogger(CloudinaryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            return "";
+
+        } catch (Exception ex) {
+            Logger.getLogger(CloudinaryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return "";
+
         }
     }
 
@@ -61,7 +74,6 @@ public class CloudinaryServiceImpl implements CloudinaryService {
             return null;
         }
     }
-    
 
     @Override
     public boolean checkPublicIdExists(String publicId) {

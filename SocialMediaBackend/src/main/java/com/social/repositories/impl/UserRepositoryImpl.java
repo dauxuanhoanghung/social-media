@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
@@ -191,5 +192,23 @@ public class UserRepositoryImpl implements UserRepository {
         query.setMaxResults(1); // Limit the result to 1 row
         List<Integer> results = query.getResultList();
         return !results.isEmpty();
+    }
+
+    @Override
+    public int updateAvatarOrBg(String alumniId, String url, boolean isBg) {
+        Session session = getSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaUpdate<User> criteriaUpdate = criteriaBuilder.createCriteriaUpdate(User.class);
+        Root userRoot = criteriaUpdate.from(User.class);
+        if (isBg) {
+
+            criteriaUpdate.set("coverBg", url);
+        } else {
+            criteriaUpdate.set("avatar", url);
+        }
+        criteriaUpdate.where(criteriaBuilder.equal(userRoot.get("alumniId"), alumniId));
+        Query query = session.createQuery(criteriaUpdate);
+
+        return query.executeUpdate();
     }
 }

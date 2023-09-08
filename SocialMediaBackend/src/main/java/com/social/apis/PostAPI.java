@@ -78,7 +78,7 @@ public class PostAPI {
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createPost(@Valid @ModelAttribute PostRequest post, BindingResult rs) {
+    public ResponseEntity createPost(@Valid @ModelAttribute("post") PostRequest post, BindingResult rs) {
         if (rs.hasErrors()) {
             return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
