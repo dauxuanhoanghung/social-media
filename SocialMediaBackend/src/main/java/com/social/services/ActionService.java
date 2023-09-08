@@ -12,7 +12,6 @@ import com.social.pojo.SubCommentAction;
  * @author LENOVO
  */
 public interface ActionService {
-
     CommentAction saveOrUpdateOrDelete(CommentActionRequest request);
 
     PostAction saveOrUpdateOrDelete(PostActionRequest request);

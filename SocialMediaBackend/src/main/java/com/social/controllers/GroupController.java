@@ -6,10 +6,12 @@ package com.social.controllers;
 
 import com.social.dto.request.CommunityRequest;
 import com.social.pojo.Community;
+import com.social.pojo.User;
 import com.social.services.CommunityService;
 import com.social.services.UserService;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +44,17 @@ public class GroupController {
         model.addAttribute("groups", groups);
         return "group";
     }
-    // Test Community
+
+    @GetMapping("/group-update")
+    public String groupEdit(Model model, @RequestParam Map<String, String> params) {
+        List<Community> groups = communityService.getCommunities(params);
+        Community myGroup = groups.get(0);
+        Set<User> userOfGroup = myGroup.getUsers();
+        model.addAttribute("userOfGroup", userOfGroup);
+        model.addAttribute("users", userService.getUsers(params));
+        model.addAttribute("myGroup", myGroup);
+        return "group-update";
+    }
 
     @PostMapping("/create-group")
     public String createCommunity(@RequestBody Community community) {
@@ -63,6 +75,20 @@ public class GroupController {
     @DeleteMapping("/delete-community/{id}")
     public String deleteCommunity(@PathVariable int id) {
         boolean isDeleted = communityService.deleteCommunity(id);
-        return isDeleted == true ? "Xoá thànnh công" : "Xoá thất bại";
+        return "group";
+    }
+
+    @PostMapping("/toggle-active")
+    public String toggleActive(@RequestBody Map<String, String> params) {
+        int communityId = Integer.parseInt(params.get("communityId"));
+        boolean status = Boolean.parseBoolean(params.get("status"));
+        communityService.toggleActiveCommunity(communityId, status);
+        return "group";
+    }
+
+    @PostMapping("/update-group")
+    public String updateGroup(@RequestBody Community community) {
+        communityService.updateGroup(community);
+        return "group";
     }
 }

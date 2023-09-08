@@ -30,7 +30,7 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Autowired
     private CommunityRepository communityRepository;
-    
+
     // Get current user
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -54,7 +54,7 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public Community toggleActiveCommunity(int communityId, boolean status) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return communityRepository.toggleActiveCommunity(communityId, status);
     }
 
     @Override
@@ -66,6 +66,13 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public Community removeUser(int communityId, List<User> users) {
         return communityRepository.removeUser(communityId, users);
+    }
+
+    @Override
+    public Community updateGroup(Community community) {
+        User currentUser = getCurrentUser();
+        community.setFounderId(currentUser);
+        return communityRepository.updateGroup(community);
     }
 
 }

@@ -9,8 +9,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -47,10 +49,10 @@ public class Community implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    
+
     @Column(name = "status")
     private String status;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -61,7 +63,7 @@ public class Community implements Serializable {
     @JoinColumn(name = "founder_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User founderId;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "community_user",
             joinColumns = @JoinColumn(name = "community_id"),
@@ -77,7 +79,6 @@ public class Community implements Serializable {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
-
 
     public Community() {
     }
