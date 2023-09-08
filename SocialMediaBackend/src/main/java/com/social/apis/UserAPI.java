@@ -178,28 +178,5 @@ public class UserAPI {
         return null;
     }
 
-// Test Community
-    @Autowired
-    private CommunityService communityService;
 
-    @PostMapping("/create-group/")
-    public Community createCommunity(@RequestBody Community community) {
-        return communityService.createCommunity(community);
-    }
-
-    @PostMapping("/add-user/")
-    public Community addUserCommunity(@RequestBody CommunityRequest request) {
-        return communityService.addUser(request.getCommunityId(), request.getUsers());
-    }
-
-    @DeleteMapping("/delete-user/")
-    public Community deleteUserCommunity(@RequestBody CommunityRequest request) {
-        return communityService.removeUser(request.getCommunityId(), request.getUsers());
-    }
-
-    @DeleteMapping("/delete-community/{id}")
-    public String deleteCommunity(@PathVariable int id) {
-        boolean isDeleted =  communityService.deleteCommunity(id);
-        return isDeleted == true ? "Xoá thànnh công": "Xoá thất bại";
-    }
 }
