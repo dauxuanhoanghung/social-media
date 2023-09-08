@@ -1,12 +1,15 @@
 package com.social.apis;
 
 import com.social.dto.UserDTO;
+import com.social.dto.request.CommunityRequest;
 import com.social.dto.request.FileUploadRequest;
 import com.social.dto.request.UserRegisterDTO;
 import com.social.dto.response.ModelResponse;
 import com.social.dto.response.UserResponse;
+import com.social.pojo.Community;
 import com.social.pojo.Post;
 import com.social.pojo.User;
+import com.social.services.CommunityService;
 import com.social.services.PostService;
 import com.social.services.UserService;
 import com.social.validator.FileValidator;
@@ -15,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
+import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -24,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -162,13 +167,39 @@ public class UserAPI {
         if (oldPassword != null) {
             if (request.containsKey("password")) {
                 User user = userService.activeLecture(request.get("password"), oldPassword);
-                if (user != null)
+                if (user != null) {
                     return new ResponseEntity<>(modelMapper.map(user, UserResponse.class),
                             HttpStatus.OK
                     );
+                }
             }
         }
 
         return null;
+    }
+
+// Test Community
+    @Autowired
+    private CommunityService communityService;
+
+    @PostMapping("/create-group/")
+    public Community createCommunity(@RequestBody Community community) {
+        return communityService.createCommunity(community);
+    }
+
+    @PostMapping("/add-user/")
+    public Community addUserCommunity(@RequestBody CommunityRequest request) {
+        return communityService.addUser(request.getCommunityId(), request.getUsers());
+    }
+
+    @DeleteMapping("/delete-user/")
+    public Community deleteUserCommunity(@RequestBody CommunityRequest request) {
+        return communityService.removeUser(request.getCommunityId(), request.getUsers());
+    }
+
+    @DeleteMapping("/delete-community/{id}")
+    public String deleteCommunity(@PathVariable int id) {
+        boolean isDeleted =  communityService.deleteCommunity(id);
+        return isDeleted == true ? "Xoá thànnh công": "Xoá thất bại";
     }
 }
