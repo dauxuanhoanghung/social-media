@@ -205,7 +205,6 @@ public class UserRepositoryImpl implements UserRepository {
         CriteriaUpdate<User> criteriaUpdate = criteriaBuilder.createCriteriaUpdate(User.class);
         Root userRoot = criteriaUpdate.from(User.class);
         if (isBg) {
-
             criteriaUpdate.set("coverBg", url);
         } else {
             criteriaUpdate.set("avatar", url);

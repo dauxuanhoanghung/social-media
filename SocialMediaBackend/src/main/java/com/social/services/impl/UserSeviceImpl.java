@@ -176,14 +176,17 @@ public class UserSeviceImpl implements UserService {
                     String publicId = CloudinaryUtil.extractPublicIdFromUrl(user.getAvatar());
                     cloudinaryService.deleteImage(publicId);
                 }
+                user.setAvatar(url);
             } else {
-                if (user.getCoverBg()!= null && !user.getCoverBg().isBlank()) {
+                if (user.getCoverBg() != null && !user.getCoverBg().isBlank()) {
                     String publicId = CloudinaryUtil.extractPublicIdFromUrl(user.getAvatar());
                     cloudinaryService.deleteImage(publicId);
                 }
+                user.setCoverBg(url);
+
             }
             this.userRepository.updateAvatarOrBg(user.getAlumniId(), url, isBackground);
-            return getCurrentUser();
+            return user;
         } catch (Exception ex) {
             Logger.getLogger(UserSeviceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
