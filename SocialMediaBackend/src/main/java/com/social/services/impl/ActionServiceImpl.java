@@ -110,7 +110,9 @@ public class ActionServiceImpl implements ActionService {
                 = subCommentActionRepository.get(currentUser.getId(), request.getSubComment().getId());
         // SAVE
         if (action.isEmpty() && request.getAction() != null) {
-            SubCommentAction savedEntity = mapper.map(request, SubCommentAction.class);
+            SubCommentAction savedEntity = new SubCommentAction();
+            savedEntity.setAction(request.getAction());
+            savedEntity.setSubComment(request.getSubComment());
             savedEntity.setUser(currentUser);
             subCommentActionRepository.save(savedEntity);
             return savedEntity;

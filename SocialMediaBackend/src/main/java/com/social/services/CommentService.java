@@ -16,8 +16,6 @@ public interface CommentService {
 
     List<Comment> getComments(Map<String, String> params);
 
-    List<SubComment> getRepliesByCommentId(Integer id);
-
     boolean delete(Integer id);
     
     Long countRepliesByCommentId(Integer commentId);

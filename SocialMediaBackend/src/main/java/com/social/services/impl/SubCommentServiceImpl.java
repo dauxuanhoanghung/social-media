@@ -16,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -47,12 +48,12 @@ public class SubCommentServiceImpl implements SubCommentService {
     @Override
     public SubComment save(ReplyRequest replyRequest) {
         // chưa xử lý đc
-        Post currentPost = this.postRepository.getPostById(Integer.SIZE).get();
-        if (currentPost == null) {
-            throw new NotFoundException();
-        } else if (currentPost.getLockComment()) {
-            return null;
-        }
+//        Post currentPost = this.postRepository.getPostById(Integer.SIZE).get();
+//        if (currentPost == null) {
+//            throw new NotFoundException();
+//        } else if (currentPost.getLockComment()) {
+//            return null;
+//        }
         SubComment subComment = mapper.map(replyRequest, SubComment.class);
         subComment.setUser(getCurrentUser());
         return this.subCommentRepository.save(subComment);
@@ -77,8 +78,14 @@ public class SubCommentServiceImpl implements SubCommentService {
 
     @Override
     public List<SubComment> getReplies(Map<String, String> params) {
-        if (params != null && params.get("page") == null) {
-            params.put("page", "1");
+        if (params != null) {
+            if (!params.containsKey("page")) {
+                params.put("page", "1");
+            }
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+                params.put("alumniId", authentication.getName());
+            }
         }
         return this.subCommentRepository.getReplies(params);
     }

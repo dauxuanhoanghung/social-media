@@ -8,6 +8,7 @@ import com.social.formatters.CommentFormatter;
 import com.social.formatters.PostFormatter;
 import com.social.formatters.QuestionFormatter;
 import com.social.formatters.RoleFormatter;
+import com.social.formatters.SubCommentFormatter;
 import com.social.formatters.UserFormatter;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -102,7 +103,9 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
 
     @Bean
     public ModelMapper modelMapper() {
-        return new ModelMapper();
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setAmbiguityIgnored(true);
+        return mapper;
     }
 
     @Override
@@ -112,6 +115,7 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
         registry.addFormatter(new PostFormatter());
         registry.addFormatter(new CommentFormatter());
         registry.addFormatter(new QuestionFormatter());
+        registry.addFormatter(new SubCommentFormatter());
     }
 
     @Override

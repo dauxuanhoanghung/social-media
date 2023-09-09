@@ -36,7 +36,8 @@ public class StatsController {
     }
     
     @GetMapping("/posts")
-    public String statisticPost(Model model) {
+    public String statisticPost(Map<String, String> params, Model model) {
+        model.addAttribute("posts", statsService.countPosts(params));
         return "statistic-post";
     }
     

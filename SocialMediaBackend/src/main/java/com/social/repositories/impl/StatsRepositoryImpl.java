@@ -97,7 +97,23 @@ public class StatsRepositoryImpl implements StatsRepository {
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
         Root<Post> postRoot = criteriaQuery.from(Post.class);
-        return null;
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (params != null) {
+            if (params.containsKey("fromDate")) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(postRoot.get("createdDate"),
+                        LocalDateTime.parse(params.get("fromDate"), dateTimeFormatter)));
+            }
+            if (params.containsKey("toDate")) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(postRoot.get("createdDate"),
+                        LocalDateTime.parse(params.get("toDate"), dateTimeFormatter)));
+            }
+
+            criteriaQuery.where(predicates.toArray(Predicate[]::new));
+        }
+        criteriaQuery.groupBy();
+        Query query = session.createQuery(criteriaQuery);
+        return query.getResultList();
     }
 
     @Override
