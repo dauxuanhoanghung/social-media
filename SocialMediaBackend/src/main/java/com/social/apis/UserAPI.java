@@ -82,20 +82,20 @@ public class UserAPI {
     public ResponseEntity<UserResponse> getProfileUser(@RequestParam Map<String, String> params) {
         String slug = params.getOrDefault("slug", null);
         String id = params.getOrDefault("id", null);
+
         if (slug != null) {
-            return new ResponseEntity<>(
-                    modelMapper.map(this.userService.getUserBySlug(slug),
-                            UserResponse.class),
-                    HttpStatus.OK
-            );
-        } else if (slug == null && id != null) {
-            return new ResponseEntity<>(
-                    modelMapper.map(this.userService.getUserById(Integer.parseInt(id)),
-                            UserResponse.class),
-                    HttpStatus.OK
-            );
+            User user = this.userService.getUserBySlug(slug);
+            if (user != null) {
+                return ResponseEntity.ok(modelMapper.map(user, UserResponse.class));
+            }
+        } else if (id != null) {
+            User user = this.userService.getUserById(Integer.parseInt(id));
+            if (user != null) {
+                return ResponseEntity.ok(modelMapper.map(user, UserResponse.class));
+            }
         }
-        return null;
+        return ResponseEntity.notFound().build();
+
     }
 
     @PostMapping(value = "/register/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
