@@ -64,6 +64,15 @@ public class PostAPI {
         Map<String, Object> res = new HashMap<>();
         res.put("posts", posts);
         return ResponseEntity.ok(res);
+        
+    }
+
+    @GetMapping("/{id}/")
+    public ResponseEntity getPostById(@PathVariable int id) {
+        Post post = postService.getPostById(id);
+        Map<String, Object> res = new HashMap<>();
+        res.put("data", post);
+        return ResponseEntity.ok(res);
 
     }
 

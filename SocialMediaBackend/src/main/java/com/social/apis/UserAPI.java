@@ -55,13 +55,12 @@ public class UserAPI {
 
     @Autowired
     private FileValidator fileValidator;
-    
+
 //    @InitBinder("file")
 //    public void initBinder(WebDataBinder binder) {
 //        binder.setBindEmptyMultipartFiles(false);
 //        binder.setValidator(fileValidator);
 //    }
-
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> get(@PathVariable(name = "id") String id) {
         return new ResponseEntity<>(
@@ -148,8 +147,10 @@ public class UserAPI {
         if (rs.hasErrors()) {
             return ResponseEntity.badRequest().body(rs.getAllErrors());
         }
-        userService.updateAvatar(file.getFiles().get(0), false);
-        return ResponseEntity.ok("File uploaded successfully");
+        User user = userService.updateAvatar(file.getFiles().get(0), false);
+        Map res = new HashMap();
+        res.put("data", user);
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping(value = "/upload-bg/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -159,8 +160,8 @@ public class UserAPI {
             return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
         User user = userService.updateAvatar(file.getFiles().get(0), true);
-        Map res = new HashMap();
-        res.put("data", user);
+//        Map res = new HashMap();
+//        res.put("data", user);
         return ResponseEntity.ok(user);
     }
 
@@ -180,6 +181,5 @@ public class UserAPI {
 
         return null;
     }
-
 
 }
