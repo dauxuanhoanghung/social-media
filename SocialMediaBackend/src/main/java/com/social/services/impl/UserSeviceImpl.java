@@ -14,6 +14,7 @@ import com.social.utils.CloudinaryUtil;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -91,8 +92,11 @@ public class UserSeviceImpl implements UserService {
 
     @Override
     public User getUserById(int id) {
-        User user = this.userRepository.getUserById(id).get();
-        return user;
+        Optional<User> user = this.userRepository.getUserById(id);
+        if (!user.isPresent()){
+            return null;
+        }
+        return user.get();
     }
 
     @Override
