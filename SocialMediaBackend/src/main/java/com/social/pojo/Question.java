@@ -65,10 +65,10 @@ public class Question implements Serializable {
     @ManyToOne(optional = false)
     private Post post;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "questionId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "questionId", orphanRemoval = true)
     private Set<SurveyResult> surveyResultSet;
 //    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question", fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<Choice> choices;
 
     public Question() {

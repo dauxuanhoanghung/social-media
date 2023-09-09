@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -155,6 +156,23 @@ public class PostServiceImpl implements PostService {
             return postRepository.update(toggleBlockPost);
         }
         return toggleBlockPost;
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #post.user.alumniId == authentication.principal.username")
+    public boolean delete(int postId) {
+        Post post = postRepository.getPostById(postId).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (post != null) {
+            if (post.getUser().getAlumniId().equals(authentication.getName()) //OWNER
+                    || authentication.getAuthorities().stream()
+                            .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))) {
+                return postRepository.delete(post);
+            }
+        }
+
+        return false;
     }
 
 }

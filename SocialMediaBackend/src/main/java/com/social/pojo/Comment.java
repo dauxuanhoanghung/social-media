@@ -60,9 +60,9 @@ public class Comment implements Serializable {
     private LocalDateTime createdDate;
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SubComment> subComments;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comment")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comment", orphanRemoval = true)
     private Set<CommentAction> commentActionSet;
     @JoinColumn(name = "post_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

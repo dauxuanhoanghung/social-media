@@ -108,7 +108,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li>
-                        <a class="dropdown-item" href="/">
+                        <a class="dropdown-item" href="<c:url value="/login" />">
                             <i class="bx bx-power-off me-2"></i>
                             <span class="align-middle"><spring:message code="view.layout.header.login" /></span>
                         </a>

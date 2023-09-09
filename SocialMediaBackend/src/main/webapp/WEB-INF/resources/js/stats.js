@@ -200,3 +200,67 @@ function drawColChart(data, label, title, type = 'bar', canvasId = "barChart") {
     var chart = new ApexCharts(document.querySelector(`#${canvasId}`), options);
     chart.render();
 }
+
+function drawLineChart(data, label, title, xaxis, type = "line", canvasId = "lineChart") {
+    var options = {
+        series: data,
+        chart: {
+            height: 350,
+            type: type,
+            dropShadow: {
+                enabled: true,
+                color: '#000',
+                top: 18,
+                left: 7,
+                blur: 10,
+                opacity: 0.2
+            },
+            toolbar: {
+                show: false
+            }
+        },
+        colors: ['#77B6EA', '#545454'],
+        dataLabels: {
+            enabled: true
+        },
+        stroke: {
+            curve: 'smooth'
+        },
+        title: {
+            text: title,
+            align: 'left'
+        },
+        grid: {
+            borderColor: '#e7e7e7',
+            row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0.5
+            }
+        },
+        markers: {
+            size: 1
+        },
+        xaxis: {
+            categories: label,
+            title: {
+                text: xaxis
+            }
+        },
+        yaxis: {
+            title: {
+                text: title
+            }
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'right',
+            floating: true,
+            offsetY: -25,
+            offsetX: -5
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector(`#${canvasId}`), options);
+    chart.render();
+    return chart;
+}

@@ -57,7 +57,11 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
     </definition>
     <!--STATISTIC-->
     <definition name="most-active-user" extends="baseLayout">
-        <put-attribute name="title" value="Dashboard Admin - Create Survey" />
+        <put-attribute name="title" value="Dashboard Admin - Statistic User" />
         <put-attribute name="content" value="/WEB-INF/pages/statistic-user.jsp" />
+    </definition>
+    <definition name="statistic-post" extends="baseLayout">
+        <put-attribute name="title" value="Dashboard Admin - Statistic Post" />
+        <put-attribute name="content" value="/WEB-INF/pages/statistic-post.jsp" />
     </definition>
 </tiles-definitions>

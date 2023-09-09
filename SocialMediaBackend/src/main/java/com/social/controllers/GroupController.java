@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  *
@@ -73,9 +75,9 @@ public class GroupController {
     }
 
     @DeleteMapping("/delete-community/{id}")
-    public String deleteCommunity(@PathVariable int id) {
-        boolean isDeleted = communityService.deleteCommunity(id);
-        return "group";
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCommunity(@PathVariable int id) {
+       communityService.deleteCommunity(id);
     }
 
     @PostMapping("/toggle-active")

@@ -27,4 +27,10 @@ public interface StatsRepository {
      * @return User, count Post, count Comment + reply, count Action + reply
      */
     List<Object[]> top10MostActiveUser(Map<String, String> params);
+    /**
+     * 
+     * @param months
+     * @return month, count User
+     */
+    List<Object[]> getNumberOfUsersInLastestMonth(int months);
 }
