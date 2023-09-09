@@ -59,7 +59,7 @@ public class SubComment implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User user;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "subComment")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "subComment", orphanRemoval = true)
     private Set<SubCommentAction> subCommentActionSet;
     
     {

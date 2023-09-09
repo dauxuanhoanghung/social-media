@@ -46,7 +46,7 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Autowired
     private ModelMapper mapper;
-
+    
     @Autowired
     private Environment env;
 
@@ -189,8 +189,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public boolean deleteById(Integer id) {
         Session session = getSession();
-        Post post = session.get(Post.class,
-                id);
+        Post post = session.get(Post.class, id);
         try {
             if (post != null) {
                 session.delete(post);
@@ -204,7 +203,14 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public boolean delete(Post post) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Session session = getSession();
+        try {
+            session.delete(post);
+            return true;
+        }
+        catch (HibernateException ex) {
+            return false;
+        }
     }
 
 }

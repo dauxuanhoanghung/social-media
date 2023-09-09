@@ -1,5 +1,6 @@
 package com.social.repositories.impl;
 
+import com.social.enums.UserStatus;
 import com.social.pojo.User;
 import com.social.repositories.UserRepository;
 import java.util.ArrayList;
@@ -63,7 +64,10 @@ public class UserRepositoryImpl implements UserRepository {
             if (roleId != null && !roleId.isEmpty()) {
                 predicates.add(b.equal(root.get("role"), Integer.valueOf(roleId)));
             }
-
+            
+            if (params.containsKey("isDeactive")) {
+                predicates.add(b.equal(root.get("status"), UserStatus.DEACTIVE));
+            }
             q.where(predicates.toArray(Predicate[]::new));
         }
 

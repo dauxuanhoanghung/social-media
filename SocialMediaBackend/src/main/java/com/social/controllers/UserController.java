@@ -39,9 +39,10 @@ public class UserController {
     private UserService userService;
 
     @ModelAttribute
-    public void commonAttributesUser(Model model) {
+    public void commonAttributesUser(Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("roles", this.userService.getAllRoles());
         model.addAttribute("status", UserStatus.values());
+        redirectAttributes.addFlashAttribute("status", UserStatus.values());
     }
 
     @GetMapping
@@ -71,6 +72,7 @@ public class UserController {
     @GetMapping("/active")
     public String alumni(Model model, @RequestParam Map<String, String> params) {
         params.put("roleId", "2");
+        params.put("isDeactive", "1");
         model.addAttribute("users", this.userService.getUsers(params));
         return "user";
     }

@@ -255,12 +255,12 @@
         const btnDeleteTemp = document.getElementById("btnDeleteTemp");
         const deleteItemId = parseInt(btnDeleteTemp.getAttribute("data-item-id"));
         console.log(deleteItemId);
-        fetch(`/admin/community/delete-community/\${deleteItemId}`, {
+        fetch(`<c:url value="/admin/community/delete-community/" />\${deleteItemId}`, {
             method: 'DELETE'
         }).then(response => {
-            console.log(response)
-            if (response.status === 200) {
-                window.location.href = "http://localhost:8080/admin/community/group";
+            console.log(response);
+            if (response.status === 204) {
+                window.location.href = '<c:url value="/admin/community/group" />';
             } else {
                 console.error('Delete request failed');
             }

@@ -10,6 +10,7 @@ import com.social.enums.Action;
 import com.social.enums.PostType;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -80,12 +81,15 @@ public class Post implements Serializable {
     @ManyToOne(optional = false)
     private User user;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", orphanRemoval = true)
     private Set<PostAction> postActions;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", fetch = FetchType.EAGER) 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", fetch = FetchType.EAGER, orphanRemoval = true) 
     private Set<Question> questions;
-    @OneToMany(mappedBy = "postId", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "postId", fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<ImagePost> imagePostSet;
+    @JsonIgnore
+    @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
     @Transient
     private Action currentAction;
     @Transient

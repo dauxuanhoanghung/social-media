@@ -23,4 +23,6 @@ public interface PostService {
     Post toggleLockCOmment(Integer postId);
     
     Post toggleBlockComment(int postId);
+    
+    boolean delete(int postId);
 }
