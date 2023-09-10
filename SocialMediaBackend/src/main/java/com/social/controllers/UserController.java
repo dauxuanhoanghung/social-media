@@ -10,11 +10,15 @@ import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,9 +36,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Lazy
 @Controller
 @ControllerAdvice
+@PropertySource("classpath:application.properties")
 @RequestMapping("/admin/user")
 public class UserController {
 
+    @Autowired
+    private Environment env;
     @Autowired
     private UserService userService;
 
@@ -47,7 +54,10 @@ public class UserController {
 
     @GetMapping
     public String get(Model model, @RequestParam Map<String, String> params) {
+        Integer size = env.getProperty("PAGINATION", Integer.class);
         model.addAttribute("users", userService.getUsers(params));
+        Long count = this.userService.count();
+        model.addAttribute("pages", Math.ceil((double) count / size));
         return "user";
     }
 
@@ -110,5 +120,10 @@ public class UserController {
         this.userService.updateInfo(user);
         return "redirect:/admin/user/" + id;
     }
-
+    
+    @DeleteMapping("/{id}/delete/")
+    public ResponseEntity delete(@PathVariable("id") int id) {
+        this.userService.deleteUser(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }

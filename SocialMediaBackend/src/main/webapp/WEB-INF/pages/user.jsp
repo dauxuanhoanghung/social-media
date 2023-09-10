@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<c:set var="currentPage" value="${param['page']}" />
 <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">
         <spring:message code="view.pages.user.user" /> /</span> <spring:message code="view.pages.user.manage-all" />
 </h4>
@@ -97,7 +98,7 @@
                                         <a class="dropdown-item" href="<c:url value="/admin/user/${user.id}"/>">
                                             <i class="bx bx-edit-alt me-1"></i><spring:message code="view.pages.user.edit" />
                                         </a>
-                                        <a class="dropdown-item" href="javascript:void(0);">
+                                        <a class="dropdown-item" onclick="deleteUser('<c:url value="/admin/user/${user.id}/delete/"/>')">
                                             <i class="bx bx-trash me-1"></i><spring:message code="view.pages.user.delete" />
                                         </a>
                                     </div>
@@ -109,6 +110,15 @@
                 </tbody>
             </table>
         </c:if>
+        <c:if test="${pages >= 2}" >
+            <ul class="pagination justify-content-center">
+                <c:forEach begin="1" end="${pages}" var="page">
+                    <li class="page-item <c:if test="${currentPage == page}">active</c:if>">
+                        <a class="page-link" href="<c:url value="/admin/user?page=${page}" />">${page}</a>
+                    </li>
+                </c:forEach>
+            </ul>
+        </c:if>
         <c:if test="${empty users}">
             <div class="alert alert-warning text-center" style="height: 100%" role="alert">
                 <i class='bx bx-error-circle bx-lg'></i>
@@ -117,3 +127,16 @@
         </c:if>
     </div>
 </div>
+
+<script>
+    const deleteUser = (url) => {
+        fetch(url, {
+            method: "DELETE"
+        })
+                .then(res => {
+                    if (res.status === 204) {
+                        location.reload();
+                    }
+                })
+    }
+</script>

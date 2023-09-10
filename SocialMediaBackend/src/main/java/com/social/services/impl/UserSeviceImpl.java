@@ -122,7 +122,7 @@ public class UserSeviceImpl implements UserService {
 
     @Override
     public boolean deleteUser(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.userRepository.deleteUser(id);
     }
 
     @Override
@@ -208,4 +208,8 @@ public class UserSeviceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public Long count() {
+        return this.userRepository.count();
+    }
 }
