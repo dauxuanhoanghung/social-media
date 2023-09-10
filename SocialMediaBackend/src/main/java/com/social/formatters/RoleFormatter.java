@@ -20,7 +20,6 @@ public class RoleFormatter implements Formatter<Role> {
     public Role parse(String id, Locale locale) throws ParseException {
         Role c = new Role();
         c.setId(Integer.valueOf(id));
-
         return c;
     }
 }

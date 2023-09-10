@@ -62,9 +62,9 @@ public class UserAPI {
 //        binder.setValidator(fileValidator);
 //    }
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserDTO> get(@PathVariable(name = "id") String id) {
+    public ResponseEntity<UserResponse> get(@PathVariable(name = "id") String id) {
         return new ResponseEntity<>(
-                modelMapper.map(this.userService.getUserByAlumniId(id), UserDTO.class),
+                modelMapper.map(this.userService.getUserByAlumniId(id), UserResponse.class),
                 HttpStatus.OK
         );
     }
