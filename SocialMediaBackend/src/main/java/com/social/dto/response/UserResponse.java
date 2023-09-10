@@ -13,6 +13,7 @@ public class UserResponse {
     private String alumniId;
     private String displayName;
     private String slug;
+    private String email;
     private String coverBg;
     private String avatar;
     private UserStatus status;

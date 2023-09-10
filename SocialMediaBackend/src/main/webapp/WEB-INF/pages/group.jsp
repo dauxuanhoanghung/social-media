@@ -151,7 +151,6 @@
                     <tr>
                         <th>Id</th>
                         <th><spring:message code="view.pages.group-user.group-name" /></th>
-                        <th><spring:message code="view.pages.group-user.number-member" /></th>
                         <th><spring:message code="view.pages.group-user.create-by" /></th>
                         <th><spring:message code="view.pages.user.status" /></th>
                         <th><spring:message code="view.pages.user.actions" /></th>
@@ -171,7 +170,6 @@
                     <a href="/admin/community/group-update?groupId=${group.id}">
                         <td>${group.founderId.displayName}</td>
                     </a>
-                    <td>0</td>
                     <td>
                         <c:choose>
                             <c:when test="${group.status eq status[0]}">
@@ -195,10 +193,6 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="<c:url value="/admin/community/group-update?groupId=${group.id}"/>">
                                     <i class="bx bx-edit-alt me-1"></i><spring:message code="view.pages.user.edit" />
-                                </a>
-                                <a class="dropdown-item" href="<c:url value="/admin/community/group?groupId=${group.id}"/>">
-                                    <i class='bx bx-envelope' ></i>
-                                    </i><spring:message code="view.pages.group-user.send-mail" />
                                 </a>
                                 <button class="dropdown-item"" onclick="toggleActive(${group.id}, '${group.status}')" >
                                     <i class='bx bxs-error-alt' ></i>
@@ -306,5 +300,5 @@
             if (res.status == 200)
                 window.location.href = "http://localhost:8080/admin/community/group";
         }).catch();
-    }
+    };
 </script>

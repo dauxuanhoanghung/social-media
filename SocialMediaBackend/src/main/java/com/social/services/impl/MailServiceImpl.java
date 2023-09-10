@@ -51,7 +51,7 @@ public class MailServiceImpl implements MailService {
 
     private MimeMessagePreparator getMessagePreparator(String mailTo, String subject, String title, String mailTemplate, String content) {
         MimeMessagePreparator preparator = (MimeMessage mimeMessage) -> {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
             helper.setFrom(env.getProperty("mail.username"));
             helper.setTo(mailTo);
@@ -84,6 +84,18 @@ public class MailServiceImpl implements MailService {
             e.printStackTrace();
             return "";
         }
+    }
+
+    public void sendBulkWithFreeMarkerTemplate(List<String> mailTos, String subject,
+            String template, Map<String, Object> model) {
+        mailTos.parallelStream().forEach(mailTo -> {
+            MimeMessagePreparator preparator = getMessagePreparator(mailTo, subject, "", template, "");
+            try {
+                mailSender.send(preparator);
+            } catch (MailException exe) {
+                System.out.println(exe);
+            }
+        });
     }
 
     @Override

@@ -8,12 +8,14 @@ import com.social.dto.request.CommunityRequest;
 import com.social.pojo.Community;
 import com.social.pojo.User;
 import com.social.services.CommunityService;
+import com.social.services.MailService;
 import com.social.services.UserService;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,6 +40,9 @@ public class GroupController {
 
     @Autowired
     private CommunityService communityService;
+
+    @Autowired
+    private MailService mailService;
 
     @GetMapping("/group")
     public String group(Model model, @RequestParam Map<String, String> params) {
@@ -77,7 +82,7 @@ public class GroupController {
     @DeleteMapping("/delete-community/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCommunity(@PathVariable int id) {
-       communityService.deleteCommunity(id);
+        communityService.deleteCommunity(id);
     }
 
     @PostMapping("/toggle-active")
@@ -92,5 +97,19 @@ public class GroupController {
     public String updateGroup(@RequestBody Community community) {
         communityService.updateGroup(community);
         return "group";
+    }
+
+    @PostMapping("/send-bulk")
+    public ResponseEntity sendBulk(@RequestBody Map mails) {
+        List<String> mailTos = (List<String>) mails.getOrDefault("mailTos", null);
+        String subject = (String) mails.getOrDefault("subject", null);
+        String content = (String) mails.getOrDefault("content", null);
+        try {
+            mailService.sendBulk(mailTos, subject, content);
+            return ResponseEntity.ok(null);
+        } catch (Exception ex) {
+            return ResponseEntity.internalServerError().build();
+        }
+       
     }
 }
