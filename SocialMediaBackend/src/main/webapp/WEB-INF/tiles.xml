@@ -55,6 +55,10 @@ Software Foundation//DTD Tiles Configuration 3.0//EN"
         <put-attribute name="title" value="Dashboard Admin - Create Survey" />
         <put-attribute name="content" value="/WEB-INF/pages/create-post.jsp" />
     </definition>
+    <definition name="view-survey-result" extends="baseLayout">
+        <put-attribute name="title" value="Dashboard Admin - Create Survey" />
+        <put-attribute name="content" value="/WEB-INF/pages/view-survey-result.jsp" />
+    </definition>
     <!--STATISTIC-->
     <definition name="most-active-user" extends="baseLayout">
         <put-attribute name="title" value="Dashboard Admin - Statistic User" />

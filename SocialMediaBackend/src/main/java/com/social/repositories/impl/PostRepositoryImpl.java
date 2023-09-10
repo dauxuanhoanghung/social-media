@@ -2,6 +2,7 @@ package com.social.repositories.impl;
 
 import com.social.dto.request.PostRequest;
 import com.social.enums.Action;
+import com.social.pojo.Comment;
 import com.social.pojo.Post;
 import com.social.pojo.PostAction;
 import com.social.pojo.User;
@@ -46,7 +47,7 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Autowired
     private ModelMapper mapper;
-    
+
     @Autowired
     private Environment env;
 
@@ -65,6 +66,14 @@ public class PostRepositoryImpl implements PostRepository {
 
         Root<Post> postRoot = criteriaQuery.from(Post.class);
 
+        Subquery<Long> countCommentQuery = criteriaQuery.subquery(Long.class);
+        Root<Comment> commentRoot = countCommentQuery.from(Comment.class);
+        Subquery<Long> countActionQuery = criteriaQuery.subquery(Long.class);
+        Root<PostAction> postARoot = countActionQuery.from(PostAction.class);
+        countCommentQuery.select(criteriaBuilder.count(commentRoot.get("id")))
+                .where(criteriaBuilder.equal(commentRoot.get("postId"), postRoot.get("id")));
+        countActionQuery.select(criteriaBuilder.count(postARoot.get("id")))
+                .where(criteriaBuilder.equal(postARoot.get("post"), postRoot.get("id")));
         List<Predicate> predicates = new ArrayList<>();
         if (params != null) {
             if (params.containsKey("slug")) {
@@ -96,9 +105,14 @@ public class PostRepositoryImpl implements PostRepository {
                                 criteriaBuilder.equal(postActionRoot.get("post"), postRoot)
                         )
                 );
-                criteriaQuery.multiselect(postRoot, subquery.getSelection());
+                criteriaQuery.multiselect(postRoot,
+                        countCommentQuery.getSelection(),
+                        countActionQuery.getSelection(),
+                        subquery.getSelection());
             } else {
-                criteriaQuery.multiselect(postRoot);
+                criteriaQuery.multiselect(postRoot,
+                        countCommentQuery.getSelection(),
+                        countActionQuery.getSelection());
             }
         }
 
@@ -117,15 +131,16 @@ public class PostRepositoryImpl implements PostRepository {
         }
 
         List<Post> result = new ArrayList<>();
-        if (params != null && params.containsKey("alumniId")) {
-            List<Object[]> resultPosts = query.getResultList();
-            for (Object[] object : resultPosts) {
-                Post p = (Post) object[0];
-                p.setCurrentAction((Action) object[1]);
-                result.add(p);
+        List<Object[]> resultPosts = query.getResultList();
+        for (Object[] object : resultPosts) {
+            Post p = (Post) object[0];
+            p.setCountComment((Long) object[1]);
+            p.setCountAction((Long) object[2]);
+            if (params != null && params.containsKey("alumniId")) {
+                p.setCurrentAction((Action) object[3]);
             }
-        } else {
-            return query.getResultList();
+
+            result.add(p);
         }
         return result;
     }
@@ -178,7 +193,7 @@ public class PostRepositoryImpl implements PostRepository {
             p.setUser(userRepository.getUserByAlumniId("2051052013").get());
             p.setImagePostSet(null);
             p.setLockComment(Boolean.FALSE);
-            p.setCountAction(0);
+            p.setCountAction(0l);
             s.save(p);
             return p;
         } catch (HibernateException ex) {
@@ -207,8 +222,7 @@ public class PostRepositoryImpl implements PostRepository {
         try {
             session.delete(post);
             return true;
-        }
-        catch (HibernateException ex) {
+        } catch (HibernateException ex) {
             return false;
         }
     }
