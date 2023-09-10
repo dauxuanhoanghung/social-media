@@ -58,6 +58,7 @@
                 </div>
             </div>
             <div id="donutChart"></div>
+            <h1 id="text"></h1>
         </div>
     </div>
 
@@ -69,139 +70,140 @@
 </div>
 <script src="<c:url value="/js/stats.js"/>"></script>
 <script>
-                    // Radio Check
-                    const showSelection = () => {
-                        var selectedOption = document.querySelector('input[name="selection"]:checked').value;
-                        var monthSelection = document.getElementById("monthSelection");
-                        var quarterSelection = document.getElementById("quarterSelection");
-                        monthSelection.style.display = "none";
-                        quarterSelection.style.display = "none";
-                        if (selectedOption === "month")
-                            monthSelection.style.display = "flex";
-                        else if (selectedOption === "quarter")
-                            quarterSelection.style.display = "flex";
-
-                    }
-                    const fetchDataBarChart = () => {
-
-                    }
-                    const formatDate = (originalDateString) => {
-                        const originalDate = new Date(originalDateString);
-                        const day = originalDate.getDate();
-                        const month = originalDate.getMonth() + 1; // Months are zero-based, so add 1
-                        const year = originalDate.getFullYear();
-                        const hours = originalDate.getHours();
-                        const minutes = originalDate.getMinutes();
-                        const seconds = originalDate.getSeconds();
-                        const formattedDate = `\${day.toString().padStart(2, '0')}-\${month.toString().padStart(2, '0')}-\${year}`;
-                        const formattedTime = `\${hours.toString().padStart(2, '0')}:\${minutes.toString().padStart(2, '0')}:\${seconds.toString().padStart(2, '0')}`;
-                        return formattedDate + " " + formattedTime;
-                    }
-                    const getData = () => {
-                        const selectedOption = document.querySelector('input[name="selection"]:checked').value;
-                        const selectedMonth = document.getElementById("month").value;
-                        const selectedQuarter = document.getElementById("quarter").value;
-                        const selectedYear = document.getElementById("year").value;
-                        let fromDate = "";
-                        let toDate = "";
-                        const formatter = new Intl.DateTimeFormat('en-US', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                            hour: 'numeric',
-                            minute: 'numeric',
-                            second: 'numeric',
-                            hour12: true
-                        });
-                        if (selectedOption === 'quarter') {
-                            const quarterToMonth = {1: 1, 2: 4, 3: 7, 4: 10};
-                            const startMonth = quarterToMonth[selectedQuarter];
-                            const endMonth = startMonth + 2;
-                            fromDate = new Date(selectedYear, startMonth - 1, 1, 0, 0, 0); // -1 since months are zero-based
-                            toDate = new Date(selectedYear, endMonth - 1, 31, 23, 59, 59); // Assuming end of month and day
-                            fromDate = formatter.format(fromDate);
-                            toDate = formatter.format(toDate);
-                        } else if (selectedOption === 'month') {
-                            const monthNumber = parseInt(selectedMonth);
-                            fromDate = new Date(selectedYear, monthNumber - 1, 1, 0, 0, 0); // -1 since months are zero-based
-                            const lastDayOfMonth = new Date(selectedYear, monthNumber, 0); // This gives the last day of the month
-                            toDate = new Date(selectedYear, monthNumber - 1, lastDayOfMonth.getDate(), 23, 59, 59);
-                            fromDate = formatter.format(fromDate);
-                            toDate = formatter.format(toDate);
-                        }
-                        const baseUrl = '<c:url value="/admin/statistic/user-register/" />'; // Replace with your actual base URL
-                        const queryParams = `?fromDate=\${encodeURIComponent(formatDate(fromDate))}&toDate=\${encodeURIComponent(formatDate(toDate))}`;
-                        const fullUrl = baseUrl + queryParams;
-                        fetch(`\${fullUrl}`)
-                                .then(res => res.json())
-                                .then(data => {
-                                    let info = [], label = [];
-                                    data.forEach(i => {
-                                        label.push(i[1]);
-                                        info.push(i[2]);
-                                    })
-                                    draw(info, label, 'New User Register');
-                                })
-                                .catch()
-                    }
-                    const drawBarChart = () => {
-                        let countPost = [];
-                        let countComment = [];
-                        let countAction = [];
-                        let username = [];
-    <c:forEach items="${listTop10}" var="c">
-                        username.push('${c[0].displayName}')
-                        countPost.push(${c[1]});
-                        countComment.push(${c[2]});
-                        countAction.push(${c[3]});
-    </c:forEach>
-                        const series = [{
-                                name: '<spring:message code="view.pages.statistic-user.countPost" />',
-                                data: countPost
-                            }, {
-                                name: '<spring:message code="view.pages.statistic-user.countComment" />',
-                                data: countComment
-                            }, {
-                                name: '<spring:message code="view.pages.statistic-user.countAction" />',
-                                data: countAction
-                            }];
-                        drawColChart(series, username, '<spring:message code="view.pages.statistic-user.mostActiveUser"/>', 'bar', "barChart");
-                    }
-                    const drawUserRegisterChart = () => {
-                        const baseUrl = '<c:url value="/admin/statistic/user-register/" />';
-                        fetch(`\${baseUrl}`)
-                                .then(res => res.json())
-                                .then(data => {
-                                    let info = [], label = [];
-                                    data.forEach(i => {
-                                        label.push(i[1]);
-                                        info.push(i[2]);
-                                    })
-                                    draw(info, label, 'New User Register');
-                                })
-                    };
-                    const drawNumberUserRegisterIn3LastestMonthsChart = () => {
-                        const baseUrl = '<c:url value="/admin/statistic/lastest-register/" />';
-                        fetch(`\${baseUrl}`)
-                                .then(res => res.json())
-                                .then(data => {
-                                    console.log(data);
-                                    let info = [], label = [];
-                                    data.forEach(i => {
-                                        label.push(`<spring:message code="view.pages.statistic-user.month"/> \${i[0]}`);
-                                        info.push(i[1]);
+                        // Radio Check
+                        let pieChart = null;
+                        const drawUserRegisterChart = (url) => {
+                            fetch(url)
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        if (pieChart) {
+                                            pieChart.destroy();
+                                        }
+                                        if (data.length === 0) {
+                                            document.getElementById("text").textContent = "<spring:message code='view.pages.statistic-user.noUser' />";
+                                            return;
+                                        }
+                                        let info = [], label = [];
+                                        data.forEach(i => {
+                                            label.push(i[1]);
+                                            info.push(i[2]);
+                                        })
+                                        pieChart = draw(info, label, 'New User Register');
+                                        document.getElementById("text").textContent = "";
                                     });
-                                    series = [{
-                                            name: '<spring:message code="view.pages.statistic-user.month" />',
-                                            data: info
-                                        }]
+                        };
+                        const showSelection = () => {
+                            var selectedOption = document.querySelector('input[name="selection"]:checked').value;
+                            var monthSelection = document.getElementById("monthSelection");
+                            var quarterSelection = document.getElementById("quarterSelection");
+                            monthSelection.style.display = "none";
+                            quarterSelection.style.display = "none";
+                            if (selectedOption === "month")
+                                monthSelection.style.display = "flex";
+                            else if (selectedOption === "quarter")
+                                quarterSelection.style.display = "flex";
+
+                        }
+                        const fetchDataBarChart = () => {
+
+                        }
+                        const formatDate = (originalDateString) => {
+                            const originalDate = new Date(originalDateString);
+                            const day = originalDate.getDate();
+                            const month = originalDate.getMonth() + 1; // Months are zero-based, so add 1
+                            const year = originalDate.getFullYear();
+                            const hours = originalDate.getHours();
+                            const minutes = originalDate.getMinutes();
+                            const seconds = originalDate.getSeconds();
+                            const formattedDate = `\${day.toString().padStart(2, '0')}-\${month.toString().padStart(2, '0')}-\${year}`;
+                            const formattedTime = `\${hours.toString().padStart(2, '0')}:\${minutes.toString().padStart(2, '0')}:\${seconds.toString().padStart(2, '0')}`;
+                            return formattedDate + " " + formattedTime;
+                        }
+                        const getData = () => {
+                            const selectedOption = document.querySelector('input[name="selection"]:checked').value;
+                            const selectedMonth = document.getElementById("month").value;
+                            const selectedQuarter = document.getElementById("quarter").value;
+                            const selectedYear = document.getElementById("year").value;
+                            let fromDate = "";
+                            let toDate = "";
+                            const formatter = new Intl.DateTimeFormat('en-US', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                second: 'numeric',
+                                hour12: true
+                            });
+                            if (selectedOption === 'quarter') {
+                                const quarterToMonth = {1: 1, 2: 4, 3: 7, 4: 10};
+                                const startMonth = quarterToMonth[selectedQuarter];
+                                const endMonth = startMonth + 2;
+                                fromDate = new Date(selectedYear, startMonth - 1, 1, 0, 0, 0); // -1 since months are zero-based
+                                toDate = new Date(selectedYear, endMonth - 1, 31, 23, 59, 59); // Assuming end of month and day
+                                fromDate = formatter.format(fromDate);
+                                toDate = formatter.format(toDate);
+                            } else if (selectedOption === 'month') {
+                                const monthNumber = parseInt(selectedMonth);
+                                fromDate = new Date(selectedYear, monthNumber - 1, 1, 0, 0, 0); // -1 since months are zero-based
+                                const lastDayOfMonth = new Date(selectedYear, monthNumber, 0); // This gives the last day of the month
+                                toDate = new Date(selectedYear, monthNumber - 1, lastDayOfMonth.getDate(), 23, 59, 59);
+                                fromDate = formatter.format(fromDate);
+                                toDate = formatter.format(toDate);
+                            }
+                            const baseUrl = '<c:url value="/admin/statistic/user-register/" />'; // Replace with your actual base URL
+                            const queryParams = `?fromDate=\${encodeURIComponent(formatDate(fromDate))}&toDate=\${encodeURIComponent(formatDate(toDate))}`;
+                            const fullUrl = baseUrl + queryParams;
+                            drawUserRegisterChart(fullUrl);
+                        };
+                        const drawBarChart = () => {
+                            let countPost = [];
+                            let countComment = [];
+                            let countAction = [];
+                            let username = [];
+    <c:forEach items="${listTop10}" var="c">
+                            username.push('${c[0].displayName}')
+                            countPost.push(${c[1]});
+                            countComment.push(${c[2]});
+                            countAction.push(${c[3]});
+    </c:forEach>
+                            const series = [{
+                                    name: '<spring:message code="view.pages.statistic-user.countPost" />',
+                                    data: countPost
+                                }, {
+                                    name: '<spring:message code="view.pages.statistic-user.countComment" />',
+                                    data: countComment
+                                }, {
+                                    name: '<spring:message code="view.pages.statistic-user.countAction" />',
+                                    data: countAction
+                                }];
+                            drawColChart(series, username, '<spring:message code="view.pages.statistic-user.mostActiveUser"/>', 'bar', "barChart");
+                        }
+                        const drawNumberUserRegisterIn3LastestMonthsChart = () => {
+                            const baseUrl = '<c:url value="/admin/statistic/lastest-register/" />';
+                            fetch(`\${baseUrl}`)
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        if (!data) {
+                                            document.getElementById("text").value = "<spring:message code='view.pages.statistic-post.noPost' />"
+                                        }
+                                        console.log(data);
+                                        let info = [], label = [];
+                                        data.forEach(i => {
+                                            label.push(`<spring:message code="view.pages.statistic-user.month"/> \${i[0]}`);
+                                            info.push(i[1]);
+                                        });
+                                        series = [{
+                                                name: '<spring:message code="view.pages.statistic-user.month" />',
+                                                data: info
+                                            }]
                                         drawLineChart(series, label, '<spring:message code="view.pages.statistic-user.newUserRegistration" />',
-                                            '<spring:message code="view.pages.statistic-user.month" />');
-                                });
-                    };
-                    window.onload = () => {
-                        drawBarChart();
-                        drawUserRegisterChart();
-                        drawNumberUserRegisterIn3LastestMonthsChart();
-                    };
+                                                '<spring:message code="view.pages.statistic-user.month" />');
+                                    });
+                        };
+                        window.onload = () => {
+                            drawBarChart();
+                            drawUserRegisterChart('<c:url value="/admin/statistic/user-register/" />');
+                            drawNumberUserRegisterIn3LastestMonthsChart();
+                        };
 </script>

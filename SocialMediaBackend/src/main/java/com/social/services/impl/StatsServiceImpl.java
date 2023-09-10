@@ -26,7 +26,7 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<Object[]> countPosts(Map<String, String> params) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.statsRepository.countPosts(params);
     }
 
     @Override

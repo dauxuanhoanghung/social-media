@@ -4,10 +4,8 @@ import com.social.dto.request.CommentRequest;
 import com.social.exceptions.NotFoundException;
 import com.social.pojo.Comment;
 import com.social.pojo.Post;
-import com.social.pojo.SubComment;
 import com.social.pojo.User;
 import com.social.repositories.CommentRepository;
-import com.social.repositories.PostRepository;
 import com.social.repositories.UserRepository;
 import com.social.services.CommentService;
 import com.social.services.PostService;
@@ -85,11 +83,6 @@ public class CommentServiceImpl implements CommentService {
             // Delete inside repo (subAction, subComment, commentAction)
             return this.commentRepository.delete(comment);
         }
-    }
-
-    @Override
-    public List<SubComment> getRepliesByCommentId(Integer id) {
-        return null;
     }
 
     @Override

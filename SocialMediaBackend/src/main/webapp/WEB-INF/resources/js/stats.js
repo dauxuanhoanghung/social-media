@@ -149,6 +149,7 @@ function draw(data, labels, title, type = "pie", canvasId = "donutChart") {
         chartInDraw = new ApexCharts(donutChartEl, chartConfig);
 
         chartInDraw.render();
+        return chartInDraw;
 }
 }
 

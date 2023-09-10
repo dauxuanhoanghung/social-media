@@ -4,6 +4,7 @@
  */
 package com.social.pojo;
 
+import com.social.enums.Action;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -21,9 +22,11 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import lombok.Data;
 
 /**
  *
@@ -38,6 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "SubComment.findByContent", query = "SELECT s FROM SubComment s WHERE s.content = :content"),
     @NamedQuery(name = "SubComment.findByCreatedDate", query = "SELECT s FROM SubComment s WHERE s.createdDate = :createdDate"),
     @NamedQuery(name = "SubComment.findByModifiedDate", query = "SELECT s FROM SubComment s WHERE s.modifiedDate = :modifiedDate")})
+@Data
 public class SubComment implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -61,6 +65,9 @@ public class SubComment implements Serializable {
     private User user;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "subComment", orphanRemoval = true)
     private Set<SubCommentAction> subCommentActionSet;
+    
+    @Transient
+    private Action currentAction;
     
     {
         this.createdDate = LocalDateTime.now();

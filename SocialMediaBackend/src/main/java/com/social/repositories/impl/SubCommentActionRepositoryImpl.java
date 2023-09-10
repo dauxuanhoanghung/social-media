@@ -33,7 +33,14 @@ public class SubCommentActionRepositoryImpl implements SubCommentActionRepositor
 
     @Override
     public SubCommentAction save(SubCommentAction subCommentAction) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Session session = getSession();
+
+        try {
+            session.save(subCommentAction);
+            return subCommentAction;
+        } catch (HibernateException ex) {
+            return null;
+        }
     }
 
     @Override

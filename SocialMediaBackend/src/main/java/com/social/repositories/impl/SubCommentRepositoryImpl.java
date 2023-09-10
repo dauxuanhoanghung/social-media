@@ -1,8 +1,8 @@
 package com.social.repositories.impl;
 
+import com.social.enums.Action;
 import com.social.pojo.SubComment;
 import com.social.pojo.SubCommentAction;
-import com.social.repositories.SubCommentActionRepository;
 import com.social.repositories.SubCommentRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +13,11 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
@@ -31,9 +31,6 @@ public class SubCommentRepositoryImpl implements SubCommentRepository {
 
     @Autowired
     private LocalSessionFactoryBean sessionFactory;
-    @Lazy
-    @Autowired
-    private SubCommentActionRepository subCommentActionRepository;
 
     @Autowired
     private Environment env;
@@ -146,7 +143,7 @@ public class SubCommentRepositoryImpl implements SubCommentRepository {
         Session session = getSession();
         Integer size = env.getProperty("PAGINATION", Integer.class);
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-        CriteriaQuery<SubComment> criteriaQuery = criteriaBuilder.createQuery(SubComment.class);
+        CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
         Root<SubComment> subCommentRoot = criteriaQuery.from(SubComment.class);
         List<Predicate> predicates = new ArrayList<>();
         String page = (String) params.get("page");
@@ -156,7 +153,22 @@ public class SubCommentRepositoryImpl implements SubCommentRepository {
                 predicates.add(
                         criteriaBuilder.equal(subCommentRoot.get("comment"), Integer.valueOf(commentId)));
             }
-
+            if (params.containsKey("alumniId")) {
+                String alumniId = (String) params.get("alumniId");
+                Subquery<Action> actionSubquery = criteriaQuery.subquery(Action.class);
+                Root<SubCommentAction> subCommentActionRoot = actionSubquery.from(SubCommentAction.class);
+                actionSubquery.select(subCommentActionRoot.get("action"));
+                actionSubquery.where(
+                        criteriaBuilder.and(
+                                criteriaBuilder.equal(subCommentActionRoot.get("user").get("alumniId"), alumniId),
+                                criteriaBuilder.equal(subCommentActionRoot.get("subComment"), subCommentRoot)
+                        )
+                );
+                criteriaQuery.multiselect(
+                        subCommentRoot, actionSubquery.getSelection());
+            } else {
+                criteriaQuery.multiselect(subCommentRoot);
+            }
             criteriaQuery.where(predicates.toArray(Predicate[]::new));
         }
 
@@ -166,7 +178,21 @@ public class SubCommentRepositoryImpl implements SubCommentRepository {
         query.setMaxResults(size);
         query.setFirstResult((Integer.parseInt(page) - 1) * size);
 
-        return query.getResultList();
+        if (!params.containsKey("alumniId")) {
+            return query.getResultList();
+        }
+
+        List<Object[]> resultList = query.getResultList();
+
+        List<SubComment> commentsWithCounts = new ArrayList<>();
+        for (Object[] result : resultList) {
+            SubComment reply = (SubComment) result[0];
+            if (!params.isEmpty() && params.containsKey("alumniId")) {
+                reply.setCurrentAction((Action) result[1]);
+            }
+            commentsWithCounts.add(reply);
+        }
+        return commentsWithCounts;
     }
 
     @Override
