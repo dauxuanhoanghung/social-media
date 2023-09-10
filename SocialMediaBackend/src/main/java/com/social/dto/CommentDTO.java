@@ -15,7 +15,7 @@ public class CommentDTO {
 
     private Integer id;
     private String content;
-    private Integer countAction;
+    private Long countAction;
     private Long countReply;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdDate;

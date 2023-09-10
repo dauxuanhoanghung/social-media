@@ -164,8 +164,6 @@ public class PostRepositoryImpl implements PostRepository {
     public Post save(Post post) {
         Session s = getSession();
         try {
-            User user = userRepository.getUserByAlumniId("chuongdp").get();
-            post.setUser(user);
             s.save(post);
             return post;
         } catch (HibernateException ex) {
@@ -184,22 +182,6 @@ public class PostRepositoryImpl implements PostRepository {
         }
     }
 
-    @Override
-    public Post save(PostRequest post) {
-        Session s = getSession();
-        Post p = mapper.map(post, Post.class
-        );
-        try {
-            p.setUser(userRepository.getUserByAlumniId("2051052013").get());
-            p.setImagePostSet(null);
-            p.setLockComment(Boolean.FALSE);
-            p.setCountAction(0l);
-            s.save(p);
-            return p;
-        } catch (HibernateException ex) {
-            return null;
-        }
-    }
 
     @Override
     public boolean deleteById(Integer id) {

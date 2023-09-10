@@ -18,8 +18,6 @@ public interface PostRepository {
 
     Post save(Post post);
     
-    Post save(PostRequest post);
-    
     Post update(Post post);
 
     boolean deleteById(Integer id);

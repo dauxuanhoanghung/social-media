@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -64,8 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder());
     }
 
-    private static final String[] AUTH_BLACKLIST = {
-//        "/api/**" // Các route không yêu cầu xác thực
+    private static final String[] AUTH_BLACKLIST = { //        "/api/**" // Các route không yêu cầu xác thực
     };
 
     @Bean
@@ -89,8 +89,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/login?accessDenied");
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-//                .antMatchers(AUTH_BLACKLIST).authenticated()
-//                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers(AUTH_BLACKLIST).authenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/actions/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/comments/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/posts/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/posts/**").authenticated()
+                .antMatchers(HttpMethod.PATCH, "/api/posts/**").authenticated()
                 .anyRequest().permitAll()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
