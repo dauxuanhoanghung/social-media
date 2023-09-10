@@ -146,7 +146,7 @@ public class UserSeviceImpl implements UserService {
             String url = cloudinaryService.uploadImage(user.getAvatarFile());
             entity.setAvatar(url);
         } else {
-            entity.setAvatar("https://res.cloudinary.com/dzgugrqxz/image/upload/v1683031039/building_img/r3owjpmhhcehj29hgw2y.jpg");
+            entity.setAvatar(null);
         }
         return this.userRepository.save(entity);
     }

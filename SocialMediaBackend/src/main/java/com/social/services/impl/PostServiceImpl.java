@@ -186,4 +186,9 @@ public class PostServiceImpl implements PostService {
         return false;
     }
 
+    @Override
+    public Long countPost() {
+        return this.postRepository.countPost();
+    }
+
 }

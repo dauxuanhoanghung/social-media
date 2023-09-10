@@ -24,4 +24,5 @@ public interface PostRepository {
     
     boolean delete(Post post);
     
+    Long countPost();
 }

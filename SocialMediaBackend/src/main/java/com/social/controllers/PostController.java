@@ -14,6 +14,8 @@ import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,9 +36,12 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Lazy
 @Controller
+@PropertySource("classpath:application.properties")
 @RequestMapping("/admin/post")
 public class PostController {
 
+    @Autowired
+    private Environment env;
     @Autowired
     private PostService postService;
 
@@ -57,9 +62,12 @@ public class PostController {
     }
 
     @GetMapping
-    public String index(Map<String, String> params, Model model) {
+    public String index(@RequestParam Map<String, String> params, Model model) {
         List<Post> posts = this.postService.getPosts(params);
         model.addAttribute("posts", posts);
+        Long count = this.postService.countPost();
+        Integer size = env.getProperty("PAGINATION", Integer.class);
+        model.addAttribute("pages", Math.ceil((double) count / size));
         return "posts";
     }
 
@@ -88,9 +96,8 @@ public class PostController {
         List<Object[]> result = surveyResultService.getResultSurvey(params);
         /**
          * {
-         * "chuongdp": [ { "questionId": "5", 
-         * "questionContent": "Tiền nhiều hay ít ?", 
-         * "result": "Nhiều" }]
+         * "chuongdp": [ { "questionId": "5", "questionContent": "Tiền nhiều hay
+         * ít ?", "result": "Nhiều" }]
          */
         Map<String, List<Map<String, String>>> results = new HashMap<>();
         result.stream().forEach(rs -> {

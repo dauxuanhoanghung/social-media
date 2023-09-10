@@ -43,12 +43,6 @@ public class PostRepositoryImpl implements PostRepository {
     private LocalSessionFactoryBean sessionFactory;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ModelMapper mapper;
-
-    @Autowired
     private Environment env;
 
     private Session getSession() {
@@ -207,6 +201,13 @@ public class PostRepositoryImpl implements PostRepository {
         } catch (HibernateException ex) {
             return false;
         }
+    }
+
+    @Override
+    public Long countPost() {
+        Session session = getSession();
+        Query q = session.createQuery("SELECT Count(*) FROM Post");
+        return Long.parseLong(q.getSingleResult().toString());
     }
 
 }
