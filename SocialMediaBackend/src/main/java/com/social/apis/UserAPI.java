@@ -81,7 +81,7 @@ public class UserAPI {
     @GetMapping
     public ResponseEntity<UserResponse> getProfileUser(@RequestParam Map<String, String> params) {
         String slug = params.getOrDefault("slug", null);
-        String id = params.getOrDefault("id", null);
+        String id = params.getOrDefault("userId", null);
 
         if (slug != null) {
             User user = this.userService.getUserBySlug(slug);

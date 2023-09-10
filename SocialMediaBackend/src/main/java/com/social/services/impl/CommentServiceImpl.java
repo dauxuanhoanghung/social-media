@@ -55,7 +55,6 @@ public class CommentServiceImpl implements CommentService {
             return null;
         }
         Comment comment = mapper.map(commentRequest, Comment.class);
-        comment.setCountAction(0);
         comment.setUser(getCurrentUser());
         return this.commentRepository.save(comment);
     }

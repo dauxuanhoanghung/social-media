@@ -19,6 +19,7 @@ import com.social.repositories.QuestionRepository;
 import com.social.repositories.UserRepository;
 import com.social.services.CloudinaryService;
 import com.social.services.PostService;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -111,6 +112,7 @@ public class PostServiceImpl implements PostService {
         savedPost.setUser(getCurrentUser());
         savedPost.setLockComment(Boolean.FALSE);
         savedPost.setType(PostType.POST);
+        savedPost.setImagePostSet(new HashSet<>());
         this.postRepository.save(savedPost);
         if (post.getImages() != null && !post.getImages().isEmpty()) {
             for (MultipartFile file : post.getImages()) {
@@ -118,8 +120,11 @@ public class PostServiceImpl implements PostService {
                 ImagePost imagePost = new ImagePost();
                 imagePost.setPostId(savedPost);
                 imagePost.setUrl(link);
-
                 this.imagePostRepository.save(imagePost);
+                Set h = savedPost.getImagePostSet();
+                h.add(imagePost);
+                savedPost.setImagePostSet(h);
+
             }
         }
 

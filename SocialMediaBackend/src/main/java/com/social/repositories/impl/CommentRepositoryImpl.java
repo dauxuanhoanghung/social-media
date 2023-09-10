@@ -177,7 +177,10 @@ public class CommentRepositoryImpl implements CommentRepository {
         subquery.select(criteriaBuilder.count(subCommentRoot.get("id")))
                 .where(criteriaBuilder.equal(subCommentRoot.get("comment"), commentRoot.get("id")));
         // SELECT comment, count()
-
+        Subquery<Long> countActionQuery = criteriaQuery.subquery(Long.class);
+        Root<CommentAction> commentARoot = countActionQuery.from(CommentAction.class);
+        countActionQuery.select(criteriaBuilder.count(commentARoot.get("id")))
+                .where(criteriaBuilder.equal(commentARoot.get("comment"), commentRoot.get("id")));
         if (!params.isEmpty()) {
             // comment.post_id == :postId
             String postId = params.get("postId");
@@ -200,9 +203,14 @@ public class CommentRepositoryImpl implements CommentRepository {
                         )
                 );
                 criteriaQuery.multiselect(
-                        commentRoot, subquery.getSelection(), actionSubquery.getSelection());
+                        commentRoot,
+                        subquery.getSelection(),
+                        countActionQuery.getSelection(),
+                        actionSubquery.getSelection());
             } else {
-                criteriaQuery.multiselect(commentRoot, subquery.getSelection());
+                criteriaQuery.multiselect(commentRoot,
+                        subquery.getSelection(),
+                        countActionQuery.getSelection());
             }
         }
 
@@ -219,8 +227,10 @@ public class CommentRepositoryImpl implements CommentRepository {
             Comment comment = (Comment) result[0];
             Long subcommentCount = (Long) result[1];
             comment.setCountReply(subcommentCount);
+            Long countAction = (Long) result[2];
+            comment.setCountAction(countAction);
             if (!params.isEmpty() && params.containsKey("alumniId")) {
-                comment.setCurrentAction((Action) result[2]);
+                comment.setCurrentAction((Action) result[3]);
             }
             commentsWithCounts.add(comment);
         }

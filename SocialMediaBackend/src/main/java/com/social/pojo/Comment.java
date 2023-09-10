@@ -74,7 +74,7 @@ public class Comment implements Serializable {
     @Transient
     private Long countReply;
     @Transient
-    private Integer countAction;
+    private Long countAction;
     @Transient
     private Action currentAction;
 
@@ -109,14 +109,6 @@ public class Comment implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public Integer getCountAction() {
-        return countAction;
-    }
-
-    public void setCountAction(Integer countAction) {
-        this.countAction = countAction;
     }
 
     public LocalDateTime getCreatedDate() {
