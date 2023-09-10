@@ -65,14 +65,15 @@
                 </tbody>
             </table>
         </c:if>
-        <ul class="pagination justify-content-center">
-            <c:forEach begin="1" end="${pages}" var="page">
-                <li class="page-item <c:if test="${currentPage == page}">active</c:if>">
-                    <a class="page-link" href="<c:url value="/admin/post?page=${page}" />">${page}</a>
-                </li>
-            </c:forEach>
-        </ul>
-
+        <c:if test="${pages >= 2}" >
+            <ul class="pagination justify-content-center">
+                <c:forEach begin="1" end="${pages}" var="page">
+                    <li class="page-item <c:if test="${currentPage == page}">active</c:if>">
+                        <a class="page-link" href="<c:url value="/admin/post?page=${page}" />">${page}</a>
+                    </li>
+                </c:forEach>
+            </ul>
+        </c:if>
 
 
         <c:if test="${empty posts}">

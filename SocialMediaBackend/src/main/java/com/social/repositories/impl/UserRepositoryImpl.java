@@ -214,4 +214,11 @@ public class UserRepositoryImpl implements UserRepository {
 
         return query.executeUpdate();
     }
+
+    @Override
+    public Long count() {
+        Session session = getSession();
+        Query q = session.createQuery("SELECT Count(*) FROM User");
+        return Long.parseLong(q.getSingleResult().toString());
+    }
 }

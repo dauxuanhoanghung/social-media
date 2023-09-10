@@ -30,4 +30,6 @@ public interface UserRepository {
     boolean existsByAlumniId(String alumniId);
     
     int updateAvatarOrBg(String alumniId,String url, boolean isBg);
+    
+    Long count();
 }
