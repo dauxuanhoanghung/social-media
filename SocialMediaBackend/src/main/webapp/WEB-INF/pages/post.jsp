@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<c:set var="currentPage" value="${param['page']}" />
 <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">
         <spring:message code="view.pages.post.post" /> /</span> <spring:message code="view.pages.post.manage-all" />
 </h4>
@@ -52,7 +53,7 @@
                                                 <i class="bx bx-target-lock me-1"></i><spring:message code="view.pages.post.view-result" />
                                             </a>
                                         </c:if>
-                                        <a class="dropdown-item">
+                                        <a class="dropdown-item" onclick="deletePost('<c:url value="/api/posts/${post.id}/delete/"/>')">
                                             <i class="bx bx-trash me-1"></i><spring:message code="view.pages.user.delete" />
                                         </a>
                                     </div>
@@ -64,6 +65,15 @@
                 </tbody>
             </table>
         </c:if>
+        <ul class="pagination justify-content-center">
+            <c:forEach begin="1" end="${pages}" var="page">
+                <li class="page-item <c:if test="${currentPage == page}">active</c:if>">
+                    <a class="page-link" href="<c:url value="/admin/post?page=${page}" />">${page}</a>
+                </li>
+            </c:forEach>
+        </ul>
+
+
 
         <c:if test="${empty posts}">
             <div class="alert alert-warning text-center" style="height: 100%" role="alert">
@@ -73,3 +83,16 @@
         </c:if>
     </div>
 </div>
+
+<script>
+    const deletePost = (url) => {
+        fetch(url, {
+            method: "DELETE"
+        })
+                .then(res => {
+                    if (res.status === 204) {
+                        location.reload();
+                    }
+                })
+    }
+</script>

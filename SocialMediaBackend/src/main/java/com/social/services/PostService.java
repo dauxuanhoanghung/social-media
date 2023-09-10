@@ -13,16 +13,19 @@ import java.util.Map;
 public interface PostService {
 
     List<Post> getPosts(Map<String, String> params);
-    
+
     Post getPostById(Integer id);
-    
+
     Post saveSurveyPost(SurveyRequest surveyRequest);
-    
+
     Post save(PostRequest post);
-    
+
     Post toggleLockCOmment(Integer postId);
-    
+
     Post toggleBlockComment(int postId);
-    
+
     boolean delete(int postId);
+
+    Long countPost();
+
 }
