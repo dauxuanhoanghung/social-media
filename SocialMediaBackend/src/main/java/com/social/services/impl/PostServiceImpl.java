@@ -83,7 +83,7 @@ public class PostServiceImpl implements PostService {
         Post surveyPost = mapper.map(surveyRequest, Post.class);
         surveyPost.setQuestions(null);
         surveyPost.setLockComment(Boolean.FALSE);
-        surveyPost.setCountAction(0);
+        surveyPost.setCountAction(0l);
         surveyPost.setUser(getCurrentUser());
         this.postRepository.save(surveyPost);
         for (QuestionRequest qr : surveyRequest.getQuestions()) {
@@ -107,7 +107,7 @@ public class PostServiceImpl implements PostService {
 //        Post savedPost = this.postRepository.save(post);
         Post savedPost = new Post();
         savedPost.setContent(post.getContent());
-        savedPost.setCountAction(0);
+        savedPost.setCountAction(0l);
         savedPost.setUser(getCurrentUser());
         savedPost.setLockComment(Boolean.FALSE);
         savedPost.setType(PostType.POST);
@@ -139,6 +139,12 @@ public class PostServiceImpl implements PostService {
             throw new NotFoundException();
         }
         User user = getCurrentUser();
+        if (!user.getRole().getName().equals("ROLE_ADMIN")
+                && !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)
+                && currentPost.getUser() != null
+                && currentPost.getUser().getId() != user.getId()) {
+            return null;
+        }
         currentPost.setLockComment(!currentPost.getLockComment());
         return this.postRepository.save(currentPost);
     }

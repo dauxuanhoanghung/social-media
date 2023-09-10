@@ -56,13 +56,26 @@ public class SurveyResultRepositoryImpl implements SurveyResultRepository {
             }
 
         }
+        criteriaQuery.where(predicates.toArray(Predicate[]::new));
         criteriaQuery.multiselect(
                 userRoot.get("alumniId"),
+                questionRoot.get("id"),
                 questionRoot.get("content"),
                 resultRoot.get("result")
         );
         Query query = session.createQuery(criteriaQuery);
 
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Question> getQuestionsByPostId(int postId) {
+        Session session = getSession();
+        CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        CriteriaQuery<Question> criteriaQuery = criteriaBuilder.createQuery(Question.class);
+        Root<Question> questionRoot = criteriaQuery.from(Question.class);
+        criteriaQuery.where(criteriaBuilder.equal(questionRoot.get("post"), postId));
+        Query query = session.createQuery(criteriaQuery);
         return query.getResultList();
     }
 

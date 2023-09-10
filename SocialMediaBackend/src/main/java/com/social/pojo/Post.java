@@ -65,7 +65,7 @@ public class Post implements Serializable {
     private String content;
     @Column(name = "lock_comment")
     private Boolean lockComment;
-    
+
     @Basic(optional = false)
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -83,7 +83,7 @@ public class Post implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", orphanRemoval = true)
     private Set<PostAction> postActions;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", fetch = FetchType.EAGER, orphanRemoval = true) 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post", fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<Question> questions;
     @OneToMany(mappedBy = "postId", fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<ImagePost> imagePostSet;
@@ -93,7 +93,10 @@ public class Post implements Serializable {
     @Transient
     private Action currentAction;
     @Transient
-    private Integer countAction;
+    private Long countAction;
+    @Transient
+    private Long countComment;
+
     {
         this.createdDate = LocalDateTime.now();
         this.modifiedDate = LocalDateTime.now();
@@ -135,14 +138,6 @@ public class Post implements Serializable {
         this.lockComment = lockComment;
     }
 
-    public Integer getCountAction() {
-        return countAction;
-    }
-
-    public void setCountAction(Integer countAction) {
-        this.countAction = countAction;
-    }
-
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
@@ -175,7 +170,6 @@ public class Post implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-
 
     @XmlTransient
     public Set<ImagePost> getImagePostSet() {

@@ -1,5 +1,6 @@
 package com.social.repositories;
 
+import com.social.pojo.Question;
 import java.util.List;
 import java.util.Map;
 
@@ -12,4 +13,6 @@ public interface SurveyResultRepository {
      * list.surveyResult.content}
      */
     List<Object[]> getResultSurvey(Map<String, String> params);
+    
+    List<Question> getQuestionsByPostId(int postId);
 }
