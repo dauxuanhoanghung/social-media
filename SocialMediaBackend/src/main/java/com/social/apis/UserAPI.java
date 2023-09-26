@@ -10,6 +10,7 @@ import com.social.validator.FileValidator;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -99,7 +101,7 @@ public class UserAPI {
             res.setMessage("Request Success");
         } else {
             res.setData("Username exists");
-            return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(res, HttpStatus.OK);
         }
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
@@ -135,7 +137,9 @@ public class UserAPI {
     public ResponseEntity uploadAvatar(@ModelAttribute @Valid FileUploadRequest file, BindingResult rs) {
         fileValidator.validate(file, rs);
         if (rs.hasErrors()) {
-            return ResponseEntity.badRequest().body(rs.getAllErrors());
+            return ResponseEntity.badRequest().body(rs.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList()));
         }
         User user = userService.updateAvatar(file.getFiles().get(0), false);
         Map res = new HashMap();
@@ -147,7 +151,10 @@ public class UserAPI {
     public ResponseEntity uploadBg(@ModelAttribute @Valid FileUploadRequest file, BindingResult rs) {
         fileValidator.validate(file, rs);
         if (rs.hasErrors()) {
-            return new ResponseEntity(rs.getAllErrors(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(rs.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList()), HttpStatus.BAD_REQUEST
+            );
         }
         User user = userService.updateAvatar(file.getFiles().get(0), true);
 //        Map res = new HashMap();

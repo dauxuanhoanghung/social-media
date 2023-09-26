@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.2" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence           http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence           http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
   <persistence-unit name="com.social_SocialMediaBackend_war_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.social.pojo.Tag</class>
@@ -28,6 +28,24 @@
     <class>com.social.pojo.Group1</class>
     <class>com.social.pojo.Question</class>
     <class>com.social.pojo.Community</class>
+    <class>com.entity.Notificationcontent</class>
+    <class>com.entity.Documents</class>
+    <class>com.entity.Customerserviceregistration</class>
+    <class>com.entity.Servicepackage</class>
+    <class>com.entity.Location</class>
+    <class>com.entity.Payment</class>
+    <class>com.entity.Blog</class>
+    <class>com.entity.Media</class>
+    <class>com.entity.Category</class>
+    <class>com.entity.Wishlistproperty</class>
+    <class>com.entity.Wishlist</class>
+    <class>com.entity.Transaction</class>
+    <class>com.entity.Userproperty</class>
+    <class>com.entity.Appointments</class>
+    <class>com.entity.Notification</class>
+    <class>com.entity.Property</class>
+    <class>com.entity.Review</class>
+    <class>com.entity.Customer</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/saleapp"/>
